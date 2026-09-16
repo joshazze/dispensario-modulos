@@ -1,0 +1,1272 @@
+{
+  "nome": "conjunto/modulos",
+  "material": "mdf-3mm",
+  "espessura_mm": 3.0,
+  "camadas_por_painel": 2,
+  "espessura_final_mm": 6.0,
+  "kerf_mm": 0.15,
+  "compensar_kerf": false,
+  "junta_dedo": {
+    "passo_alvo_mm": 30.0,
+    "profundidade_mm": 6.0
+  },
+  "fixacoes_m3": false,
+  "m3": {
+    "diametro_furo_mm": 3.2,
+    "bolso_porca_entre_faces_mm": 5.5,
+    "margem_mm": 30.0,
+    "margem_extremidade_mm": 70.0,
+    "passo_maximo_mm": 250.0
+  },
+  "encaixe": {
+    "folga_entre_pecas_mm": 8.0,
+    "margem_mm": 0.0,
+    "margem_vazio_mm": 3.0
+  },
+  "folha": {
+    "largura_mm": 3080.0,
+    "chapa_padrao_mm": [
+      2750.0,
+      1840.0
+    ],
+    "mesa_mm": [
+      1150.0,
+      1000.0
+    ],
+    "travar_rotacao": false,
+    "retangulares_deitadas": true,
+    "bloco_mm": [
+      1000.0,
+      1000.0
+    ],
+    "perfil_dxf": "perfis/perfil-tecnico.json"
+  },
+  "legenda": {
+    "largura_mm": 200.0,
+    "altura_mm": 100.0,
+    "fonte_mm": 6.0
+  },
+  "modulos": [
+    {
+      "prefixo": "bio",
+      "codigo": "B",
+      "nome": "modulo biometrico",
+      "largura_externa_mm": 250.0,
+      "altura_externa_mm": 1000.0,
+      "profundidade_externa_mm": 250.0,
+      "observacao_frontal": "aberturas da eletronica pendentes",
+      "aberturas": [
+        {
+          "nome": "passa-fio",
+          "tipo": "furo",
+          "face": 2,
+          "camadas": "todas",
+          "diametro_mm": 50.0,
+          "x_mm": 90.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "parafusos da tampa",
+          "tipo": "parafusos",
+          "face": 2,
+          "camadas": "todas",
+          "diametro_mm": 2.5,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "x_mm": 90.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "passa-fio",
+          "tipo": "furo",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 50.0,
+          "x_mm": 160.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "parafusos da tampa",
+          "tipo": "parafusos",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 2.5,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "x_mm": 160.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "janela da interface",
+          "tipo": "janela",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 180.0,
+          "altura_mm": 500.0,
+          "raio_mm": 3.0,
+          "centro_x": true,
+          "y_mm": 650.0
+        },
+        {
+          "nome": "parafusos do sub-painel",
+          "tipo": "parafusos",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.5,
+          "passo_x_mm": 210.0,
+          "passo_y_mm": 530.0,
+          "linhas_x": 2,
+          "linhas_y": 4,
+          "centro_x": true,
+          "y_mm": 650.0
+        },
+        {
+          "nome": "vao de manutencao",
+          "tipo": "janela",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 110.0,
+          "altura_mm": 860.0,
+          "raio_mm": 4.0,
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "parafusos da placa",
+          "tipo": "parafusos",
+          "face": 1,
+          "camadas": "todas",
+          "diametro_mm": 2.5,
+          "passo_x_mm": 140.0,
+          "passo_y_mm": 890.0,
+          "linhas_x": 2,
+          "linhas_y": 8,
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "fixacao na parede",
+          "tipo": "gota",
+          "face": 1,
+          "camadas": "todas",
+          "cabeca_mm": 12.0,
+          "haste_mm": 6.5,
+          "comprimento_mm": 10.0,
+          "x_mm": 85.0,
+          "y_mm": 22.0,
+          "espelhado": true
+        },
+        {
+          "nome": "fixacao na parede",
+          "tipo": "gota",
+          "face": 1,
+          "camadas": "todas",
+          "cabeca_mm": 12.0,
+          "haste_mm": 6.5,
+          "comprimento_mm": 10.0,
+          "x_mm": 85.0,
+          "y_mm": 970.0,
+          "espelhado": true
+        },
+        {
+          "nome": "rasgo de prateleira",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 40.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 67.0,
+          "y_mm": 733.3333333333334,
+          "repete": 3,
+          "passo_mm": 166.66666666666666,
+          "eixo": "y",
+          "espelhado": true
+        },
+        {
+          "nome": "rasgo de prateleira",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 40.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 67.0,
+          "y_mm": 733.3333333333334,
+          "repete": 3,
+          "passo_mm": 166.66666666666666,
+          "eixo": "y",
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 15.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 985.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 33.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 967.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 15.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 985.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 33.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 967.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 15.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 985.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 33.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 967.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 15.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 985.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 33.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 967.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 15.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 235.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 33.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 217.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 15.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 235.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 33.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "centro_x": true,
+          "y_mm": 217.0
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 1,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 100.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 220.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 330.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 12.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 30.0,
+          "y_mm": 950.0,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 15.0,
+          "centro_y": true,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 33.0,
+          "centro_y": true,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 15.0,
+          "centro_y": true,
+          "espelhado": true
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 2.5,
+          "altura_mm": 6.5,
+          "raio_mm": 0.6,
+          "x_mm": 33.0,
+          "centro_y": true,
+          "espelhado": true
+        }
+      ]
+    },
+    {
+      "prefixo": "arm",
+      "codigo": "A",
+      "nome": "modulo de armario",
+      "largura_externa_mm": 1260.0,
+      "altura_externa_mm": 1500.0,
+      "profundidade_externa_mm": 350.0,
+      "observacao_frontal": "visor, dobradica e tranca pendentes",
+      "aberturas": [
+        {
+          "nome": "passa-fio",
+          "tipo": "furo",
+          "face": 2,
+          "camadas": "todas",
+          "diametro_mm": 50.0,
+          "x_mm": 90.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "parafusos da tampa",
+          "tipo": "parafusos",
+          "face": 2,
+          "camadas": "todas",
+          "diametro_mm": 2.5,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "x_mm": 90.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "passa-fio",
+          "tipo": "furo",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 50.0,
+          "x_mm": 260.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "parafusos da tampa",
+          "tipo": "parafusos",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 2.5,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "x_mm": 260.0,
+          "y_mm": 80.0
+        },
+        {
+          "nome": "vao da porta",
+          "tipo": "pilula",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 1080.0,
+          "altura_mm": 380.0,
+          "repete": 3,
+          "passo_mm": 470.0,
+          "eixo": "y",
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    }
+  ],
+  "passa_fio": {
+    "diametro_mm": 50.0,
+    "altura_centro_mm": 80.0,
+    "tampa_diametro_mm": 90.0,
+    "passo_parafusos_mm": 51.0,
+    "furo_piloto_mm": 2.5,
+    "furo_passante_mm": 3.2,
+    "rosca_prensa_cabo_mm": 22.5
+  },
+  "porta": {
+    "quantidade": 3,
+    "borda_mm": 90.0,
+    "eixo": "y",
+    "pilula_largura_mm": 1080.0,
+    "pilula_altura_mm": 380.0,
+    "passo_mm": 470.0,
+    "folga_folha_mm": 4.0
+  },
+  "interface": {
+    "janela_largura_mm": 180.0,
+    "janela_altura_mm": 500.0,
+    "altura_centro_mm": 650.0,
+    "sub_painel_largura_mm": 240.0,
+    "sub_painel_altura_mm": 560.0,
+    "recuo_parafuso_mm": 15.0,
+    "raio_canto_mm": 3.0,
+    "linhas_parafuso": 4
+  },
+  "pecas_extras": [
+    {
+      "codigo": "AP1",
+      "nome": "folha 1 da porta",
+      "tipo": "pilula",
+      "largura_mm": 1072.0,
+      "altura_mm": 372.0,
+      "laminas": 2
+    },
+    {
+      "codigo": "AP2",
+      "nome": "folha 2 da porta",
+      "tipo": "pilula",
+      "largura_mm": 1072.0,
+      "altura_mm": 372.0,
+      "laminas": 2
+    },
+    {
+      "codigo": "AP3",
+      "nome": "folha 3 da porta",
+      "tipo": "pilula",
+      "largura_mm": 1072.0,
+      "altura_mm": 372.0,
+      "laminas": 2
+    },
+    {
+      "codigo": "BSP",
+      "nome": "sub-painel da interface",
+      "tipo": "retangulo",
+      "largura_mm": 240.0,
+      "altura_mm": 560.0,
+      "raio_mm": 3.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "parafusos",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 210.0,
+          "passo_y_mm": 530.0,
+          "centro_x": true,
+          "centro_y": true,
+          "linhas_y": 4
+        }
+      ]
+    },
+    {
+      "codigo": "BTR",
+      "nome": "tampa rosqueada do biometrico",
+      "tipo": "disco",
+      "diametro_mm": 90.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "rosca do prensa-cabo",
+          "tipo": "furo",
+          "diametro_mm": 22.5,
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "parafusos",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ],
+      "alojar_em": "B6E"
+    },
+    {
+      "codigo": "BTF",
+      "nome": "tampa fechada do biometrico",
+      "tipo": "disco",
+      "diametro_mm": 90.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "parafusos",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ],
+      "alojar_em": "B6E"
+    },
+    {
+      "codigo": "ATR",
+      "nome": "tampa rosqueada do armario",
+      "tipo": "disco",
+      "diametro_mm": 90.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "rosca do prensa-cabo",
+          "tipo": "furo",
+          "diametro_mm": 22.5,
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "parafusos",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    },
+    {
+      "codigo": "ATF",
+      "nome": "tampa fechada do armario",
+      "tipo": "disco",
+      "diametro_mm": 90.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "parafusos",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 51.0,
+          "passo_y_mm": 51.0,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    },
+    {
+      "codigo": "BP1",
+      "nome": "prateleira 1 do biometrico",
+      "tipo": "prateleira_u",
+      "laminas": 1,
+      "largura_mm": 238.0,
+      "profundidade_mm": 236.0,
+      "aba_mm": 6.0,
+      "aba_largura_mm": 40.0,
+      "aba_centros_mm": [
+        60.0,
+        176.0
+      ],
+      "recorte_largura_mm": 110.0,
+      "recorte_profundidade_mm": 90.0,
+      "recorte_largura_frente_mm": 214.0
+    },
+    {
+      "codigo": "BP2",
+      "nome": "prateleira 2 do biometrico",
+      "tipo": "prateleira_u",
+      "laminas": 1,
+      "largura_mm": 238.0,
+      "profundidade_mm": 236.0,
+      "aba_mm": 6.0,
+      "aba_largura_mm": 40.0,
+      "aba_centros_mm": [
+        60.0,
+        176.0
+      ],
+      "recorte_largura_mm": 110.0,
+      "recorte_profundidade_mm": 90.0,
+      "recorte_largura_frente_mm": 214.0
+    },
+    {
+      "codigo": "BP3",
+      "nome": "prateleira 3 do biometrico",
+      "tipo": "prateleira_u",
+      "laminas": 1,
+      "largura_mm": 238.0,
+      "profundidade_mm": 236.0,
+      "aba_mm": 6.0,
+      "aba_largura_mm": 40.0,
+      "aba_centros_mm": [
+        60.0,
+        176.0
+      ],
+      "recorte_largura_mm": 110.0,
+      "recorte_profundidade_mm": 90.0,
+      "recorte_largura_frente_mm": 214.0
+    },
+    {
+      "codigo": "BPM",
+      "nome": "placa de manutencao do biometrico",
+      "tipo": "retangulo",
+      "largura_mm": 170.0,
+      "altura_mm": 920.0,
+      "raio_mm": 4.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "parafusos",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 140.0,
+          "passo_y_mm": 890.0,
+          "linhas_x": 2,
+          "linhas_y": 8,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    }
+  ],
+  "prateleiras": {
+    "quantidade": 3,
+    "alturas_mm": [
+      566.6666666666666,
+      733.3333333333333,
+      900.0
+    ],
+    "largura_mm": 238.0,
+    "profundidade_mm": 236.0,
+    "aba_mm": 6.0,
+    "aba_largura_mm": 40.0,
+    "aba_centros_mm": [
+      60.0,
+      176.0
+    ],
+    "recorte_largura_mm": 110.0,
+    "recorte_profundidade_mm": 90.0,
+    "ponta_mm": 12.0,
+    "recorte_largura_frente_mm": 214.0,
+    "laminas": 1,
+    "espessura_mm": 3.0
+  },
+  "manutencao": {
+    "borda_mm": 70.0,
+    "vao_largura_mm": 110.0,
+    "vao_altura_mm": 860.0,
+    "placa_largura_mm": 170.0,
+    "placa_altura_mm": 920.0,
+    "recuo_parafuso_mm": 15.0,
+    "linhas_parafuso": 8,
+    "passo_x_mm": 140.0,
+    "passo_y_mm": 890.0,
+    "raio_canto_mm": 4.0,
+    "recuo_placa_mm": 40.0
+  },
+  "fixacao_parede": {
+    "tipo": "gota",
+    "quantidade": 4,
+    "cabeca_mm": 12.0,
+    "haste_mm": 6.5,
+    "comprimento_mm": 10.0,
+    "x_mm": 85.0,
+    "y_baixo_mm": 22.0,
+    "y_alto_mm": 970.0
+  },
+  "enforca_gato": {
+    "fita_largura_mm": 4.8,
+    "fita_espessura_mm": 1.3,
+    "rasgo_comprimento_mm": 6.5,
+    "rasgo_largura_mm": 2.5,
+    "recuo_aresta_mm": 12.0,
+    "afastamento_par_mm": 18.0,
+    "faces": [
+      1,
+      2,
+      4,
+      6
+    ],
+    "arranjo": "lado a lado",
+    "alturas_mm": [
+      100.0,
+      220.0,
+      330.0,
+      950.0
+    ],
+    "recuo_aresta_horizontal_mm": 15.0,
+    "faces_tampa": [
+      3,
+      5
+    ]
+  },
+  "gravar_codigos": false
+}

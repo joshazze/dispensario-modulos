@@ -1,0 +1,24 @@
+{
+  "_leia": "Numero medido vale, numero de tabela e chute. Enquanto 'origem' for 'estimado', todo build avisa. Cortar um cupom de calibracao no MDF da vez, medir com paquimetro e trocar por 'medido' com a data e a maquina.",
+  "_unidades": "mm",
+
+  "maquina_padrao": null,
+
+  "materiais": {
+    "mdf-3mm": {
+      "material": "mdf",
+      "espessura_nominal": 3.0,
+      "espessura_real": 3.0,
+      "kerf": 0.18,
+      "folga_dedo": 0.0,
+      "folga_bolso": 0.3,
+      "ponte_minima": 3.0,
+      "interferencia_press_fit": 0.08,
+      "origem": "estimado",
+      "medido_em": null,
+      "maquina": null,
+      "_faixa_kerf": "0.08 (Sculpteo) a 0.30 (GS9070 100W). Fator 3 entre fontes: medir.",
+      "_nota": "Dedo abaixo de 3 mm quebra: ligacao interna do MDF grade 130 e 0.54 N/mm2."
+    }
+  }
+}

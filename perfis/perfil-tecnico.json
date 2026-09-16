@@ -1,0 +1,54 @@
+{
+  "origem": "Chapa1.dxf, enviado pelo tecnico do corte em 03/09/2026",
+  "template": "perfis/chapa-tecnico.dxf",
+  "versao_dxf": "AC1032 (AutoCAD 2018)",
+  "encoding": "cp1252",
+  "fim_de_linha": "CRLF",
+  "unidades": {
+    "INSUNITS": 4,
+    "significado": "milimetro",
+    "MEASUREMENT": 1
+  },
+  "folha_do_tecnico_mm": [
+    1000.0,
+    800.0
+  ],
+  "camadas": {
+    "corte": {
+      "nome": "CORTE",
+      "cor_aci": 1,
+      "cor": "vermelho",
+      "ltype": "Continuous",
+      "lineweight": 0
+    },
+    "marcacao": {
+      "nome": "MARCAÇÃO",
+      "cor_aci": 2,
+      "cor": "amarelo",
+      "ltype": "Continuous",
+      "lineweight": 0
+    },
+    "moldura": {
+      "nome": "0",
+      "cor_aci": 7,
+      "cor": "branco/preto",
+      "ltype": "Continuous",
+      "lineweight": -3
+    }
+  },
+  "entidades_aceitas": [
+    "LWPOLYLINE",
+    "CIRCLE",
+    "LINE"
+  ],
+  "owner_model_space": "1F",
+  "handle_maximo_no_template": "322",
+  "secoes_preservadas": [
+    "HEADER",
+    "CLASSES",
+    "TABLES",
+    "BLOCKS",
+    "OBJECTS",
+    "ACDSDATA"
+  ]
+}

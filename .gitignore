@@ -1,0 +1,14 @@
+.DS_Store
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# HTML intermediario do PDF
+tmp/
+
+# a versao com moldura so alimenta o PDF
+*_cotado.svg
+
+# cargas do armario: 18 das 19 sao pecas fora de medida, uma por arquivo
+cortes/armario/*-bloco*
