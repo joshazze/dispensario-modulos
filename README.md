@@ -48,12 +48,12 @@ As tampas `BTR` e `BTF` saem de dentro da janela da frente `B6E`: aquele MDF já
 
 <table>
 <tr>
-<td width="50%"><img src="docs/biometrico-cama1.svg" alt="Carga 1 do biométrico"><br><sub>Carga 1</sub></td>
-<td width="50%"><img src="docs/biometrico-cama2.svg" alt="Carga 2 do biométrico"><br><sub>Carga 2</sub></td>
+<td width="50%"><img src="docs/biometrico-cama1.svg" alt="Carga 1 do biométrico" width="400"><br><sub>Carga 1</sub></td>
+<td width="50%"><img src="docs/biometrico-cama2.svg" alt="Carga 2 do biométrico" width="400"><br><sub>Carga 2</sub></td>
 </tr>
 <tr>
-<td><img src="docs/biometrico-cama3.svg" alt="Carga 3 do biométrico"><br><sub>Carga 3</sub></td>
-<td><img src="docs/biometrico-cama4.svg" alt="Carga 4 do biométrico"><br><sub>Carga 4</sub></td>
+<td><img src="docs/biometrico-cama3.svg" alt="Carga 3 do biométrico" width="400"><br><sub>Carga 3</sub></td>
+<td><img src="docs/biometrico-cama4.svg" alt="Carga 4 do biométrico" width="400"><br><sub>Carga 4</sub></td>
 </tr>
 </table>
 

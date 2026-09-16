@@ -28,12 +28,15 @@ def _path(poly, flip):
     return "M" + "L".join("%s,%s" % (_num(x), _num(y)) for x, y in pts) + "Z"
 
 
-def svg_cama(cortes, textos, largura, altura, traco):
+def svg_cama(cortes, textos, largura, altura, traco, px_por_mm=0.45):
     flip = lambda x, y: (x, altura - y)
     margem = 20.0
+    lw, lh = largura + 2 * margem, altura + 2 * margem
     out = [
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s %s %s %s">'
-        % (_num(-margem), _num(-margem), _num(largura + 2 * margem), _num(altura + 2 * margem)),
+        # tamanho intrinseco: sem ele o GitHub encolhe a figura dentro de tabela
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s %s %s %s" width="%d" height="%d">'
+        % (_num(-margem), _num(-margem), _num(lw), _num(lh),
+           round(lw * px_por_mm), round(lh * px_por_mm)),
         '<rect x="%s" y="%s" width="%s" height="%s" fill="%s"/>'
         % (_num(-margem), _num(-margem), _num(largura + 2 * margem), _num(altura + 2 * margem), FUNDO),
         '<rect x="0" y="0" width="%s" height="%s" fill="none" stroke="%s" '
@@ -73,7 +76,7 @@ def previas_do_modulo(spec, filtro, prefixo, so_prancha=False):
         tl = [dict(t, x=t["x"] - x0, y=t["y"] - y0) for t in textos]
         nome = "%s-prancha.svg" % prefixo
         with open(os.path.join(DOCS, nome), "w", encoding="utf-8") as f:
-            f.write(svg_cama(locais, tl, x1 - x0, y1 - y0, traco=5.0))
+            f.write(svg_cama(locais, tl, x1 - x0, y1 - y0, traco=5.0, px_por_mm=0.18))
         return [nome]
     for indice, (ox, oy, bw, bh, _) in enumerate(gerador.build_sheet.molduras, 1):
         dentro = [p for p in cortes
