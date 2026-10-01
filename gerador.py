@@ -468,6 +468,7 @@ def pecas_extras(spec):
                 "h": h,
                 "legenda": False,
                 "gira": True,
+                "ponte_aceita_mm": extra.get("ponte_aceita_mm"),
             })
     return unidades
 
@@ -965,8 +966,14 @@ def valida_prancha(spec, placed):
     problemas = []
     for unit, x, y, gira in placed:
         polys = rot90(unit["polys"]) if gira else unit["polys"]
+        # excecao declarada na spec, com o motivo ao lado: o piso cai so
+        # naquela peca e o relatorio continua mostrando que caiu
+        piso = min(piso_ponte, unit.get("ponte_aceita_mm") or piso_ponte)
+        if piso < piso_ponte:
+            print("EXCECAO DFM %s: ponte aceita de %.2f mm (piso %.1f)"
+                  % (unit["code"], piso, piso_ponte))
         problemas.extend(checa_aberturas(unit["code"], polys[0], polys[1:],
-                                         espessura, piso_ponte))
+                                         espessura, piso))
     return problemas
 
 
