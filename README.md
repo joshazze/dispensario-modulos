@@ -4,6 +4,8 @@ Chassi do protótipo do dispensário eletrônico da disciplina de Projeto de Sis
 
 A linguagem construtiva (enforca-gato, dedos, camada dupla, gota de parede, pílula) está documentada no repositório irmão, **[dispensario-design-system](https://github.com/joshazze/dispensario-design-system)**.
 
+Componentes comprados (LCD, teclado, parafusos, prensa-cabo), a fonte de cada medida usada no desenho e os arquivos de cada um estão em **[docs/componentes.md](docs/componentes.md)**.
+
 <p align="center"><img src="docs/vista-modulos.svg" alt="Vista isométrica do armário e do módulo biométrico" width="720"></p>
 
 ## Estado
@@ -13,7 +15,7 @@ A linguagem construtiva (enforca-gato, dedos, camada dupla, gota de parede, píl
 | Biométrico, código `B` | 250 x 1000 x 250 mm | 19 | **pronto para a máquina**, em 4 cargas de até 1000 x 1000 mm |
 | Armário, código `A` | 1260 x 1500 x 350 mm | 20 | **rascunho**: 12 painéis são maiores que a mesa |
 
-Já cortadas em 03/09/2026: `BP1`, `BP2`, `BP3`, `BSP`, `B3E`, `B5E`, `BTR` e `BTF`.
+Já cortadas em 03/09/2026: `BP1`, `BP2`, `BP3`, `BSP`, `B3E`, `B5E`, `BTR` e `BTF`. A `BSP` foi cortada antes de ganhar os vãos do LCD e do teclado; eles saem num arquivo à parte, `interface-vaos.dxf`, para cortar na peça que já existe.
 
 Máquina de referência: eCNC L-1210, mesa de 1150 x 1000 mm. Cada carga usa no máximo 1000 mm de largura, folga entre peças incluída, e os 150 mm que sobram ficam de margem.
 
@@ -26,7 +28,8 @@ cortes/
 │   ├── modulo-biometrico-bloco2.dxf
 │   ├── modulo-biometrico-bloco3.dxf
 │   ├── modulo-biometrico-bloco4.dxf
-│   └── modulo-biometrico.dxf          ← as 19 peças numa prancha só
+│   ├── modulo-biometrico.dxf          ← as 19 peças numa prancha só
+│   └── interface-vaos.dxf             ← só os vãos do LCD e do teclado, sem contorno
 └── armario/
     └── modulo-armario.dxf             ← prancha de conferência, ainda não cortável
 ```
@@ -76,7 +79,7 @@ Peças avulsas levam três letras:
 
 | código | peça | medida | lâminas |
 |---|---|---|---|
-| `BSP` | sub-painel da interface, atrás da janela da frente | 240 x 560 mm, 8 parafusos | 1 |
+| `BSP` | sub-painel da interface, atrás da janela da frente | 240 x 560 mm, 8 parafusos, vãos do LCD 1602A e do teclado 4x4 | 1 |
 | `BPM` | placa que fecha o vão de manutenção do fundo | 170 x 920 mm, 16 parafusos | 1 |
 | `BP1` a `BP3` | prateleiras em U com abas nas laterais | 250 x 236 mm | 1 |
 | `BTR`, `ATR` | tampa do passa-fio com furo para prensa-cabo PG16 | ⌀90 mm, furo ⌀22,5 | 1 |
@@ -109,8 +112,11 @@ Requisitos: Python 3.10 ou mais novo, sem biblioteca externa. O PDF usa o Google
 ```bash
 python3 gerador.py --filtro '^B' --nome biometrico/modulo-biometrico
 python3 gerador.py --filtro '^A' --nome armario/modulo-armario
+python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 python3 previas.py        # figuras deste README
 ```
+
+`--vaos CODIGO` exporta só as aberturas marcadas com `componente` naquela peça avulsa, sem o contorno, com a origem no canto de baixo à esquerda.
 
 Para mudar uma medida, edite `specs/modulos.json` e rode o gerador de novo. Ele imprime o tamanho de cada carga, o aproveitamento do material, a tabela de peças contra a mesa e, se houver, cada problema de fabricação encontrado.
 
@@ -123,7 +129,7 @@ python3 -m pip install -r requirements-dev.txt
 python3 -m pytest
 ```
 
-São 23 testes. Entre outras coisas, eles garantem que:
+São 27 testes. Entre outras coisas, eles garantem que:
 
 * cada painel tem duas lâminas de 3 mm e a junta de dedos tem 6 mm de profundidade;
 * nenhuma peça invade outra na prancha e toda feição fica dentro da peça, longe da borda;
@@ -132,20 +138,24 @@ São 23 testes. Entre outras coisas, eles garantem que:
 * a aba da prateleira bate com o rasgo da lateral;
 * o vão da porta sai com uma linha de corte só;
 * nenhuma carga do biométrico passa de 1000 mm de largura;
-* o DXF sai sem moldura, com o canto de baixo à esquerda na origem.
+* o DXF sai sem moldura, com o canto de baixo à esquerda na origem;
+* o arquivo de vãos da interface sai sem o contorno da `BSP`, com os furos em 75 x 31 (LCD) e 60 x 59 (teclado), cada vão centrado nos seus furos;
+* a ponte abaixo do piso só é aceita na peça onde a spec declara a exceção.
 
 ## Pendências
 
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
 * **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
 * **Frente do armário:** visor, dobradiça e tranca ainda não estão no desenho.
-* **Frente do biométrico:** as aberturas da eletrônica dependem dos componentes escolhidos.
+* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD e o teclado na mão, e só depois o corte oficial. O sensor biométrico ainda não foi escolhido. Detalhe em [docs/componentes.md](docs/componentes.md).
+* **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
 ## Estrutura
 
 | caminho | o que é |
 |---|---|
 | `specs/modulos.json` | todas as medidas, em mm |
+| `docs/componentes.md` | componentes, fonte de cada medida e arquivos |
 | `gerador.py` | desenha faces, feições e peças avulsas, encaixa nas cargas e exporta |
 | `previas.py` | figuras do README |
 | `laser/` | geometria, escritor de DXF, relatório e registro de material |
