@@ -977,6 +977,44 @@ def valida_prancha(spec, placed):
     return problemas
 
 
+def vaos_de_componentes(spec, codigo):
+    """So os vaos e furos dos componentes de uma peca avulsa, sem o contorno.
+
+    E o arquivo para cortar os componentes numa peca que ja saiu da maquina:
+    a peca vai de novo na mesa, alinhada a mao, e o laser corta so isto.
+    """
+    extra = next(e for e in spec["pecas_extras"] if e["codigo"] == codigo)
+    w, h = extra["largura_mm"], extra["altura_mm"]
+    polys = []
+    for ab in extra.get("aberturas", []):
+        if ab.get("componente"):
+            polys += abertura_polys(ab, w, h)
+    if not polys:
+        raise ValueError("a peca %s nao tem abertura com `componente`" % codigo)
+    x0 = min(x for p in polys for x, _ in p)
+    y0 = min(y for p in polys for _, y in p)
+    return [[(x - x0, y - y0) for x, y in p] for p in polys]
+
+
+def exporta_vaos(spec, codigo, nome, margem=5.0):
+    """DXF so com os vaos (origem no canto de baixo a esquerda) e PDF 1:1."""
+    cuts = vaos_de_componentes(spec, codigo)
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts)
+    # o PDF ganha margem para o furo da borda nao sair cortado na pagina
+    vis = [[(x + margem, y + margem) for x, y in p] for p in cuts]
+    w = max(x for p in vis for x, _ in p) + margem
+    h = max(y for p in vis for _, y in p) + margem
+    svg = svg_sheet(vis, [], w, h, labels=True)
+    with open(os.path.join(OUTPUT, nome + ".svg"), "w", encoding="utf-8") as stream:
+        stream.write(svg)
+    write_pdf(svg, w, h, os.path.join(OUTPUT, nome + ".pdf"))
+    ponte = min((geom.dist_poligonos(a, b) for i, a in enumerate(cuts)
+                 for b in cuts[i + 1:]), default=float("inf"))
+    print("vaos %s.dxf | %d contornos | ponte mais fina %.2f mm"
+          % (nome, len(cuts), ponte))
+    return cuts
+
+
 def relatorio(spec, placed, sheet_w, sheet_h):
     """Aproveitamento, perimetro e tamanho de peca.
 
@@ -1019,8 +1057,11 @@ def tabela_pecas(placed, mesa=None):
 
 
 def opcoes(argv):
-    """--filtro REGEX recorta o banco de pecas, --nome STEM nomeia a saida."""
-    filtro = nome = titulo = None
+    """--filtro REGEX recorta o banco de pecas, --nome STEM nomeia a saida.
+
+    --vaos CODIGO exporta so os vaos de componente daquela peca avulsa.
+    """
+    filtro = nome = titulo = vaos = None
     argv = list(argv)
     while argv:
         arg = argv.pop(0)
@@ -1030,16 +1071,24 @@ def opcoes(argv):
             nome = argv.pop(0)
         elif arg == "--titulo" and argv:
             titulo = argv.pop(0)
+        elif arg == "--vaos" and argv:
+            vaos = argv.pop(0)
         else:
             raise SystemExit(
-                "uso: gerador.py [--filtro REGEX] [--nome PASTA/STEM] [--titulo TEXTO]")
-    return filtro, nome, titulo
+                "uso: gerador.py [--filtro REGEX] [--nome PASTA/STEM] [--titulo TEXTO]"
+                " | --vaos CODIGO --nome PASTA/STEM")
+    return filtro, nome, titulo, vaos
 
 
 def main(argv=None):
-    filtro, nome_saida, titulo = opcoes(sys.argv[1:] if argv is None else argv)
+    filtro, nome_saida, titulo, vaos = opcoes(sys.argv[1:] if argv is None else argv)
     with open(SPEC_PATH, encoding="utf-8") as stream:
         spec = json.load(stream)
+    if vaos:
+        nome = nome_saida or "vaos-" + vaos.lower()
+        os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)
+        exporta_vaos(spec, vaos, nome)
+        return
     groups = make_groups(spec)
     nome = nome_saida or spec["nome"]
     os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)
