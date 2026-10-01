@@ -1022,6 +1022,8 @@
       "altura_mm": 560.0,
       "raio_mm": 3.0,
       "laminas": 1,
+      "ponte_aceita_mm": 0.95,
+      "ponte_aceita_motivo": "teclado 4x4: o fabricante poe os furos de 60 x 59 colados no recorte de 60 x 57 com R4; sobra ~1,0 mm de MDF por furo. Decisao do Josh em 01/10/2026: manter os 4 furos",
       "aberturas": [
         {
           "nome": "parafusos",
@@ -1032,6 +1034,97 @@
           "centro_x": true,
           "centro_y": true,
           "linhas_y": 4
+        },
+        {
+          "nome": "moldura do lcd 1602A",
+          "fonte": "foto do LCD do grupo (1602A Ver5.5, 01/10/2026): moldura ~76-77 x ~25, centrada nos furos, passando ~1 mm alem da linha dos furos nas pontas, com a lingueta branca do backlight saindo ~1,5 mm em uma ponta. Os datasheets (Tinsharp TC1602A 71,3 x 26,8; EONE 1602A-1 70,7 x 23,8; HJ1602A 70,8 x 23,8) dao moldura menor e nao batem com esta peca. Vao de 78 x 26 com lingueta de 10 x 1 nas duas pontas, para servir montada de qualquer lado; a moldura atravessa a chapa e a placa parafusa por tras",
+          "tipo": "poligono",
+          "pontos_mm": [
+            [
+              -39.0,
+              -13.0
+            ],
+            [
+              39.0,
+              -13.0
+            ],
+            [
+              39.0,
+              -5.0
+            ],
+            [
+              40.0,
+              -5.0
+            ],
+            [
+              40.0,
+              5.0
+            ],
+            [
+              39.0,
+              5.0
+            ],
+            [
+              39.0,
+              13.0
+            ],
+            [
+              -39.0,
+              13.0
+            ],
+            [
+              -39.0,
+              5.0
+            ],
+            [
+              -40.0,
+              5.0
+            ],
+            [
+              -40.0,
+              -5.0
+            ],
+            [
+              -39.0,
+              -5.0
+            ]
+          ],
+          "centro_x": true,
+          "y_mm": 480.0,
+          "componente": "lcd-1602a"
+        },
+        {
+          "nome": "parafusos do lcd 1602A",
+          "fonte": "Tinsharp TC1602A-01T p.4: 4 furos de 2,5 em 75 x 31 entre centros; passante 2,7 para M2 ou M2,5",
+          "tipo": "parafusos",
+          "diametro_mm": 2.7,
+          "passo_x_mm": 75.0,
+          "passo_y_mm": 31.0,
+          "centro_x": true,
+          "y_mm": 480.0,
+          "componente": "lcd-1602a"
+        },
+        {
+          "nome": "bloco do teclado 4x4",
+          "fonte": "Multicomp MCAK1604NBWB (farnell.com/datasheets/1662717.pdf p.2): recorte de painel 60 x 57, cantos R4, centrado nos furos; folga 0,25 por lado; o bloco atravessa a chapa e a base de 65 x 64 parafusa por tras",
+          "tipo": "janela",
+          "largura_mm": 60.5,
+          "altura_mm": 57.5,
+          "raio_mm": 4.25,
+          "centro_x": true,
+          "y_mm": 380.0,
+          "componente": "teclado-4x4"
+        },
+        {
+          "nome": "parafusos do teclado 4x4",
+          "fonte": "Multicomp MCAK1604NBWB p.2: 4 furos de 2,3 em 60 x 59 entre centros; passante 2,4 para M2",
+          "tipo": "parafusos",
+          "diametro_mm": 2.4,
+          "passo_x_mm": 60.0,
+          "passo_y_mm": 59.0,
+          "centro_x": true,
+          "y_mm": 380.0,
+          "componente": "teclado-4x4"
         }
       ]
     },
