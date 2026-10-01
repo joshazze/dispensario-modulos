@@ -408,3 +408,62 @@ def test_enforca_gato_nao_encosta_em_outra_feicao():
                 for o in outros:
                     d = geom.dist_poligonos(r, o)
                     assert d >= piso, "B%d%s: ponte de %.2f mm" % (face, lamina, d)
+
+
+def _furos(polys, diametro):
+    """Centros dos circulos de um diametro, lidos do proprio contorno."""
+    centros = []
+    for p in polys:
+        x0, y0, x1, y1 = geom.bbox(p)
+        if abs((x1 - x0) - diametro) < 0.05 and abs((y1 - y0) - diametro) < 0.05:
+            centros.append(((x0 + x1) / 2.0, (y0 + y1) / 2.0))
+    return centros
+
+
+def _passo(centros):
+    xs = [x for x, _ in centros]
+    ys = [y for _, y in centros]
+    return max(xs) - min(xs), max(ys) - min(ys), (max(xs) + min(xs)) / 2.0, (max(ys) + min(ys)) / 2.0
+
+
+def test_vaos_da_interface_saem_sem_o_contorno_da_peca():
+    """O arquivo de vaos corta numa BSP que ja existe: so componente, nada de borda."""
+    cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
+    assert len(cuts) == 10                      # 2 vaos + 4 furos do LCD + 4 do teclado
+    assert min(x for p in cuts for x, _ in p) == 0.0
+    assert min(y for p in cuts for _, y in p) == 0.0
+    largura = max(x for p in cuts for x, _ in p)
+    assert largura < 100.0                      # a BSP tem 240: o contorno nao veio junto
+
+
+def test_furos_do_lcd_e_do_teclado_batem_com_o_datasheet():
+    cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
+    lx, ly, lcx, lcy = _passo(_furos(cuts, 2.7))
+    tx, ty, tcx, tcy = _passo(_furos(cuts, 2.4))
+    assert (round(lx, 2), round(ly, 2)) == (75.0, 31.0)     # LCD 1602A
+    assert (round(tx, 2), round(ty, 2)) == (60.0, 59.0)     # teclado 4x4 MCAK1604
+    assert abs(lcx - tcx) < 1e-6                             # mesmo eixo vertical
+    assert abs((lcy - tcy) - 100.0) < 1e-6                   # LCD 100 mm acima
+
+
+def test_vao_centrado_nos_furos_de_cada_componente():
+    cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
+    for diametro in (2.7, 2.4):
+        _, _, cx, cy = _passo(_furos(cuts, diametro))
+        vaos = [p for p in cuts if len(p) > 4 and geom.bbox(p)[0] < cx < geom.bbox(p)[2]
+                and geom.bbox(p)[1] < cy < geom.bbox(p)[3]]
+        assert len(vaos) == 1, diametro
+        x0, y0, x1, y1 = geom.bbox(vaos[0])
+        assert abs((x0 + x1) / 2.0 - cx) < 1e-6
+        assert abs((y0 + y1) / 2.0 - cy) < 1e-6
+
+
+def test_ponte_fina_so_e_aceita_onde_a_spec_declara():
+    spec = load_spec()
+    bsp = next(e for e in spec["pecas_extras"] if e["codigo"] == "BSP")
+    assert bsp["ponte_aceita_motivo"]
+    _, _, _, _, _, placed = build()
+    assert gerador.valida_prancha(spec, placed) == []
+    for unit, _, _, _ in placed:
+        unit["ponte_aceita_mm"] = None
+    assert any("BSP: ponte" in linha for linha in gerador.valida_prancha(spec, placed))
