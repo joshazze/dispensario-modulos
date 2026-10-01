@@ -302,6 +302,11 @@ def abertura_polys(ab, w, h):
             lh = ab["altura_mm"]
             saida.append(geom.rrect(cx - lw / 2.0, cy - lh / 2.0, lw, lh,
                                     ab.get("raio_mm", 0.0)))
+        elif tipo == "poligono":
+            # contorno livre, em mm relativos ao centro da feicao: e o vao da
+            # moldura do LCD, que nao e retangulo puro por causa da lingueta
+            # branca do backlight saindo nas pontas
+            saida.append([(cx + px, cy + py) for px, py in ab["pontos_mm"]])
         elif tipo == "parafusos":
             # grade de nx por ny sobre o retangulo passo_x por passo_y.
             # 2 x 2 e o quadrado de cantos; ny maior distribui a fixacao ao
