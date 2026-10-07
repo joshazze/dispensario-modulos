@@ -101,7 +101,9 @@ Cada feição está explicada, com medida e regra, no [design system](https://gi
 
 <p align="center"><img src="docs/armario-prancha.svg" alt="Peças do armário" width="560"></p>
 
-Por enquanto o armário é só a casca: seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) sai fechada, sem vão de porta. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira repete a dele: quatro estações em cada aresta vertical, uma dupla no topo e outra no rodapé das paredes, quatro duplas radiais no piso e no teto.
+Por enquanto o armário é só a casca: seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) sai fechada, sem vão de porta. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira é a mesma do biométrico, só que mais densa: oito estações em cada aresta vertical e cinco duplas em cada aresta de 750 mm (topo e rodapé do fundo e da frente, e os lados longos do piso e do teto). As arestas de 250 mm seguem com uma dupla no meio.
+
+`modulo-armario-externas` é o recorte com uma lâmina externa de cada face (`A1E` a `A6E`), para conferir a casca sem as internas.
 
 Todas as peças cabem na mesa. São 7 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira.
 
