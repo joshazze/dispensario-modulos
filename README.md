@@ -13,7 +13,7 @@ Componentes comprados (LCD, teclado, parafusos, prensa-cabo), a fonte de cada me
 | módulo | medida externa (L x A x P) | peças | situação |
 |---|---|---|---|
 | Biométrico, código `B` | 250 x 1000 x 250 mm | 19 | **pronto para a máquina**, em 4 cargas de até 1000 x 1000 mm |
-| Armário, código `A` | 750 x 1000 x 250 mm | 14 | **só a casca**: 6 cargas, frente em moldura, porta e interior pendentes |
+| Armário, código `A` | 750 x 1000 x 250 mm | 29 | casca, nicho interno e espaçadores em 6 cargas; porta pendente |
 
 Já cortadas em 03/09/2026: `BP1`, `BP2`, `BP3`, `BSP`, `B3E`, `B5E`, `BTR` e `BTF`. A `BSP` foi cortada antes de ganhar os vãos do LCD e do teclado; eles saem num arquivo à parte, `interface-vaos.dxf`, para cortar na peça que já existe.
 
@@ -32,7 +32,9 @@ cortes/
 │   └── interface-vaos.dxf             ← só os vãos do LCD e do teclado, sem contorno
 └── armario/
     ├── modulo-armario-bloco1.dxf      ← cargas 1 a 6 da máquina (e .pdf, .svg)
-    └── modulo-armario.dxf             ← as 14 peças numa prancha só
+    ├── modulo-armario.dxf             ← as 29 peças numa prancha só
+    ├── modulo-armario-externas.dxf    ← só uma lâmina externa de cada face
+    └── modulo-armario-nicho.dxf       ← só o nicho e os espaçadores
 ```
 
 Para a máquina vai o `.dxf`. O `.pdf` tem a mesma prancha em escala 1:1 para conferir na tela ou imprimir, e o `.svg` é o mesmo desenho em vetor.
@@ -101,11 +103,15 @@ Cada feição está explicada, com medida e regra, no [design system](https://gi
 
 <p align="center"><img src="docs/armario-prancha.svg" alt="Peças do armário" width="560"></p>
 
-Por enquanto o armário é só a casca: seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) é uma moldura de 70 mm em volta de um vão único de 610 x 860 mm, ainda sem porta; o miolo do vão aloja as duas tampas de 750 x 250 na mesma carga. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira é a mesma do biométrico, só que mais densa: oito estações em cada aresta vertical e cinco duplas em cada aresta de 750 mm (topo e rodapé do fundo e da frente, e os lados longos do piso e do teto). As arestas de 250 mm seguem com uma dupla no meio.
+A casca do armário são seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) é uma moldura de 70 mm em volta de um vão único de 610 x 860 mm, ainda sem porta; o miolo do vão aloja as duas tampas de 750 x 250 na mesma carga. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira é a mesma do biométrico, só que mais densa: oito estações em cada aresta vertical e cinco duplas em cada aresta de 750 mm (topo e rodapé do fundo e da frente, e os lados longos do piso e do teto). As arestas de 250 mm seguem com uma dupla no meio.
+
+Dentro da casca vai o **nicho** (`AN1` a `AN5`): uma caixa de cinco faces em lâmina única de 3 mm, sem frente, que por dentro mede exatamente o vão da moldura (610 x 860) e tem 236 mm de profundidade. Entre o nicho e a casca sobra uma folga de 61 mm nos quatro lados, que é por onde os fios correm depois de entrar pelas laterais.
+
+Quem segura o nicho no lugar são dez **espaçadores** iguais (`AE1` a `AE10`), costelas de 160 x 61 mm com duas abas de 30 x 3 de cada lado. As abas de um lado atravessam a parede do nicho; as do outro entram só na lâmina interna da casca, então por fora o armário continua liso. São três por lateral, nas alturas de 250, 500 e 750 mm, e dois no piso e dois no teto, a 250 e 500 mm da lateral.
 
 `modulo-armario-externas` é o recorte com uma lâmina externa de cada face (`A1E` a `A6E`), para conferir a casca sem as internas.
 
-Todas as peças cabem na mesa. São 6 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira.
+Todas as peças cabem na mesa. São 6 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira; o nicho e os espaçadores entram nas sobras.
 
 ## Gerar de novo
 
@@ -147,7 +153,7 @@ São 27 testes. Entre outras coisas, eles garantem que:
 
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
 * **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
-* **Armário:** só a casca está desenhada. Porta, visor, dobradiça, tranca e o interior ficam para depois.
+* **Armário:** casca, nicho e espaçadores estão desenhados. Porta, visor, dobradiça, tranca, fixação do nicho na moldura e divisórias internas ficam para depois.
 * **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD e o teclado na mão, e só depois o corte oficial. O sensor biométrico ainda não foi escolhido. Detalhe em [docs/componentes.md](docs/componentes.md).
 * **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
