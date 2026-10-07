@@ -275,6 +275,15 @@ def test_gota_nao_fica_debaixo_da_placa_de_manutencao():
     assert H - (fix["y_alto_mm"] + topo_da_fenda) >= 2 * spec["espessura_mm"]
 
 
+def _eg_do_modulo(spec, modulo):
+    """Estacoes do enforca-gato: o modulo pode declarar as suas por cima do padrao."""
+    mod = next(m for m in spec["modulos"] if m["codigo"] == modulo)
+    proprio = mod.get("enforca_gato", {})
+    alturas = proprio.get("alturas_mm", spec["enforca_gato"]["alturas_mm"])
+    longa = proprio.get("centros_aresta_longa_mm")
+    return mod, alturas, longa
+
+
 def _rasgos_eg(peca, eg, em_pe):
     """Separa os rasgos de enforca-gato pela orientacao do retangulo."""
     comp, larg = eg["rasgo_comprimento_mm"], eg["rasgo_largura_mm"]
@@ -298,7 +307,8 @@ def test_enforca_gato_em_pe_com_uma_dupla_por_peca(modulo):
     assert comp > eg["fita_largura_mm"]
     groups = gerador.make_groups(spec)
     por_codigo = {p["code"]: p for g in groups for p in g["pieces"]}
-    esperado = 2 * len(eg["alturas_mm"]) * 2  # duas arestas, N estacoes, um par
+    _, alturas_mm, _ = _eg_do_modulo(spec, modulo)
+    esperado = 2 * len(alturas_mm) * 2        # duas arestas, N estacoes, um par
     for face in eg["faces"]:
         for lamina in ("I", "E"):
             code = "%s%d%s" % (modulo, face, lamina)
@@ -310,7 +320,7 @@ def test_enforca_gato_em_pe_com_uma_dupla_por_peca(modulo):
                 cx = (geom.bbox(r)[0] + geom.bbox(r)[2]) / 2.0
                 assert min(cx - x0, x1 - cx) <= limite + 1e-6
             alturas = {round((geom.bbox(r)[1] + geom.bbox(r)[3]) / 2.0, 3) for r in rasgos}
-            assert len(alturas) == len(eg["alturas_mm"])
+            assert len(alturas) == len(alturas_mm)
             larguras = {round((geom.bbox(r)[0] + geom.bbox(r)[2]) / 2.0, 3) for r in rasgos}
             assert len(larguras) == 4
 
@@ -322,21 +332,25 @@ def test_junta_horizontal_tem_dupla_em_cada_parede_e_quatro_no_piso(modulo):
     eg = spec["enforca_gato"]
     groups = gerador.make_groups(spec)
     por_codigo = {p["code"]: p for g in groups for p in g["pieces"]}
+    _, _, longa = _eg_do_modulo(spec, modulo)
+    n_longa = len(longa) if longa else 1      # duplas por aresta longa
     for face in eg["faces"]:
+        duplas = n_longa if face in (1, 6) else 1
         for lamina in ("I", "E"):
             peca = por_codigo["%s%d%s" % (modulo, face, lamina)]
             deitados = _rasgos_eg(peca, eg, em_pe=False)
-            assert len(deitados) == 4, "%s%d%s" % (modulo, face, lamina)
+            assert len(deitados) == 4 * duplas, "%s%d%s" % (modulo, face, lamina)
             _, y0, _, y1 = geom.bbox(peca["outline"])
             perto_do_topo = [r for r in deitados
                              if y1 - (geom.bbox(r)[1] + geom.bbox(r)[3]) / 2.0 < 60]
-            assert len(perto_do_topo) == 2
+            assert len(perto_do_topo) == 2 * duplas
     for face in eg["faces_tampa"]:
         for lamina in ("I", "E"):
             peca = por_codigo["%s%d%s" % (modulo, face, lamina)]
             total = (len(_rasgos_eg(peca, eg, em_pe=False))
                      + len(_rasgos_eg(peca, eg, em_pe=True)))
-            assert total == 8, "%s%d%s" % (modulo, face, lamina)   # 4 duplas radiais
+            # duas arestas longas com n_longa duplas, duas curtas com uma
+            assert total == 4 * n_longa + 4, "%s%d%s" % (modulo, face, lamina)
 
 
 def test_prancha_nao_gira_peca_quando_a_trava_esta_ligada():
