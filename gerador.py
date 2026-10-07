@@ -70,13 +70,17 @@ def boxmaker_panel_defs(module, spec):
     As dimensoes informadas sao externas. A espessura estrutural e a soma das
     laminas. O gerador de referencia cuida dos deslocamentos de canto,
     numero impar de divisoes e polaridade de cada uma das 24 arestas.
+
+    `caixa: "sem_frente"` no modulo gera cinco faces, com a aresta da boca reta.
     """
+    if module.get("caixa") == "sem_frente":
+        return _painel_defs_sem_frente(module, spec)
     core = BoxMakerCore()
     core.set_parameters(
         length=module["largura_externa_mm"],
         width=module["profundidade_externa_mm"],
         height=module["altura_externa_mm"],
-        thickness=spec["espessura_final_mm"],
+        thickness=espessura_do_modulo(module, spec),
         kerf=spec["kerf_mm"] if spec["compensar_kerf"] else 0.0,
         tab=spec["junta_dedo"]["passo_alvo_mm"],
         style=LayoutStyle.SEPARATED,
@@ -111,6 +115,64 @@ def boxmaker_panel_defs(module, spec):
             width, height = height, width
         faces.append((title, normalized, width, height))
     return faces
+
+
+def camadas_do_modulo(module, spec):
+    """Laminas por painel: o modulo pode declarar as suas por cima do padrao."""
+    return module.get("camadas", spec["camadas_por_painel"])
+
+
+def espessura_do_modulo(module, spec):
+    return spec["espessura_mm"] * camadas_do_modulo(module, spec)
+
+
+def _faces_do_boxmaker(core, paths):
+    """Junta as quatro arestas de cada face num contorno com origem em (0, 0)."""
+    faces = []
+    for index in range(len(paths) // 4):
+        points = []
+        for path in paths[index * 4:index * 4 + 4]:
+            edge = core.extract_coords_from_path(path["data"])
+            if points and edge and math.hypot(points[-1][0] - edge[0][0], points[-1][1] - edge[0][1]) < 1e-7:
+                edge = edge[1:]
+            points.extend(edge)
+        min_x = min(x for x, _ in points)
+        min_y = min(y for _, y in points)
+        normalized = clean_polygon([(x - min_x, y - min_y) for x, y in points])
+        faces.append((normalized, max(x for x, _ in normalized), max(y for _, y in normalized)))
+    return faces
+
+
+def _painel_defs_sem_frente(module, spec):
+    """Cinco faces: fundo, duas laterais, piso e teto. A boca fica na frente.
+
+    O TabbedBoxMaker so sabe tirar a face de cima, entao a caixa e gerada
+    deitada, com a profundidade no eixo da altura, e a face que falta vira a
+    frente. Laterais ja saem em pe (profundidade x altura), sem girar.
+    """
+    core = BoxMakerCore()
+    core.set_parameters(
+        length=module["largura_externa_mm"],
+        width=module["altura_externa_mm"],
+        height=module["profundidade_externa_mm"],
+        thickness=espessura_do_modulo(module, spec),
+        kerf=spec["kerf_mm"] if spec["compensar_kerf"] else 0.0,
+        tab=spec["junta_dedo"]["passo_alvo_mm"],
+        style=LayoutStyle.SEPARATED,
+        boxtype=BoxType.NO_TOP,
+        tabtype=TabType.LASER,
+        div_l=0,
+        div_w=0,
+        inside=0,
+    )
+    paths = core.generate_box()["paths"]
+    if len(paths) != 20:
+        raise ValueError("esperadas 20 arestas para cinco faces, recebidas %d" % len(paths))
+    geradas = _faces_do_boxmaker(core, paths)
+    # Ordem da biblioteca: piso, lateral, fundo, lateral, teto.
+    ordem = [(2, "fundo"), (1, "lateral esquerda"), (0, "piso"),
+             (3, "lateral direita"), (4, "teto")]
+    return [(titulo,) + geradas[indice] for indice, titulo in ordem]
 
 
 def positions(length, end_margin, max_step):
@@ -171,11 +233,12 @@ def layer_fasteners(centers, layer, panel_height, cfg):
 def layer_names(count):
     """Nomes e ordem das laminas, da face interna para a externa."""
     layouts = {
+        1: ("unica",),
         2: ("interna", "externa"),
         3: ("interna", "central", "externa"),
     }
     if count not in layouts:
-        raise ValueError("camadas_por_painel deve ser 2 ou 3")
+        raise ValueError("camadas por painel deve ser 1, 2 ou 3")
     return layouts[count]
 
 
@@ -428,6 +491,27 @@ def prateleira_u(cfg):
     return [(x + aba, y) for x, y in pts]
 
 
+def espacador(cfg):
+    """Costela que trava o nicho dentro da casca: corpo do tamanho do vao, abas dos dois lados.
+
+    O corpo ocupa a folga entre as duas caixas. As abas de um lado atravessam
+    a parede do nicho e as do outro entram so na lamina interna da casca.
+    """
+    comp, folga, aba = cfg["comprimento_mm"], cfg["folga_mm"], cfg["aba_mm"]
+    aw = cfg["aba_largura_mm"]
+    centros = sorted(cfg["aba_centros_mm"])
+    pts = [(0.0, aba)]
+    for c in centros:
+        pts += [(c - aw / 2.0, aba), (c - aw / 2.0, 0.0),
+                (c + aw / 2.0, 0.0), (c + aw / 2.0, aba)]
+    pts += [(comp, aba), (comp, aba + folga)]
+    for c in reversed(centros):
+        pts += [(c + aw / 2.0, aba + folga), (c + aw / 2.0, 2 * aba + folga),
+                (c - aw / 2.0, 2 * aba + folga), (c - aw / 2.0, aba + folga)]
+    pts.append((0.0, aba + folga))
+    return pts
+
+
 def pecas_extras(spec):
     """Folhas de porta, sub-painel da interface e tampas dos passa-fios.
 
@@ -447,6 +531,10 @@ def pecas_extras(spec):
             w = extra["largura_mm"]
             h = extra["altura_mm"]
             contorno = geom.rrect(0.0, 0.0, w, h, min(w, h) / 2.0)
+        elif extra["tipo"] == "espacador":
+            contorno = espacador(extra)
+            x0, y0, x1, y1 = geom.bbox(contorno)
+            w, h = x1 - x0, y1 - y0
         elif extra["tipo"] == "retangulo":
             w = extra["largura_mm"]
             h = extra["altura_mm"]
@@ -479,15 +567,15 @@ def make_groups(spec):
         raise ValueError("espessura final difere da soma das laminas")
     if abs(spec["junta_dedo"]["profundidade_mm"] - spec["espessura_final_mm"]) > 1e-8:
         raise ValueError("profundidade da junta deve ser igual a espessura final")
-    layers = layer_names(spec["camadas_por_painel"])
     groups = []
     for module in spec["modulos"]:
+        layers = layer_names(camadas_do_modulo(module, spec))
         for face_number, (title, outline, w, h) in enumerate(boxmaker_panel_defs(module, spec), 1):
             centers = (panel_hole_centers(w, h, spec["m3"])
                        if spec.get("fixacoes_m3", False) else [])
             pieces = []
             for layer in layers:
-                layer_code = "I" if layer == "interna" else ("E" if layer == "externa" else "C")
+                layer_code = {"interna": "I", "externa": "E", "unica": ""}.get(layer, "C")
                 feicoes = (layer_fasteners(centers, layer, h, spec["m3"])
                            + aberturas_da_face(module, face_number, layer, w, h))
                 pieces.append({

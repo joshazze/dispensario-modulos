@@ -53,10 +53,11 @@ def test_paineis_usam_duas_laminas_de_tres_milimetros():
 
 def test_seis_faces_por_modulo_em_duas_laminas():
     groups = gerador.make_groups(load_spec())
-    assert len(groups) == 12
-    assert sum(len(group["pieces"]) for group in groups) == 24
+    # dois modulos de seis faces em lamina dupla, mais o nicho de cinco em lamina unica
+    assert len(groups) == 17
+    assert sum(len(group["pieces"]) for group in groups) == 29
     codes = {piece["code"] for group in groups for piece in group["pieces"]}
-    assert len(codes) == 24
+    assert len(codes) == 29
     assert {"B1I", "B6E", "A1I", "A6E"} <= codes
 
 
@@ -64,7 +65,7 @@ def test_prancha_e_uma_so_com_legenda_tampas_e_sub_painel():
     _, _, engrave, _, _, placed = build()
     codes = {u["code"] for u, _, _, _ in placed}
     gravados = {i["texto"] for i in engrave if i["tipo"] == "texto"}
-    assert len(placed) == 33
+    assert len(placed) == 48
     assert "BPM" in codes                                 # placa de manutencao do fundo
     assert {"BP1", "BP2", "BP3"} <= codes                 # tres prateleiras, uma lamina
     assert {"ATR", "ATF", "BTR", "BTF"} <= codes          # tampa rosqueada e cega
@@ -104,6 +105,89 @@ def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():
         assert por_codigo[code]["vazios"], code       # janela da interface e vazio util
     for code in ("A6I", "A6E"):
         assert len(por_codigo[code]["vazios"]) == 1   # frente em moldura, um vao so
+
+
+def test_nicho_tem_cinco_faces_e_a_boca_do_tamanho_do_vao_da_moldura():
+    """O nicho completa a caixa por tras da moldura: por dentro mede o vao dela."""
+    spec = load_spec()
+    arm = next(m for m in spec["modulos"] if m["codigo"] == "A")
+    nicho = next(m for m in spec["modulos"] if m["codigo"] == "AN")
+    vao = next(a for a in arm["aberturas"] if a["nome"] == "vao da moldura")
+    t = spec["espessura_mm"]
+    assert nicho["largura_externa_mm"] - 2 * t == vao["largura_mm"]
+    assert nicho["altura_externa_mm"] - 2 * t == vao["altura_mm"]
+    # cabe entre a moldura e o fundo do armario
+    assert nicho["profundidade_externa_mm"] <= (
+        arm["profundidade_externa_mm"] - 2 * spec["espessura_final_mm"])
+    por_codigo = {p["code"]: p for g in gerador.make_groups(spec) for p in g["pieces"]}
+    assert {"AN1", "AN2", "AN3", "AN4", "AN5"} <= set(por_codigo)
+    assert "AN6" not in por_codigo
+    P, H, W = (nicho["profundidade_externa_mm"], nicho["altura_externa_mm"],
+               nicho["largura_externa_mm"])
+    assert (por_codigo["AN1"]["w"], por_codigo["AN1"]["h"]) == (W, H)
+    for code in ("AN2", "AN4"):
+        assert (por_codigo[code]["w"], por_codigo[code]["h"]) == (P, H)
+    for code in ("AN3", "AN5"):
+        assert (por_codigo[code]["w"], por_codigo[code]["h"]) == (W, P)
+
+    def retas(code):
+        """Quantas das quatro arestas do contorno nao tem dedo nenhum."""
+        pts = por_codigo[code]["outline"]
+        w, h = por_codigo[code]["w"], por_codigo[code]["h"]
+        bordas = [[x for x, _ in pts if x < 2 * t], [w - x for x, _ in pts if w - x < 2 * t],
+                  [y for _, y in pts if y < 2 * t], [h - y for _, y in pts if h - y < 2 * t]]
+        return sum(1 for b in bordas if max(b) < 1e-6)
+
+    assert retas("AN1") == 0                  # fundo encaixa nos quatro lados
+    for code in ("AN2", "AN3", "AN4", "AN5"):
+        assert retas(code) == 1, code         # a aresta da boca e reta
+
+
+def test_espacador_bate_com_os_rasgos_das_duas_caixas():
+    """A costela ocupa a folga entre casca e nicho e as abas acham rasgo dos dois lados."""
+    spec = load_spec()
+    cfg = spec["espacadores"]
+    arm = next(m for m in spec["modulos"] if m["codigo"] == "A")
+    nicho = next(m for m in spec["modulos"] if m["codigo"] == "AN")
+    t, tf = spec["espessura_mm"], spec["espessura_final_mm"]
+    W, H, P = (arm["largura_externa_mm"], arm["altura_externa_mm"],
+               arm["profundidade_externa_mm"])
+    nw, nh, np_ = (nicho["largura_externa_mm"], nicho["altura_externa_mm"],
+                   nicho["profundidade_externa_mm"])
+    # a mesma folga nos quatro lados, e o corpo do espacador e exatamente ela
+    assert (W - 2 * tf - nw) / 2.0 == (H - 2 * tf - nh) / 2.0 == cfg["folga_mm"]
+    assert cfg["aba_mm"] == t                 # atravessa o nicho, para na lamina interna
+
+    por_codigo = {p["code"]: p for g in gerador.make_groups(spec) for p in g["pieces"]}
+    aw = cfg["aba_largura_mm"]
+
+    def rasgos(code):
+        saida = []
+        for f in por_codigo[code]["fasteners"]:
+            x0, y0, x1, y1 = geom.bbox(f)
+            if sorted((round(x1 - x0, 6), round(y1 - y0, 6))) == sorted((aw, t)):
+                saida.append((round((x0 + x1) / 2.0, 6), round((y0 + y1) / 2.0, 6)))
+        return sorted(saida)
+
+    abas = len(cfg["aba_centros_mm"])
+    dx, dy, dp = (W - nw) / 2.0, (H - nh) / 2.0, (P - np_) / 2.0
+    for face in (2, 4):                       # laterais: x e profundidade, y e altura
+        casca, miolo = rasgos("A%dI" % face), rasgos("AN%d" % face)
+        assert len(casca) == len(miolo) == abas * len(cfg["alturas_mm"])
+        assert casca == sorted((round(x + dp, 6), round(y + dy, 6)) for x, y in miolo)
+        assert rasgos("A%dE" % face) == []    # por fora a casca fica lisa
+    for face in (3, 5):                       # piso e teto: x e largura, y e profundidade
+        casca, miolo = rasgos("A%dI" % face), rasgos("AN%d" % face)
+        assert len(casca) == len(miolo) == abas * len(cfg["posicoes_largura_mm"])
+        assert casca == sorted((round(x + dx, 6), round(y + dp, 6)) for x, y in miolo)
+        assert rasgos("A%dE" % face) == []
+
+    pecas = [e for e in spec["pecas_extras"] if e["tipo"] == "espacador"]
+    assert len(pecas) == 2 * len(cfg["alturas_mm"]) + 2 * len(cfg["posicoes_largura_mm"])
+    for e in pecas:
+        contorno = gerador.espacador(e)
+        x0, y0, x1, y1 = geom.bbox(contorno)
+        assert (x1 - x0, y1 - y0) == (cfg["comprimento_mm"], cfg["folga_mm"] + 2 * t)
 
 
 def test_nenhuma_peca_invade_outra():

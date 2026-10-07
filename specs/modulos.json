@@ -2739,6 +2739,226 @@
           "x_mm": 33.0,
           "centro_y": true,
           "espelhado": true
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 85.0,
+          "y_mm": 250.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 165.0,
+          "y_mm": 250.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 85.0,
+          "y_mm": 500.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 165.0,
+          "y_mm": 500.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 85.0,
+          "y_mm": 750.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 165.0,
+          "y_mm": 750.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 85.0,
+          "y_mm": 250.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 165.0,
+          "y_mm": 250.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 85.0,
+          "y_mm": 500.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 165.0,
+          "y_mm": 500.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 85.0,
+          "y_mm": 750.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 165.0,
+          "y_mm": 750.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 250.0,
+          "y_mm": 85.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 250.0,
+          "y_mm": 165.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 500.0,
+          "y_mm": 85.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 500.0,
+          "y_mm": 165.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 250.0,
+          "y_mm": 85.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 250.0,
+          "y_mm": 165.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 500.0,
+          "y_mm": 85.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "interna",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 500.0,
+          "y_mm": 165.0
         }
       ],
       "enforca_gato": {
@@ -2761,6 +2981,243 @@
         ]
       },
       "moldura_frontal_mm": 70.0
+    },
+    {
+      "prefixo": "nic",
+      "codigo": "AN",
+      "nome": "nicho do armario",
+      "caixa": "sem_frente",
+      "camadas": 1,
+      "vao_interno_mm": [
+        610.0,
+        860.0
+      ],
+      "largura_externa_mm": 616.0,
+      "altura_externa_mm": 866.0,
+      "profundidade_externa_mm": 236.0,
+      "observacao_frontal": "boca aberta do tamanho do vao da moldura; fixacao na moldura pendente",
+      "aberturas": [
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 78.0,
+          "y_mm": 183.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 158.0,
+          "y_mm": 183.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 78.0,
+          "y_mm": 433.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 158.0,
+          "y_mm": 433.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 78.0,
+          "y_mm": 683.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 2,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 158.0,
+          "y_mm": 683.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 78.0,
+          "y_mm": 183.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 158.0,
+          "y_mm": 183.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 78.0,
+          "y_mm": 433.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 158.0,
+          "y_mm": 433.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 78.0,
+          "y_mm": 683.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 30.0,
+          "altura_mm": 3.0,
+          "raio_mm": 0.6,
+          "x_mm": 158.0,
+          "y_mm": 683.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 183.0,
+          "y_mm": 78.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 183.0,
+          "y_mm": 158.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 433.0,
+          "y_mm": 78.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 3,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 433.0,
+          "y_mm": 158.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 183.0,
+          "y_mm": 78.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 183.0,
+          "y_mm": 158.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 433.0,
+          "y_mm": 78.0
+        },
+        {
+          "nome": "rasgo de espacador",
+          "tipo": "rasgo",
+          "face": 5,
+          "camadas": "todas",
+          "largura_mm": 3.0,
+          "altura_mm": 30.0,
+          "raio_mm": 0.6,
+          "x_mm": 433.0,
+          "y_mm": 158.0
+        }
+      ]
     }
   ],
   "passa_fio": {
@@ -3057,6 +3514,146 @@
           "centro_y": true
         }
       ]
+    },
+    {
+      "codigo": "AE1",
+      "nome": "espacador 1 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE2",
+      "nome": "espacador 2 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE3",
+      "nome": "espacador 3 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE4",
+      "nome": "espacador 4 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE5",
+      "nome": "espacador 5 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE6",
+      "nome": "espacador 6 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE7",
+      "nome": "espacador 7 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE8",
+      "nome": "espacador 8 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE9",
+      "nome": "espacador 9 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
+    },
+    {
+      "codigo": "AE10",
+      "nome": "espacador 10 do nicho",
+      "tipo": "espacador",
+      "laminas": 1,
+      "folga_mm": 61.0,
+      "comprimento_mm": 160.0,
+      "aba_mm": 3.0,
+      "aba_largura_mm": 30.0,
+      "aba_centros_mm": [
+        40.0,
+        120.0
+      ]
     }
   ],
   "prateleiras": {
@@ -3130,5 +3727,25 @@
       5
     ]
   },
-  "gravar_codigos": false
+  "gravar_codigos": false,
+  "espacadores": {
+    "folga_mm": 61.0,
+    "comprimento_mm": 160.0,
+    "aba_mm": 3.0,
+    "aba_largura_mm": 30.0,
+    "aba_centros_mm": [
+      40.0,
+      120.0
+    ],
+    "alturas_mm": [
+      250.0,
+      500.0,
+      750.0
+    ],
+    "posicoes_largura_mm": [
+      250.0,
+      500.0
+    ],
+    "raio_rasgo_mm": 0.6
+  }
 }
