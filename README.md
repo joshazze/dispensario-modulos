@@ -13,7 +13,7 @@ Componentes comprados (LCD, teclado, parafusos, prensa-cabo), a fonte de cada me
 | módulo | medida externa (L x A x P) | peças | situação |
 |---|---|---|---|
 | Biométrico, código `B` | 250 x 1000 x 250 mm | 19 | **pronto para a máquina**, em 4 cargas de até 1000 x 1000 mm |
-| Armário, código `A` | 750 x 1000 x 250 mm | 14 | **só a casca**: 7 cargas, frente fechada, porta e interior pendentes |
+| Armário, código `A` | 750 x 1000 x 250 mm | 14 | **só a casca**: 6 cargas, frente em moldura, porta e interior pendentes |
 
 Já cortadas em 03/09/2026: `BP1`, `BP2`, `BP3`, `BSP`, `B3E`, `B5E`, `BTR` e `BTF`. A `BSP` foi cortada antes de ganhar os vãos do LCD e do teclado; eles saem num arquivo à parte, `interface-vaos.dxf`, para cortar na peça que já existe.
 
@@ -31,7 +31,7 @@ cortes/
 │   ├── modulo-biometrico.dxf          ← as 19 peças numa prancha só
 │   └── interface-vaos.dxf             ← só os vãos do LCD e do teclado, sem contorno
 └── armario/
-    ├── modulo-armario-bloco1.dxf      ← cargas 1 a 7 da máquina (e .pdf, .svg)
+    ├── modulo-armario-bloco1.dxf      ← cargas 1 a 6 da máquina (e .pdf, .svg)
     └── modulo-armario.dxf             ← as 14 peças numa prancha só
 ```
 
@@ -101,11 +101,11 @@ Cada feição está explicada, com medida e regra, no [design system](https://gi
 
 <p align="center"><img src="docs/armario-prancha.svg" alt="Peças do armário" width="560"></p>
 
-Por enquanto o armário é só a casca: seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) sai fechada, sem vão de porta. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira é a mesma do biométrico, só que mais densa: oito estações em cada aresta vertical e cinco duplas em cada aresta de 750 mm (topo e rodapé do fundo e da frente, e os lados longos do piso e do teto). As arestas de 250 mm seguem com uma dupla no meio.
+Por enquanto o armário é só a casca: seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) é uma moldura de 70 mm em volta de um vão único de 610 x 860 mm, ainda sem porta; o miolo do vão aloja as duas tampas de 750 x 250 na mesma carga. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira é a mesma do biométrico, só que mais densa: oito estações em cada aresta vertical e cinco duplas em cada aresta de 750 mm (topo e rodapé do fundo e da frente, e os lados longos do piso e do teto). As arestas de 250 mm seguem com uma dupla no meio.
 
 `modulo-armario-externas` é o recorte com uma lâmina externa de cada face (`A1E` a `A6E`), para conferir a casca sem as internas.
 
-Todas as peças cabem na mesa. São 7 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira.
+Todas as peças cabem na mesa. São 6 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira.
 
 ## Gerar de novo
 
