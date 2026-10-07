@@ -13,7 +13,7 @@ Componentes comprados (LCD, teclado, parafusos, prensa-cabo), a fonte de cada me
 | módulo | medida externa (L x A x P) | peças | situação |
 |---|---|---|---|
 | Biométrico, código `B` | 250 x 1000 x 250 mm | 19 | **pronto para a máquina**, em 4 cargas de até 1000 x 1000 mm |
-| Armário, código `A` | 1260 x 1500 x 350 mm | 20 | **rascunho**: 12 painéis são maiores que a mesa |
+| Armário, código `A` | 750 x 1000 x 250 mm | 14 | **só a casca**: 7 cargas, frente fechada, porta e interior pendentes |
 
 Já cortadas em 03/09/2026: `BP1`, `BP2`, `BP3`, `BSP`, `B3E`, `B5E`, `BTR` e `BTF`. A `BSP` foi cortada antes de ganhar os vãos do LCD e do teclado; eles saem num arquivo à parte, `interface-vaos.dxf`, para cortar na peça que já existe.
 
@@ -31,7 +31,8 @@ cortes/
 │   ├── modulo-biometrico.dxf          ← as 19 peças numa prancha só
 │   └── interface-vaos.dxf             ← só os vãos do LCD e do teclado, sem contorno
 └── armario/
-    └── modulo-armario.dxf             ← prancha de conferência, ainda não cortável
+    ├── modulo-armario-bloco1.dxf      ← cargas 1 a 7 da máquina (e .pdf, .svg)
+    └── modulo-armario.dxf             ← as 14 peças numa prancha só
 ```
 
 Para a máquina vai o `.dxf`. O `.pdf` tem a mesma prancha em escala 1:1 para conferir na tela ou imprimir, e o `.svg` é o mesmo desenho em vetor.
@@ -84,7 +85,6 @@ Peças avulsas levam três letras:
 | `BP1` a `BP3` | prateleiras em U com abas nas laterais | 250 x 236 mm | 1 |
 | `BTR`, `ATR` | tampa do passa-fio com furo para prensa-cabo PG16 | ⌀90 mm, furo ⌀22,5 | 1 |
 | `BTF`, `ATF` | tampa cega do passa-fio | ⌀90 mm | 1 |
-| `AP1` a `AP3` | folhas da porta do armário, em pílula | 1072 x 372 mm | 2 |
 
 ### O que cada face do biométrico leva
 
@@ -101,9 +101,9 @@ Cada feição está explicada, com medida e regra, no [design system](https://gi
 
 <p align="center"><img src="docs/armario-prancha.svg" alt="Peças do armário" width="560"></p>
 
-A porta são três pílulas deitadas de 1080 x 380 mm na frente, cada uma com a folha própria (`AP1` a `AP3`) 4 mm menor por lado. Nesta figura o painel da frente está girado, por isso as pílulas aparecem em pé. As laterais levam o passa-fio igual ao do biométrico.
+Por enquanto o armário é só a casca: seis faces em duas lâminas, com a mesma altura e profundidade do biométrico e 750 mm de largura. A frente (`A6`) sai fechada, sem vão de porta. As laterais levam o passa-fio igual ao do biométrico, e a amarração por abraçadeira repete a dele: quatro estações em cada aresta vertical, uma dupla no topo e outra no rodapé das paredes, quatro duplas radiais no piso e no teto.
 
-O armário ainda não é cortável: os painéis de 1260 x 1500 não entram na mesa de 1150 x 1000, e as folhas da porta, com 1072 mm, passam da carga de 1000 mm. Nada disso fica escondido: cada peça dessas ganha uma carga própria marcada como `FORA DE MEDIDA`.
+Todas as peças cabem na mesa. São 7 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira.
 
 ## Gerar de novo
 
@@ -136,7 +136,6 @@ São 27 testes. Entre outras coisas, eles garantem que:
 * a fenda de toda gota de parede aponta para cima e nenhuma gota fica debaixo da placa `BPM`;
 * nas quatro paredes do biométrico, o rasgo de enforca-gato fica a pelo menos 9 mm (3x a espessura) de qualquer outra feição;
 * a aba da prateleira bate com o rasgo da lateral;
-* o vão da porta sai com uma linha de corte só;
 * nenhuma carga do biométrico passa de 1000 mm de largura;
 * o DXF sai sem moldura, com o canto de baixo à esquerda na origem;
 * o arquivo de vãos da interface sai sem o contorno da `BSP`, com os furos em 75 x 31 (LCD) e 60 x 59 (teclado), cada vão centrado nos seus furos;
@@ -146,7 +145,7 @@ São 27 testes. Entre outras coisas, eles garantem que:
 
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
 * **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
-* **Frente do armário:** visor, dobradiça e tranca ainda não estão no desenho.
+* **Armário:** só a casca está desenhada. Porta, visor, dobradiça, tranca e o interior ficam para depois.
 * **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD e o teclado na mão, e só depois o corte oficial. O sensor biométrico ainda não foi escolhido. Detalhe em [docs/componentes.md](docs/componentes.md).
 * **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
