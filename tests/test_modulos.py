@@ -103,7 +103,7 @@ def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():
     for code in ("B6I", "B6E"):
         assert por_codigo[code]["vazios"], code       # janela da interface e vazio util
     for code in ("A6I", "A6E"):
-        assert not por_codigo[code]["vazios"]         # frente fechada, porta pendente
+        assert len(por_codigo[code]["vazios"]) == 1   # frente em moldura, um vao so
 
 
 def test_nenhuma_peca_invade_outra():

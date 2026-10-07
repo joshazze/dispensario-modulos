@@ -903,7 +903,7 @@
       "largura_externa_mm": 750.0,
       "altura_externa_mm": 1000.0,
       "profundidade_externa_mm": 250.0,
-      "observacao_frontal": "frente fechada: porta, visor, dobradica e tranca pendentes",
+      "observacao_frontal": "frente em moldura: porta, visor, dobradica e tranca pendentes",
       "aberturas": [
         {
           "nome": "passa-fio",
@@ -944,6 +944,17 @@
           "passo_y_mm": 51.0,
           "x_mm": 160.0,
           "y_mm": 80.0
+        },
+        {
+          "nome": "vao da moldura",
+          "tipo": "janela",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 610.0,
+          "altura_mm": 860.0,
+          "raio_mm": 4.0,
+          "centro_x": true,
+          "centro_y": true
         },
         {
           "nome": "enforca gato",
@@ -2748,7 +2759,8 @@
           500.0,
           625.0
         ]
-      }
+      },
+      "moldura_frontal_mm": 70.0
     }
   ],
   "passa_fio": {
