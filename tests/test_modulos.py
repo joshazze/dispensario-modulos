@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 import gerador
 from laser import geom
 
@@ -58,17 +60,15 @@ def test_seis_faces_por_modulo_em_duas_laminas():
     assert {"B1I", "B6E", "A1I", "A6E"} <= codes
 
 
-def test_prancha_e_uma_so_com_legenda_portas_tampas_e_sub_painel():
+def test_prancha_e_uma_so_com_legenda_tampas_e_sub_painel():
     _, _, engrave, _, _, placed = build()
     codes = {u["code"] for u, _, _, _ in placed}
     gravados = {i["texto"] for i in engrave if i["tipo"] == "texto"}
-    assert len(placed) == 39
+    assert len(placed) == 33
     assert "BPM" in codes                                 # placa de manutencao do fundo
     assert {"BP1", "BP2", "BP3"} <= codes                 # tres prateleiras, uma lamina
     assert {"ATR", "ATF", "BTR", "BTF"} <= codes          # tampa rosqueada e cega
     assert "BSP" in codes                                 # sub-painel da interface
-    # tres folhas de porta, duas laminas cada, peca solta na prancha
-    assert {"AP1I", "AP2I", "AP3I", "AP1E", "AP2E", "AP3E"} <= codes
     naMaquina = {i["texto"] for i in engrave
                  if i["tipo"] == "texto" and i.get("machine", True)}
     assert not naMaquina         # sem gravacao: texto nao vai pra maquina
@@ -103,23 +103,7 @@ def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():
     for code in ("B6I", "B6E"):
         assert por_codigo[code]["vazios"], code       # janela da interface e vazio util
     for code in ("A6I", "A6E"):
-        assert len(por_codigo[code]["vazios"]) == 3   # tres pilulas, tres vazios uteis
-
-
-def test_o_vao_da_porta_sai_com_uma_linha_de_corte_so():
-    """Contorno concentrico dentro do vao faria a maquina cortar um anel de refugo."""
-    spec, _, _, _, _, placed = build()
-    porta = spec["porta"]
-    for unit, _, _, gira in placed:
-        if unit["code"] not in ("A6I", "A6E"):
-            continue
-        polys = gerador.rot90(unit["polys"]) if gira else unit["polys"]
-        assert len(polys) == 1 + porta["quantidade"]      # contorno + 3 vaos
-    folhas = [u for u, _, _, _ in placed if u["code"].startswith("AP")]
-    assert len(folhas) == 6
-    for unit in folhas:
-        assert abs(unit["w"] - (porta["pilula_largura_mm"] - 2 * porta["folga_folha_mm"])) < 1e-6
-        assert abs(unit["h"] - (porta["pilula_altura_mm"] - 2 * porta["folga_folha_mm"])) < 1e-6
+        assert not por_codigo[code]["vazios"]         # frente fechada, porta pendente
 
 
 def test_nenhuma_peca_invade_outra():
@@ -303,7 +287,8 @@ def _rasgos_eg(peca, eg, em_pe):
     return saida
 
 
-def test_enforca_gato_em_pe_com_uma_dupla_por_peca():
+@pytest.mark.parametrize("modulo", ["A", "B"])
+def test_enforca_gato_em_pe_com_uma_dupla_por_peca(modulo):
     """Nos cantos verticais: rasgo em pe, par LADO A LADO, junto da aresta."""
     spec = load_spec()
     eg = spec["enforca_gato"]
@@ -316,7 +301,7 @@ def test_enforca_gato_em_pe_com_uma_dupla_por_peca():
     esperado = 2 * len(eg["alturas_mm"]) * 2  # duas arestas, N estacoes, um par
     for face in eg["faces"]:
         for lamina in ("I", "E"):
-            code = "B%d%s" % (face, lamina)
+            code = "%s%d%s" % (modulo, face, lamina)
             rasgos = _rasgos_eg(por_codigo[code], eg, em_pe=True)
             assert len(rasgos) == esperado, code
             x0, _, x1, _ = geom.bbox(por_codigo[code]["outline"])
@@ -330,7 +315,8 @@ def test_enforca_gato_em_pe_com_uma_dupla_por_peca():
             assert len(larguras) == 4
 
 
-def test_junta_horizontal_tem_dupla_em_cada_parede_e_quatro_no_piso():
+@pytest.mark.parametrize("modulo", ["A", "B"])
+def test_junta_horizontal_tem_dupla_em_cada_parede_e_quatro_no_piso(modulo):
     """Parede leva par no topo e no rodape; piso e teto levam 4 duplas radiais."""
     spec = load_spec()
     eg = spec["enforca_gato"]
@@ -338,19 +324,19 @@ def test_junta_horizontal_tem_dupla_em_cada_parede_e_quatro_no_piso():
     por_codigo = {p["code"]: p for g in groups for p in g["pieces"]}
     for face in eg["faces"]:
         for lamina in ("I", "E"):
-            peca = por_codigo["B%d%s" % (face, lamina)]
+            peca = por_codigo["%s%d%s" % (modulo, face, lamina)]
             deitados = _rasgos_eg(peca, eg, em_pe=False)
-            assert len(deitados) == 4, "B%d%s" % (face, lamina)
+            assert len(deitados) == 4, "%s%d%s" % (modulo, face, lamina)
             _, y0, _, y1 = geom.bbox(peca["outline"])
             perto_do_topo = [r for r in deitados
                              if y1 - (geom.bbox(r)[1] + geom.bbox(r)[3]) / 2.0 < 60]
             assert len(perto_do_topo) == 2
     for face in eg["faces_tampa"]:
         for lamina in ("I", "E"):
-            peca = por_codigo["B%d%s" % (face, lamina)]
+            peca = por_codigo["%s%d%s" % (modulo, face, lamina)]
             total = (len(_rasgos_eg(peca, eg, em_pe=False))
                      + len(_rasgos_eg(peca, eg, em_pe=True)))
-            assert total == 8, "B%d%s" % (face, lamina)   # 4 duplas radiais
+            assert total == 8, "%s%d%s" % (modulo, face, lamina)   # 4 duplas radiais
 
 
 def test_prancha_nao_gira_peca_quando_a_trava_esta_ligada():
@@ -387,7 +373,8 @@ def test_cada_cama_tem_no_maximo_um_metro_de_largura():
         assert direita - esquerda <= 1000.0 + 1e-6, (ox, oy)
 
 
-def test_enforca_gato_nao_encosta_em_outra_feicao():
+@pytest.mark.parametrize("modulo", ["A", "B"])
+def test_enforca_gato_nao_encosta_em_outra_feicao(modulo):
     """Ponte de 3,75 mm entre o rasgo e a borda da janela ja passou aqui.
 
     O DFM aceita 1,5 mm (metade da espessura), mas isso e piso de ruptura, nao
@@ -400,14 +387,14 @@ def test_enforca_gato_nao_encosta_em_outra_feicao():
     por_codigo = {p["code"]: p for g in groups for p in g["pieces"]}
     for face in eg["faces"]:
         for lamina in ("I", "E"):
-            peca = por_codigo["B%d%s" % (face, lamina)]
+            peca = por_codigo["%s%d%s" % (modulo, face, lamina)]
             rasgos = (_rasgos_eg(peca, eg, em_pe=True)
                       + _rasgos_eg(peca, eg, em_pe=False))
             outros = [f for f in peca["fasteners"] if f not in rasgos]
             for r in rasgos:
                 for o in outros:
                     d = geom.dist_poligonos(r, o)
-                    assert d >= piso, "B%d%s: ponte de %.2f mm" % (face, lamina, d)
+                    assert d >= piso, "%s%d%s: ponte de %.2f mm" % (modulo, face, lamina, d)
 
 
 def _furos(polys, diametro):
