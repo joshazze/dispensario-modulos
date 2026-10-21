@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Armario 3D</title>
+<style>
+  @page { size: 297mm 210mm; margin: 0; }
+  html, body { margin: 0; padding: 0; background: #fff; font-family: Helvetica, Arial, sans-serif; color: #202124; }
+  .pag { width: 297mm; height: 210mm; box-sizing: border-box; padding: 11mm 13mm 9mm; page-break-after: always; display: flex; flex-direction: column; overflow: hidden; }
+  .pag:last-child { page-break-after: auto; }
+  h1 { font-size: 17pt; margin: 0 0 1mm; letter-spacing: .2px; }
+  h2 { font-size: 13pt; margin: 0 0 1mm; }
+  .sub { font-size: 9pt; color: #5f6368; margin: 0 0 3mm; line-height: 1.35; }
+  .vista { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .vista img { max-width: 100%; max-height: 100%; display: block; }
+  .grade { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3mm; }
+  .grade figure { margin: 0; display: flex; flex-direction: column; min-height: 0; border: 0.3mm solid #e0e0e0; }
+  .grade img { flex: 1; min-height: 0; object-fit: contain; width: 100%; }
+  figcaption { font-size: 8pt; color: #5f6368; padding: 1mm 2mm; }
+  .rodape { font-size: 7.5pt; color: #80868b; display: flex; justify-content: space-between; margin-top: 2mm; }
+  .leg { display: flex; gap: 5mm; font-size: 8.5pt; margin-top: 1mm; flex-wrap: wrap; }
+  .leg span::before { content: ""; display: inline-block; width: 3.2mm; height: 3.2mm; margin-right: 1.4mm; vertical-align: -0.5mm; border: 0.2mm solid #555; background: var(--c); }
+</style>
+</head>
+<body>
+<div id="saida"></div>
+<script type="module">
+import * as THREE from "./three.module.js";  // third_party/three, r160
+
+const M = await (await fetch("./modelo.json")).json();
+const W = M.W, H = M.H, D = M.D;
+
+const COR = {
+  "casca-E": 0xc9a77c,
+  "casca-I": 0xb8956a,
+  "nicho": 0xe3cfa8,
+  "espacador": 0x7a8fa6,
+  "tampa": 0x6b7f5a,
+};
+
+function geometria(p) {
+  const forma = new THREE.Shape(p.outline.map(([x, y]) => new THREE.Vector2(x, y)));
+  for (const f of p.furos) forma.holes.push(new THREE.Path(f.map(([x, y]) => new THREE.Vector2(x, y))));
+  const g = new THREE.ExtrudeGeometry(forma, { depth: p.t, bevelEnabled: false, curveSegments: 1 });
+  const m = new THREE.Matrix4().makeBasis(
+    new THREE.Vector3(...p.eu), new THREE.Vector3(...p.ev), new THREE.Vector3(...p.ew));
+  m.setPosition(new THREE.Vector3(...p.o));
+  g.applyMatrix4(m);
+  // mundo do modelo: Z = 0 no fundo; centraliza a caixa na origem
+  g.translate(-W / 2, -H / 2, -D / 2);
+  return g;
+}
+
+const GEOS = M.pecas.map(p => ({ p, g: geometria(p), arestas: null }));
+// arestas direto dos contornos: o EdgesGeometry pega as diagonais de triangulos finos
+function arestas(p) {
+  const v = [];
+  const m = new THREE.Matrix4().makeBasis(
+    new THREE.Vector3(...p.eu), new THREE.Vector3(...p.ev), new THREE.Vector3(...p.ew));
+  m.setPosition(new THREE.Vector3(...p.o));
+  const P = (x, y, z) => new THREE.Vector3(x, y, z).applyMatrix4(m).sub(new THREE.Vector3(W / 2, H / 2, D / 2));
+  for (const r of [p.outline, ...p.furos]) {
+    const n = r.length;
+    for (let i = 0; i < n; i++) {
+      const a = r[i], b = r[(i + 1) % n], z = r[(i + n - 1) % n];
+      for (const t of [0, p.t]) v.push(P(a[0], a[1], t), P(b[0], b[1], t));
+      const d1 = Math.atan2(a[1] - z[1], a[0] - z[0]), d2 = Math.atan2(b[1] - a[1], b[0] - a[0]);
+      let ang = Math.abs(d2 - d1); if (ang > Math.PI) ang = 2 * Math.PI - ang;
+      if (ang > 0.35) v.push(P(a[0], a[1], 0), P(a[0], a[1], p.t));
+    }
+  }
+  return new THREE.BufferGeometry().setFromPoints(v);
+}
+for (const o of GEOS) o.arestas = arestas(o.p);
+
+function centro(o) {
+  o.g.computeBoundingBox();
+  const c = new THREE.Vector3();
+  o.g.boundingBox.getCenter(c);
+  return c;
+}
+
+const PX = 2400, PY = 1500;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(PX, PY);
+renderer.localClippingEnabled = true;
+
+function cena(opt = {}) {
+  const s = new THREE.Scene();
+  s.background = new THREE.Color(0xffffff);
+  s.add(new THREE.HemisphereLight(0xffffff, 0xb5ad9f, 2.6));
+  const l1 = new THREE.DirectionalLight(0xffffff, 2.4); l1.position.set(-1.2, 1.6, 1.9); s.add(l1);
+  const l2 = new THREE.DirectionalLight(0xffffff, 0.9); l2.position.set(1.5, 0.4, -1.0); s.add(l2);
+  for (const o of GEOS) {
+    const g = o.p.grupo;
+    if (opt.so && !opt.so(o.p)) continue;
+    const transp = opt.transp && opt.transp(o.p);
+    const mat = new THREE.MeshLambertMaterial({
+      color: COR[g], side: THREE.DoubleSide,
+      transparent: !!transp, opacity: transp ? 0.13 : 1, depthWrite: !transp,
+      clippingPlanes: opt.corte || [], clipShadows: true,
+      polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1,
+    });
+    const mesh = new THREE.Mesh(o.g, mat);
+    const lin = new THREE.LineSegments(o.arestas, new THREE.LineBasicMaterial({
+      color: transp ? 0x9aa0a6 : 0x2b2b2b, transparent: !!transp, opacity: transp ? 0.35 : 1,
+      clippingPlanes: opt.corte || [],
+    }));
+    const grp = new THREE.Group();
+    grp.add(mesh, lin);
+    if (opt.explode) grp.position.copy(opt.explode(o.p, centro(o)));
+    if (transp) mesh.renderOrder = 2;
+    s.add(grp);
+  }
+  return s;
+}
+
+function camera(dir, opt = {}) {
+  const d = new THREE.Vector3(...dir).normalize();
+  const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, -10000, 10000);
+  cam.position.copy(d.clone().multiplyScalar(3000));
+  cam.up.set(...(opt.up || [0, 1, 0]));
+  cam.lookAt(0, 0, 0);
+  cam.updateMatrixWorld();
+  return cam;
+}
+
+function enquadra(cam, s, folga = 1.08, alvo) {
+  // ajusta o frustum ortografico ao que esta na cena (ou ao box alvo)
+  const box = alvo || new THREE.Box3().setFromObject(s);
+  const inv = cam.matrixWorldInverse;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const a of [box.min.x, box.max.x]) for (const b of [box.min.y, box.max.y]) for (const c of [box.min.z, box.max.z]) {
+    const v = new THREE.Vector3(a, b, c).applyMatrix4(inv);
+    x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+  }
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  let hw = (x1 - x0) / 2 * folga, hh = (y1 - y0) / 2 * folga;
+  if (hw / hh > PX / PY) hh = hw * PY / PX; else hw = hh * PX / PY;
+  cam.left = cx - hw; cam.right = cx + hw; cam.top = cy + hh; cam.bottom = cy - hh;
+  cam.updateProjectionMatrix();
+}
+
+function foto(dir, opt = {}) {
+  const s = cena(opt);
+  const cam = camera(dir, opt);
+  enquadra(cam, s, opt.folga || 1.08, opt.alvo);
+  renderer.render(s, cam);
+  return renderer.domElement.toDataURL("image/png");
+}
+
+const ISO_FE = [-1, 0.8, 1.25];
+const ISO_FD = [1, 0.8, 1.25];
+const ISO_TE = [-1.1, 0.75, -1.2];
+const casca = p => p.grupo.startsWith("casca") || p.grupo === "tampa";
+const lateralEsq = p => /^A2[IE]$/.test(p.code) || p.code === "ATR";
+
+const vistas = [
+  { t: "Frente e lateral esquerda", s: "Isométrica. Moldura de 70 mm na frente, vão de 610 x 860 mm com o nicho aparecendo por dentro. Na lateral, a tampa rosqueada ATR fecha o passa-fio.", img: foto(ISO_FE) },
+  { t: "Frente e lateral direita", s: "Isométrica pelo outro lado. A tampa cega ATF fecha o passa-fio da lateral direita, a 90 mm do fundo e 80 mm do piso.", img: foto(ISO_FD) },
+  { t: "Fundo, lado da parede", s: "Traseira com as duplas de enforca-gato no topo e no rodapé (cinco duplas) e as oito estações em cada aresta vertical.", img: foto(ISO_TE) },
+  { t: "Vista frontal", s: "Projeção ortogonal, 750 x 1000 mm. O nicho fica 61 mm afastado da casca nos quatro lados.", img: foto([0, 0, 1], { folga: 1.05 }) },
+  { t: "Vista lateral esquerda", s: "Projeção ortogonal, 250 x 1000 mm, com o passa-fio tampado.", img: foto([-1, 0, 0], { folga: 1.05 }) },
+  { t: "Vista superior", s: "Projeção ortogonal pelo teto, 750 x 250 mm, mostrando os dedos das juntas nas quatro arestas.", img: foto([0, 1, 0], { up: [0, 0, -1], folga: 1.05 }) },
+  { t: "Casca transparente", s: "A casca em vidro para mostrar o miolo: o nicho de cinco faces (AN1 a AN5) e os dez espaçadores (AE1 a AE10), três por lateral, dois no piso e dois no teto.", img: foto(ISO_FE, { transp: casca }) },
+  { t: "Corte horizontal a 500 mm", s: "Plano de corte na altura do espaçador do meio. As abas atravessam a parede do nicho e entram só na lâmina interna da casca: por fora a lateral continua lisa.", img: foto([-0.35, 1.6, 0.9], { corte: [new THREE.Plane(new THREE.Vector3(0, -1, 0), 500 - H / 2 + 2)] }) },
+  { t: "Corte vertical pelo meio da largura", s: "Plano de corte em X = 375 mm. Aparecem o espaçador do piso e o do teto, o fundo e a moldura em duas lâminas de 3 mm.", img: foto([-1.6, 0.45, 0.55], { corte: [new THREE.Plane(new THREE.Vector3(1, 0, 0), 0)] }) },
+  { t: "Vista explodida", s: "Cada face da casca afastada para fora, nicho no centro e espaçadores entre os dois. A lâmina externa sai um pouco além da interna.", img: foto([-1, 0.75, 1.35], { folga: 1.04, explode: (p, c) => {
+      const v = new THREE.Vector3();
+      if (p.grupo.startsWith("casca") || p.grupo === "tampa") {
+        const n = new THREE.Vector3(...p.ew).multiplyScalar(p.grupo === "tampa" ? 1 : -1);
+        const k = (p.grupo === "casca-E" || p.grupo === "tampa") ? 1 : 0.82;
+        const base = Math.abs(n.y) > 0.5 ? 380 : Math.abs(n.z) > 0.5 ? 430 : 360;
+        v.copy(n).multiplyScalar(base * k + (p.grupo === "tampa" ? 90 : 0));
+      } else if (p.grupo === "espacador") {
+        v.copy(c).setLength(1).multiplyScalar(0);
+        const ax = Math.abs(c.x) > Math.abs(c.y) * 0.75 ? new THREE.Vector3(Math.sign(c.x), 0, 0) : new THREE.Vector3(0, Math.sign(c.y), 0);
+        v.copy(ax).multiplyScalar(170);
+      } else if (p.grupo === "nicho") {
+        v.set(0, 0, 0);
+      }
+      return v;
+    } }) },
+  { t: "Detalhe do canto superior esquerdo da frente", s: "Aproximação na junta de dedos entre teto, lateral esquerda e moldura. Cada painel são duas lâminas de 3 mm e o dedo tem 6 mm.", img: foto([-1, 0.8, 1.25], { folga: 1.0, alvo: new THREE.Box3(new THREE.Vector3(-W / 2 - 5, H / 2 - 150, D / 2 - 150), new THREE.Vector3(-W / 2 + 150, H / 2 + 5, D / 2 + 5)) }) },
+  { t: "Lateral esquerda isolada, por dentro", s: "As duas lâminas da A2 com os rasgos dos espaçadores só na interna, o passa-fio de 50 mm e os furos da tampa.", img: foto([1, 0.25, 0.3], { so: lateralEsq, folga: 1.1 }) },
+];
+
+const leg = '<div class="leg">' +
+  '<span style="--c:#c9a77c">casca, lâmina externa</span>' +
+  '<span style="--c:#b8956a">casca, lâmina interna</span>' +
+  '<span style="--c:#e3cfa8">nicho</span>' +
+  '<span style="--c:#7a8fa6">espaçadores</span>' +
+  '<span style="--c:#6b7f5a">tampas do passa-fio</span></div>';
+const hoje = M.data;
+const rod = n => `<div class="rodape"><span>Dispensário eletrônico · módulo armário · ${W} x ${H} x ${D} mm · ${M.pecas.length} peças em MDF 3 mm</span><span>${hoje} · ${n}</span></div>`;
+
+let html = `<section class="pag"><h1>Módulo armário em 3D</h1>
+<p class="sub">Montagem simulada com as mesmas ${M.pecas.length} peças dos arquivos de corte (specs/modulos.json, gerador.py): 12 lâminas da casca, 5 faces do nicho, 10 espaçadores e 2 tampas. Encaixe conferido por amostragem: nenhum dedo, aba ou tampa invade outra peça.</p>
+<div class="grade">${[0, 1, 6, 9].map(i => `<figure><img src="${vistas[i].img}"><figcaption>${vistas[i].t}</figcaption></figure>`).join("")}</div>${leg}${rod(1)}</section>`;
+vistas.forEach((v, i) => {
+  html += `<section class="pag"><h2>${i + 1}. ${v.t}</h2><p class="sub">${v.s}</p><div class="vista"><img src="${v.img}"></div>${leg}${rod(i + 2)}</section>`;
+});
+document.getElementById("saida").innerHTML = html;
+document.title = "pronto";
+</script>
+</body>
+</html>

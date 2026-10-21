@@ -124,6 +124,15 @@ python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 python3 previas.py        # figuras deste README
 ```
 
+### Simulação 3D do armário
+
+```bash
+python3 -m pip install numpy
+python3 vista3d.py --abrir    # docs/armario-3d.pdf
+```
+
+[`docs/armario-3d.pdf`](docs/armario-3d.pdf) monta as 29 peças do armário em 3D, com os mesmos contornos, dedos e furos dos DXF, e mostra 12 vistas: duas isométricas pela frente, o fundo, frente, lateral e topo em projeção ortogonal, a casca transparente, um corte horizontal, um corte vertical, a explodida, o detalhe da junta de dedos e a lateral sozinha. Antes de desenhar, o script confere o encaixe por amostragem: se um dedo, uma aba ou uma tampa invade outra peça, ele para e não gera o PDF. A cena é desenhada com [three.js](third_party/three/) no mesmo Chrome headless que imprime as pranchas. Dois pontos são suposição e não estão na spec: a tampa rosqueada `ATR` fica na lateral esquerda e a cega `ATF` na direita, e o nicho fica centrado na profundidade, que é a posição em que os rasgos batem.
+
 `--vaos CODIGO` exporta só as aberturas marcadas com `componente` naquela peça avulsa, sem o contorno, com a origem no canto de baixo à esquerda.
 
 Para mudar uma medida, edite `specs/modulos.json` e rode o gerador de novo. Ele imprime o tamanho de cada carga, o aproveitamento do material, a tabela de peças contra a mesa e, se houver, cada problema de fabricação encontrado.
@@ -165,10 +174,12 @@ São 27 testes. Entre outras coisas, eles garantem que:
 | `docs/componentes.md` | componentes, fonte de cada medida e arquivos |
 | `gerador.py` | desenha faces, feições e peças avulsas, encaixa nas cargas e exporta |
 | `previas.py` | figuras do README |
+| `vista3d.py`, `vista3d/` | simulação 3D do armário em PDF |
 | `laser/` | geometria, escritor de DXF, relatório e registro de material |
 | `perfis/` | modelo de DXF do técnico e o perfil extraído dele |
 | `materiais.json` | kerf e espessura por material, marcados como `estimado` ou `medido` |
 | `third_party/tabbedboxmaker/` | matriz de juntas de dedos das seis faces |
+| `third_party/three/` | three.js r160 (MIT), usado só pela simulação 3D |
 | `tests/` | validação automática |
 
 ## Licença
