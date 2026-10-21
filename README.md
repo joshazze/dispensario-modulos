@@ -13,7 +13,7 @@ Componentes comprados (LCD, teclado, parafusos, prensa-cabo), a fonte de cada me
 | módulo | medida externa (L x A x P) | peças | situação |
 |---|---|---|---|
 | Biométrico, código `B` | 250 x 1000 x 250 mm | 19 | **pronto para a máquina**, em 4 cargas de até 1000 x 1000 mm |
-| Armário, código `A` | 750 x 1000 x 250 mm | 29 | casca, nicho interno e espaçadores em 6 cargas; porta pendente |
+| Armário, código `A` | 750 x 1000 x 250 mm | 29 | casca, nicho interno e espaçadores em 6 cargas, com [simulação 3D](docs/armario-3d.pdf); porta pendente |
 
 Já cortadas em 03/09/2026: `BP1`, `BP2`, `BP3`, `BSP`, `B3E`, `B5E`, `BTR` e `BTF`. A `BSP` foi cortada antes de ganhar os vãos do LCD e do teclado; eles saem num arquivo à parte, `interface-vaos.dxf`, para cortar na peça que já existe.
 
@@ -113,6 +113,10 @@ Quem segura o nicho no lugar são dez **espaçadores** iguais (`AE1` a `AE10`), 
 
 Todas as peças cabem na mesa. São 6 cargas porque cada painel de 1000 x 750 ocupa uma carga quase inteira; o nicho e os espaçadores entram nas sobras.
 
+<p align="center"><a href="docs/armario-3d.pdf"><img src="docs/armario-3d.png" alt="Simulação 3D do armário: duas isométricas, casca transparente e vista explodida" width="720"></a></p>
+
+O armário montado, com todas as peças, está em [`docs/armario-3d.pdf`](docs/armario-3d.pdf): são 13 páginas, com isométricas, vistas ortogonais, casca transparente, cortes, explodida e detalhe da junta.
+
 ## Gerar de novo
 
 Requisitos: Python 3.10 ou mais novo, sem biblioteca externa. O PDF usa o Google Chrome ou Chromium; sem ele, o gerador avisa e pula só o PDF (dá para apontar o caminho com `CHROME=...`).
@@ -128,8 +132,10 @@ python3 previas.py        # figuras deste README
 
 ```bash
 python3 -m pip install numpy
-python3 vista3d.py --abrir    # docs/armario-3d.pdf
+python3 vista3d.py --abrir    # docs/armario-3d.pdf e a capa docs/armario-3d.png
 ```
+
+A capa em PNG sai pelo `pdftoppm` (poppler); sem ele, o script avisa e gera só o PDF. As legendas de cada vista são texto fixo em `vista3d/render.html`: se mudar uma medida citada nelas, atualize lá também.
 
 [`docs/armario-3d.pdf`](docs/armario-3d.pdf) monta as 29 peças do armário em 3D, com os mesmos contornos, dedos e furos dos DXF, e mostra 12 vistas: duas isométricas pela frente, o fundo, frente, lateral e topo em projeção ortogonal, a casca transparente, um corte horizontal, um corte vertical, a explodida, o detalhe da junta de dedos e a lateral sozinha. Antes de desenhar, o script confere o encaixe por amostragem: se um dedo, uma aba ou uma tampa invade outra peça, ele para e não gera o PDF. A cena é desenhada com [three.js](third_party/three/) no mesmo Chrome headless que imprime as pranchas. Dois pontos são suposição e não estão na spec: a tampa rosqueada `ATR` fica na lateral esquerda e a cega `ATF` na direita, e o nicho fica centrado na profundidade, que é a posição em que os rasgos batem.
 
@@ -146,13 +152,15 @@ python3 -m pip install -r requirements-dev.txt
 python3 -m pytest
 ```
 
-São 27 testes. Entre outras coisas, eles garantem que:
+São 31 testes. Entre outras coisas, eles garantem que:
 
 * cada painel tem duas lâminas de 3 mm e a junta de dedos tem 6 mm de profundidade;
 * nenhuma peça invade outra na prancha e toda feição fica dentro da peça, longe da borda;
 * a fenda de toda gota de parede aponta para cima e nenhuma gota fica debaixo da placa `BPM`;
 * nas quatro paredes do biométrico, o rasgo de enforca-gato fica a pelo menos 9 mm (3x a espessura) de qualquer outra feição;
 * a aba da prateleira bate com o rasgo da lateral;
+* o nicho tem cinco faces, sem frente, e por dentro mede o vão da moldura;
+* as abas do espaçador batem com os rasgos do nicho e da lâmina interna da casca;
 * nenhuma carga do biométrico passa de 1000 mm de largura;
 * o DXF sai sem moldura, com o canto de baixo à esquerda na origem;
 * o arquivo de vãos da interface sai sem o contorno da `BSP`, com os furos em 75 x 31 (LCD) e 60 x 59 (teclado), cada vão centrado nos seus furos;
@@ -161,10 +169,8 @@ São 27 testes. Entre outras coisas, eles garantem que:
 ## Pendências
 
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
-* **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
-* **Armário:** casca, nicho e espaçadores estão desenhados. Porta, visor, dobradiça, tranca, fixação do nicho na moldura e divisórias internas ficam para depois.
+* **Armário:** casca, nicho e espaçadores estão desenhados e simulados em 3D. Porta, visor, dobradiça, tranca, fixação do nicho na moldura, divisórias internas e os componentes do módulo ficam para depois. Falta também decidir em que lateral vai cada tampa (`ATR`, `ATF`); a simulação supõe a rosqueada à esquerda.
 * **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD e o teclado na mão, e só depois o corte oficial. O sensor biométrico ainda não foi escolhido. Detalhe em [docs/componentes.md](docs/componentes.md).
-* **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
 ## Estrutura
 

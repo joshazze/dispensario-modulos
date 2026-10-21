@@ -11,7 +11,7 @@ script antes do PDF.
 A cena e desenhada com three.js (third_party/three) no Chrome headless, o
 mesmo que imprime os PDFs de corte.
 
-    python3 vista3d.py            # docs/armario-3d.pdf
+    python3 vista3d.py            # docs/armario-3d.pdf e a capa em .png
     python3 vista3d.py --abrir    # e abre no visualizador
 """
 import datetime
@@ -33,6 +33,7 @@ import gerador
 HTML = os.path.join(gerador.BASE, "vista3d", "render.html")
 THREE = os.path.join(gerador.BASE, "third_party", "three", "three.module.js")
 SAIDA = os.path.join(gerador.BASE, "docs", "armario-3d.pdf")
+CAPA = os.path.join(gerador.BASE, "docs", "armario-3d.png")
 TRABALHO = os.path.join(gerador.TMP, "vista3d")
 
 
@@ -331,9 +332,21 @@ def imprime(dados, saida):
     print(os.path.relpath(saida, gerador.BASE))
 
 
+def capa_png(pdf, png):
+    """Capa do PDF em PNG para o README. Precisa do pdftoppm (poppler); sem ele, pula."""
+    pdftoppm = shutil.which("pdftoppm")
+    if pdftoppm is None:
+        print("AVISO pdftoppm nao encontrado: capa do README nao atualizada")
+        return
+    subprocess.run([pdftoppm, "-png", "-r", "110", "-f", "1", "-l", "1", "-singlefile",
+                    pdf, os.path.splitext(png)[0]], check=True)
+    print(os.path.relpath(png, gerador.BASE))
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     imprime(modelo(), SAIDA)
+    capa_png(SAIDA, CAPA)
     if "--abrir" in argv:
         subprocess.run(["open", SAIDA])
 
