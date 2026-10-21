@@ -6,6 +6,8 @@ A linguagem construtiva (enforca-gato, dedos, camada dupla, gota de parede, píl
 
 Componentes comprados (LCD, teclado, parafusos, prensa-cabo), a fonte de cada medida usada no desenho e os arquivos de cada um estão em **[docs/componentes.md](docs/componentes.md)**.
 
+O que planejamos, o que deu errado e o que mudou por causa disso, com figuras, está em **[docs/aprendizados.md](docs/aprendizados.md)**.
+
 <p align="center"><img src="docs/vista-modulos.svg" alt="Vista isométrica do armário e do módulo biométrico" width="720"></p>
 
 ## Estado
@@ -117,6 +119,19 @@ Todas as peças cabem na mesa. São 6 cargas porque cada painel de 1000 x 750 oc
 
 O armário montado, com todas as peças, está em [`docs/armario-3d.pdf`](docs/armario-3d.pdf): são 13 páginas, com isométricas, vistas ortogonais, casca transparente, cortes, explodida e detalhe da junta.
 
+<table>
+<tr>
+<td width="33%"><img src="docs/figuras/armario-transparente.png" alt="Casca transparente" width="260"><br><sub>Casca transparente: nicho e espaçadores</sub></td>
+<td width="33%"><img src="docs/figuras/armario-corte-horizontal.png" alt="Corte horizontal a 500 mm" width="260"><br><sub>Corte a 500 mm</sub></td>
+<td width="33%"><img src="docs/figuras/armario-explodida.png" alt="Vista explodida" width="260"><br><sub>Explodida</sub></td>
+</tr>
+<tr>
+<td><img src="docs/figuras/armario-detalhe-junta.png" alt="Detalhe da junta de dedos" width="260"><br><sub>Junta de dedos em duas lâminas</sub></td>
+<td><img src="docs/figuras/armario-fundo.png" alt="Fundo do armário" width="260"><br><sub>Fundo, lado da parede</sub></td>
+<td><img src="docs/figuras/armario-folga-61.svg" alt="Folga de 61 mm entre casca e nicho" width="260"><br><sub>Folga de 61 mm para os fios</sub></td>
+</tr>
+</table>
+
 ## Gerar de novo
 
 Requisitos: Python 3.10 ou mais novo, sem biblioteca externa. O PDF usa o Google Chrome ou Chromium; sem ele, o gerador avisa e pula só o PDF (dá para apontar o caminho com `CHROME=...`).
@@ -126,6 +141,7 @@ python3 gerador.py --filtro '^B' --nome biometrico/modulo-biometrico
 python3 gerador.py --filtro '^A' --nome armario/modulo-armario
 python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 python3 previas.py        # figuras deste README
+python3 figuras.py        # diagramas de docs/aprendizados.md
 ```
 
 ### Simulação 3D do armário
@@ -181,6 +197,8 @@ São 31 testes. Entre outras coisas, eles garantem que:
 | `gerador.py` | desenha faces, feições e peças avulsas, encaixa nas cargas e exporta |
 | `previas.py` | figuras do README |
 | `vista3d.py`, `vista3d/` | simulação 3D do armário em PDF |
+| `figuras.py` | diagramas de `docs/aprendizados.md` |
+| `docs/aprendizados.md` | diário de decisões: o que planejamos e o que aprendemos |
 | `laser/` | geometria, escritor de DXF, relatório e registro de material |
 | `perfis/` | modelo de DXF do técnico e o perfil extraído dele |
 | `materiais.json` | kerf e espessura por material, marcados como `estimado` ou `medido` |

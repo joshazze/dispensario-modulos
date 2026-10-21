@@ -11,9 +11,10 @@ script antes do PDF.
 A cena e desenhada com three.js (third_party/three) no Chrome headless, o
 mesmo que imprime os PDFs de corte.
 
-    python3 vista3d.py            # docs/armario-3d.pdf e a capa em .png
+    python3 vista3d.py            # docs/armario-3d.pdf, a capa e docs/figuras/armario-*.png
     python3 vista3d.py --abrir    # e abre no visualizador
 """
+import base64
 import datetime
 import functools
 import http.server
@@ -34,6 +35,8 @@ HTML = os.path.join(gerador.BASE, "vista3d", "render.html")
 THREE = os.path.join(gerador.BASE, "third_party", "three", "three.module.js")
 SAIDA = os.path.join(gerador.BASE, "docs", "armario-3d.pdf")
 CAPA = os.path.join(gerador.BASE, "docs", "armario-3d.png")
+FIGURAS = os.path.join(gerador.BASE, "docs", "figuras")
+N_FIGURAS = 7  # vistas marcadas com `f` no render.html
 TRABALHO = os.path.join(gerador.TMP, "vista3d")
 
 
@@ -282,8 +285,22 @@ def invasoes(pecas):
 
 
 class _Silencioso(http.server.SimpleHTTPRequestHandler):
+    """Serve a pagina e recebe as figuras soltas que ela manda por POST."""
+    recebidas = []
+
     def log_message(self, *a):
         pass
+
+    def do_POST(self):
+        nome = os.path.basename(self.path.rstrip("/"))
+        corpo = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        os.makedirs(FIGURAS, exist_ok=True)
+        destino = os.path.join(FIGURAS, "armario-%s.png" % nome)
+        with open(destino, "wb") as f:
+            f.write(base64.b64decode(corpo.split(",", 1)[1]))
+        _Silencioso.recebidas.append(destino)
+        self.send_response(204)
+        self.end_headers()
 
 
 def imprime(dados, saida):
@@ -319,7 +336,7 @@ def imprime(dados, saida):
                 break
             if os.path.exists(tmp_pdf):
                 tam = os.path.getsize(tmp_pdf)
-                if tam > 0 and tam == ultimo:
+                if tam > 0 and tam == ultimo and len(_Silencioso.recebidas) >= N_FIGURAS:
                     break
                 ultimo = tam
         else:
@@ -330,6 +347,8 @@ def imprime(dados, saida):
         srv.shutdown()
     shutil.move(tmp_pdf, saida)
     print(os.path.relpath(saida, gerador.BASE))
+    for f in sorted(_Silencioso.recebidas):
+        print(os.path.relpath(f, gerador.BASE))
 
 
 def capa_png(pdf, png):
