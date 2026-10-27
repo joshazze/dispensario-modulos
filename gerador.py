@@ -297,6 +297,8 @@ def abertura_polys(ab, w, h):
                                         lw, lh, ab.get("raio_mm", 0.0)))
         elif tipo == "furo":
             saida.append(circle_pts(cx, cy, ab["diametro_mm"]))
+        elif tipo == "rebaixo" and "pontos_mm" in ab:
+            saida.append([(cx + px, cy + py) for px, py in ab["pontos_mm"]])
         elif tipo in ("janela", "rebaixo"):
             # rebaixo tem a geometria da janela, mas e gravado (Fill) e nao
             # atravessa: e o assento da placa na face que fica pra cima na mesa

@@ -1228,7 +1228,7 @@
         },
         {
           "nome": "rebaixo da placa ESP32-CAM",
-          "fonte": "Ai-Thinker ESP32-CAM, ficha V1.0: placa de 27 x 40,5 x 4,5 (+-0,2); folga de 0,25 por lado. Placa em pe, com a camera virada pra chapa e a lente a 10 mm do topo da placa (PROVISORIO: a posicao do modulo na placa nao esta cotada em lugar nenhum)",
+          "fonte": "Ai-Thinker ESP32-CAM, ficha V1.0: placa de 27 x 40,5 x 4,5 (+-0,2); folga de 0,25 por lado. Placa em pe, com a camera virada pra chapa e a lente a 10 mm do topo da placa (PROVISORIO: a posicao do modulo na placa nao esta cotada em lugar nenhum). Rebaixo gravado so sob a placa; a borda dela entra no berco BCB",
           "tipo": "rebaixo",
           "largura_mm": 27.5,
           "altura_mm": 41.0,
@@ -1238,14 +1238,71 @@
           "componente": "esp32-cam"
         },
         {
-          "nome": "rebaixo da placa ESP32 DevKitC",
-          "fonte": "anuncio Eletrogate E33-003 (ESP32 DevKitC S1, 38 pinos): 55 x 28 x 13 com pinos; folga de 0,25 por lado. Placa em pe, com o modulo WROOM virado pra chapa e os pinos pra dentro da caixa, USB embaixo",
-          "tipo": "rebaixo",
-          "largura_mm": 28.5,
-          "altura_mm": 55.5,
-          "raio_mm": 0.5,
+          "nome": "parafusos do berco da ESP32-CAM",
+          "fonte": "2 M3 x 20 com porca: atravessam BSP, berco BCB e presilha BCP; comprimento provisorio ate medir a altura da camera dobrada sobre a placa",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 51.5,
+          "linhas_x": 1,
           "x_mm": 190.0,
-          "y_mm": 361.5,
+          "y_mm": 435.0,
+          "componente": "esp32-cam"
+        },
+        {
+          "nome": "rebaixo da placa ESP32 DevKitC",
+          "fonte": "Espressif ESP32-DevKitC V4, desenho de dimensoes (dl.espressif.com/dl/schematics/esp32_devkitc_v4_dimensions.pdf): placa de 27,94 x 48,26, modulo WROOM saindo 6,04 alem da placa com 18 de largura, total 54,3. Sem furo de fixacao. Folga de 0,25 por lado. Rebaixo gravado so sob a placa: o modulo afunda nele e a borda da placa entra no berco BDB",
+          "tipo": "rebaixo",
+          "x_mm": 190.0,
+          "y_mm": 290.0,
+          "componente": "esp32-devkitc",
+          "pontos_mm": [
+            [
+              -14.22,
+              -27.4
+            ],
+            [
+              14.22,
+              -27.4
+            ],
+            [
+              14.22,
+              21.36
+            ],
+            [
+              9.25,
+              21.36
+            ],
+            [
+              9.25,
+              27.4
+            ],
+            [
+              -9.25,
+              27.4
+            ],
+            [
+              -9.25,
+              21.36
+            ],
+            [
+              -14.22,
+              21.36
+            ]
+          ],
+          "largura_mm": 28.44,
+          "altura_mm": 54.8
+        },
+        {
+          "nome": "parafusos do berco do DevKit",
+          "fonte": "2 M3 x 16 com porca: atravessam BSP, berco BDB e presilha BDP; a placa nao tem furo, quem segura e a presilha",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 65.8,
+          "linhas_x": 1,
+          "x_mm": 190.0,
+          "y_mm": 290.0,
           "componente": "esp32-devkitc"
         }
       ],
@@ -1278,6 +1335,145 @@
           "passo_x_mm": 38.0,
           "passo_y_mm": 0.0,
           "linhas_y": 1,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    },
+    {
+      "codigo": "BDB",
+      "nome": "berco do ESP32 DevKitC",
+      "tipo": "retangulo",
+      "largura_mm": 41.0,
+      "altura_mm": 81.0,
+      "raio_mm": 3.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "janela da placa e do modulo",
+          "fonte": "Espressif ESP32-DevKitC V4, desenho de dimensoes (dl.espressif.com/dl/schematics/esp32_devkitc_v4_dimensions.pdf): placa de 27,94 x 48,26, modulo WROOM saindo 6,04 alem da placa com 18 de largura, total 54,3. Sem furo de fixacao. Folga de 0,25 por lado. Mesma figura do rebaixo da BSP: a placa entra aqui com o modulo virado pra BSP",
+          "tipo": "poligono",
+          "pontos_mm": [
+            [
+              -14.22,
+              -27.4
+            ],
+            [
+              14.22,
+              -27.4
+            ],
+            [
+              14.22,
+              21.36
+            ],
+            [
+              9.25,
+              21.36
+            ],
+            [
+              9.25,
+              27.4
+            ],
+            [
+              -9.25,
+              27.4
+            ],
+            [
+              -9.25,
+              21.36
+            ],
+            [
+              -14.22,
+              21.36
+            ]
+          ],
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "parafusos",
+          "fonte": "os 2 M3 do DevKit na BSP",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 65.8,
+          "linhas_x": 1,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    },
+    {
+      "codigo": "BDP",
+      "nome": "presilha do ESP32 DevKitC",
+      "tipo": "retangulo",
+      "largura_mm": 20.0,
+      "altura_mm": 81.0,
+      "raio_mm": 3.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "parafusos",
+          "fonte": "tira de 20 entre as duas fileiras de pinos (25,40 entre centros no desenho da Espressif): sobra ~1,4 de cada lado ate o conector dos jumpers. Aperta o meio da placa por baixo",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 65.8,
+          "linhas_x": 1,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    },
+    {
+      "codigo": "BCB",
+      "nome": "berco da ESP32-CAM",
+      "tipo": "retangulo",
+      "largura_mm": 39.5,
+      "altura_mm": 67.0,
+      "raio_mm": 3.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "janela da placa",
+          "fonte": "Ai-Thinker ESP32-CAM V1.0: placa de 27 x 40,5 (+-0,2), folga de 0,25 por lado",
+          "tipo": "janela",
+          "largura_mm": 27.5,
+          "altura_mm": 41.0,
+          "raio_mm": 0.5,
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "parafusos",
+          "fonte": "os 2 M3 da ESP32-CAM na BSP",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 51.5,
+          "linhas_x": 1,
+          "centro_x": true,
+          "centro_y": true
+        }
+      ]
+    },
+    {
+      "codigo": "BCP",
+      "nome": "presilha da ESP32-CAM",
+      "tipo": "retangulo",
+      "largura_mm": 16.0,
+      "altura_mm": 67.0,
+      "raio_mm": 3.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "parafusos",
+          "fonte": "tira de 16 no meio da face dos pinos, longe das duas fileiras de 8 pinos (espacamento entre fileiras nao cotado pela Ai-Thinker; 16 deixa folga mesmo se as fileiras estiverem a 20,32)",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 51.5,
+          "linhas_x": 1,
           "centro_x": true,
           "centro_y": true
         }
