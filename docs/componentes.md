@@ -8,7 +8,7 @@ A linguagem construtiva (enforca-gato, dedos, camada dupla, gota de parede, píl
 
 Os componentes de interface ficam no sub-painel `BSP` (240 x 560 mm, 1 lâmina), que vai atrás da janela de 180 x 500 da frente `B6E`. A regra de montagem é a mesma para todos: **só a parte saltada atravessa a chapa**, e a placa ou base do componente é parafusada por trás, encostada no MDF.
 
-Os dois ficam centrados na largura da `BSP`. O LCD tem o centro dos furos a 480 mm da base da peça e o teclado a 380, então o LCD fica 100 mm acima do teclado.
+Todos ficam centrados na largura da `BSP`. O LCD tem o centro dos furos a 480 mm da base da peça e o teclado a 380, então o LCD fica 100 mm acima do teclado. O leitor R307S está a 300 e o LED a 265, **em posição provisória**: a ordem do projeto é desenhar o recorte de cada componente primeiro e só depois organizar todos nos módulos.
 
 ### LCD 1602A (16 x 2)
 
@@ -43,11 +43,36 @@ O vendedor só informa 69 x 65 x 10 mm e "furos de fixação nas extremidades". 
 
 **Ponte abaixo do piso, aceita.** O próprio fabricante põe os furos colados no recorte, e no MDF de 3 mm sobra cerca de 1 mm entre cada furo e o vão. O piso do projeto é 1,5 mm (metade da espessura). A exceção foi aceita em 01/10/2026 e está declarada na spec da `BSP` (`ponte_aceita_mm` e `ponte_aceita_motivo`). O gerador imprime `EXCECAO DFM BSP` toda vez que roda, e um teste garante que a exceção vale só ali. Se uma ponte trincar, o parafuso ainda aperta a base pelo lado de fora do furo.
 
+### Leitor biométrico Grow R307S
+
+| item | valor |
+|---|---|
+| peça do grupo | Grow R307S, chip AS608, conector de 6 vias (3,3VT, TOUCH, RXD, TXD, GND, VCC) e USB de 4 |
+| corpo | 44,1 de altura, seção de 20,1 x 23,5 mm (a placa de trás tem a mesma seção) |
+| vidro | 15 x 11,19 mm na face de cima |
+| vão na chapa | 20,6 x 24,0 mm (folga de 0,25 por lado) com 4 batentes de 2,0 x 4,0 nos cantos; meio livre de 16,6 |
+| furos na chapa | 2 de ⌀3,2 a 38 mm entre centros, na altura do leitor, para M3 x 60 |
+| presilha `BLR` | 56 x 40, janela de 17 x 26, 2 furos de ⌀3,2 a 38 |
+
+As lojas dão quatro corpos diferentes para o R307S (52 x 20 x 22, 55 x 21 x 21,5, 46 x 21 x 23,5 e 48 x 24 x 20). Valeu o manual da própria Grow, que tem a única vista cotada: 44,1 x 20 x 23,5, com a placa de trás de 20,1 x 23,5. A foto da peça do grupo confere a placa quadrada com os 4 parafusos nos cantos.
+
+O corpo não passa pelo vão. Os 4 batentes dos cantos ficam por fora da largura do vidro (15 mm, centrado) e seguram a face do leitor, que fica 3 mm abaixo da frente da chapa: o vão livre de 16,6 deixa o dedo chegar no vidro. Por trás, a presilha `BLR` aperta a placa do leitor contra os batentes. Ela apoia só nas faixas laterais da placa (~1,5 mm) e nas cabeças dos 4 parafusos dos cantos, e o conector e o cabo passam pela janela do meio. Montagem: 2 parafusos M3 x 60 entram pela frente da `BSP`, ganham uma porca encostada na chapa, atravessam a presilha e levam a porca que aperta. A conta do comprimento é 3 da `BSP` + 44,1 do corpo + 3 da presilha + porca.
+
+### LED RGB de 5 mm (módulo KY-016)
+
+| item | valor |
+|---|---|
+| peça do grupo | módulo KY-016, 4 pinos (GND, B, G, R) em barra de 90°, 2 furos de fixação, LED dobrado para fora da borda da placa |
+| LED | 5 mm de corpo, aba da base de ~5,8 mm |
+| furos na chapa | ⌀5,0 para o LED e 2 de ⌀2,4 a 10 mm entre centros para a placa, 3 mm ao lado do LED |
+
+A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o LED é endireitado a 90 graus da placa para atravessar o furo de ⌀5,0. Com 2 porcas M2 de espaçador em cada parafuso, a placa fica ~3 mm atrás da chapa e o LED salta ~2 mm na frente. A furação não aparece em nenhuma loja nem no datasheet da Joy-it: saiu da foto da peça do grupo em resolução cheia, usando como régua o passo de 2,54 mm da barra de pinos e conferindo pela aba de ~5,8 do LED. São 2 furos de ~2,5 a 10,0 mm entre centros, na borda do LED, numa placa de ~15 x 13. Por ser medida de foto, é a primeira coisa a conferir no corte de teste.
+
 ### Ainda sem desenho
 
 | componente | situação |
 |---|---|
-| sensor biométrico | modelo não escolhido |
+| tranca, 2 botões de porta, ESP32 DevKitC, ESP32-CAM | próximos recortes |
 | monitor touch | desejável, fora do protótipo por ora |
 
 ## Fixação e passagem de cabo
@@ -68,9 +93,13 @@ O vendedor só informa 69 x 65 x 10 mm e "furos de fixação nas extremidades". 
 | EONE 1602A-1 (Elecrow), p. 12 | furos 75,4 x 31,4 ⌀2,8, moldura 70,7 x 23,8, altura 7,0 | [PDF](https://www.elecrow.com/download/LCD1602.pdf) |
 | HJ1602A, p. 2 | furos 75 x 31 ⌀2,5, moldura 70,8 x 23,8 | [PDF (Northwestern)](https://hades.mech.northwestern.edu/images/f/f7/LCD16x2_HJ1602A.pdf) |
 | Waveshare LCD1602, p. 18 | placa 80 x 36, furos 75 x 31 | [PDF](https://www.waveshare.com/datasheet/LCD_en_PDF/LCD1602.pdf) |
+| foto do KY-016 do grupo (IMG_7664) | furos de ~2,5 a 10,0 entre centros, placa de ~15 x 13 | foto de 07/10/2026, não publicada |
 | foto do LCD do grupo | moldura ~76-77 x ~25, centrada; lingueta do backlight | foto tirada em 01/10/2026, não publicada |
 | Multicomp MCAK1604NBWB, p. 2 | recorte 60 x 57 R4, furos ⌀2,3 em 60 x 59, base 65 x 64 | [PDF (Farnell)](https://www.farnell.com/datasheets/1662717.pdf) |
 | Accord AK-1604 | recorte de painel 60 x 57, base 65 x 64 | [página do produto (TME)](https://www.tme.eu/en/details/kb1604-pnb/plastic-keypads/accord/ak-1604-n-bbw/) |
+| Grow R307S User Manual, p. 2 | corpo 44,1 x 20 x 23,5, placa 20,1 x 23,5, vidro 15 x 11,19, pinagem | [PDF (Robu)](https://robu.in/wp-content/uploads/2024/08/R307S-fingerprint-module-user-manual.pdf) |
+| Joy-it COM-KY016RGBLED | módulo com LED de 5 mm | [datasheet](https://www.joy-it.net/files/files/Produkte/COM-KY016-RGBLED/COM-KY016RGBLED-Datasheet.pdf) |
+| fotos do R307S e do KY-016 do grupo | placa do leitor com 4 parafusos; LED dobrado para fora da placa | fotos tiradas em 07/10/2026, não publicadas |
 | Smart Componentes | teclado 69 x 65 x 10, conector de 10 pinos | [loja](https://www.smartcomponentes.com/modulo-teclado-matricial-16-karet-teclas-alfanum-rico-4x4-arduino) |
 | TabbedBoxMaker | matriz de juntas de dedos das seis faces | [GitHub](https://github.com/paulh-rnd/TabbedBoxMaker) |
 | técnico do laboratório | perfil do DXF (AC1032, camada `CORTE`) | `perfis/` |
@@ -79,7 +108,7 @@ O vendedor só informa 69 x 65 x 10 mm e "furos de fixação nas extremidades". 
 
 | arquivo | o que é |
 |---|---|
-| `cortes/biometrico/interface-vaos.dxf` | **só os vãos e furos do LCD e do teclado**, sem o contorno da `BSP`, para cortar na peça que já foi cortada, alinhando à mão na mesa |
+| `cortes/biometrico/interface-vaos.dxf` | **só os vãos e furos do LCD, do teclado, do leitor R307S e do LED**, sem o contorno da `BSP`, para cortar na peça que já foi cortada, alinhando à mão na mesa |
 | `cortes/biometrico/interface-vaos.pdf` | o mesmo em escala 1:1, com 5 mm de margem: imprimir em 100% e pôr os componentes de cara para baixo em cima confere tudo sem paquímetro |
 | `cortes/biometrico/modulo-biometrico-bloco3.dxf` | carga 3, que tem a `BSP` inteira já com os vãos |
 | `specs/modulos.json` | peça `BSP`, campo `aberturas`: cada vão com `componente` e `fonte` |
@@ -90,6 +119,7 @@ python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 
 ## Pendências
 
-1. **Corte de teste.** Cortar `interface-vaos.dxf` num retalho, encaixar o LCD e o teclado de verdade e conferir os vãos, os furos e a solda dos pinos.
+1. **Corte de teste.** Cortar `interface-vaos.dxf` num retalho, encaixar o LCD, o teclado, o leitor e o LED de verdade e conferir os vãos, os furos e a solda dos pinos.
 2. **Corte oficial.** Só depois do teste: os vãos na `BSP` já cortada, ou a `BSP` nova da carga 3.
 3. **Medida da moldura do LCD.** Se o teste mostrar folga demais ou de menos, trocar os pontos do vão na spec pela medida de paquímetro.
+4. **Batentes do leitor.** Conferir no teste se os batentes de 2,0 mm pegam o corpo e se o dedo alcança o vidro 3 mm abaixo da frente.

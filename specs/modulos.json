@@ -1125,6 +1125,128 @@
           "centro_x": true,
           "y_mm": 380.0,
           "componente": "teclado-4x4"
+        },
+        {
+          "nome": "vao do leitor biometrico R307S com batentes",
+          "fonte": "Grow R307S Fingerprint Module User Manual (hzgrow.com), p.2: corpo 44,1 x 20 x 23,5, placa de tras 20,1 x 23,5, vidro de 15 x 11,19 centrado na largura da face de cima. Vao de 20,6 x 24,0 (folga 0,25 por lado) com quatro batentes de 2,0 x 4,0 nos cantos, por fora da largura do vidro (vao livre de 16,6 no meio): o corpo nao passa, a face encosta neles por tras e fica 3 mm abaixo da frente. A presilha BLR aperta o leitor contra os batentes. Posicao provisoria",
+          "tipo": "poligono",
+          "pontos_mm": [
+            [
+              -8.3,
+              -12.0
+            ],
+            [
+              8.3,
+              -12.0
+            ],
+            [
+              8.3,
+              -8.0
+            ],
+            [
+              10.3,
+              -8.0
+            ],
+            [
+              10.3,
+              8.0
+            ],
+            [
+              8.3,
+              8.0
+            ],
+            [
+              8.3,
+              12.0
+            ],
+            [
+              -8.3,
+              12.0
+            ],
+            [
+              -8.3,
+              8.0
+            ],
+            [
+              -10.3,
+              8.0
+            ],
+            [
+              -10.3,
+              -8.0
+            ],
+            [
+              -8.3,
+              -8.0
+            ]
+          ],
+          "centro_x": true,
+          "y_mm": 300.0,
+          "componente": "r307s"
+        },
+        {
+          "nome": "parafusos da presilha do R307S",
+          "fonte": "2 parafusos M3 x 60 com porca: 3 da BSP + 44,1 do corpo + 3 da presilha + porca; passante 3,2, a 19 mm do eixo do leitor",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 38.0,
+          "passo_y_mm": 0.0,
+          "linhas_y": 1,
+          "centro_x": true,
+          "y_mm": 300.0,
+          "componente": "r307s"
+        },
+        {
+          "nome": "led rgb de 5 mm do modulo KY-016",
+          "fonte": "LED de 5 mm (Joy-it COM-KY016RGBLED). Furo de 5,0 so para o corpo: o LED e endireitado a 90 graus da placa e atravessa a chapa; a placa fica deitada atras, parafusada pelos 2 furos dela. O centro do LED fica 3,0 mm para dentro da linha dos furos da placa, no meio deles; as pernas do LED absorvem a diferenca na montagem. Posicao provisoria",
+          "tipo": "furo",
+          "diametro_mm": 5.0,
+          "x_mm": 123.0,
+          "y_mm": 265.0,
+          "componente": "led-rgb-ky016"
+        },
+        {
+          "nome": "parafusos da placa do KY-016",
+          "fonte": "foto da peca do grupo (07/10/2026, IMG_7664) em resolucao cheia, escala pelo passo de 2,54 da barra de pinos e conferida pela aba de ~5,8 do LED: 2 furos de ~2,5 a 10,0 mm entre centros na borda do LED, a ~2,6 da borda da placa; placa de ~15 x 13. Nenhuma loja da a furacao. Passante 2,4 para M2, como no teclado; 2 porcas M2 de espacador em cada parafuso deixam a placa ~3 mm atras da chapa e o LED saltado ~2 mm na frente. Medida por foto: conferir no corte de teste",
+          "tipo": "parafusos",
+          "diametro_mm": 2.4,
+          "passo_x_mm": 0.0,
+          "passo_y_mm": 10.0,
+          "linhas_x": 1,
+          "x_mm": 120.0,
+          "y_mm": 265.0,
+          "componente": "led-rgb-ky016"
+        }
+      ]
+    },
+    {
+      "codigo": "BLR",
+      "nome": "presilha do leitor R307S",
+      "tipo": "retangulo",
+      "largura_mm": 56.0,
+      "altura_mm": 40.0,
+      "raio_mm": 3.0,
+      "laminas": 1,
+      "aberturas": [
+        {
+          "nome": "janela do conector e do chip",
+          "fonte": "placa de tras do R307S, 20,1 x 23,5 (manual da Grow, p.2); conector de 6 vias de ~15,7 de largura (foto de 07/10). Janela de 17 x 26: a presilha so apoia nas faixas de ~1,5 mm das laterais da placa e nas cabecas dos 4 parafusos dos cantos, e o cabo sai pelo meio",
+          "tipo": "janela",
+          "largura_mm": 17.0,
+          "altura_mm": 26.0,
+          "centro_x": true,
+          "centro_y": true
+        },
+        {
+          "nome": "parafusos da presilha",
+          "fonte": "mesmos 2 parafusos M3 da BSP, 38 entre centros",
+          "tipo": "parafusos",
+          "diametro_mm": 3.2,
+          "passo_x_mm": 38.0,
+          "passo_y_mm": 0.0,
+          "linhas_y": 1,
+          "centro_x": true,
+          "centro_y": true
         }
       ]
     },
