@@ -147,7 +147,7 @@ São 30 testes. Entre outras coisas, eles garantem que:
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
 * **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
 * **Frente do armário:** visor, dobradiça e tranca ainda não estão no desenho.
-* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD, o teclado, o leitor R307S e o LED na mão, e só depois o corte oficial. O leitor é preso por batentes na `BSP` e pela presilha `BLR` por trás; as posições do leitor e do LED são provisórias até os componentes serem organizados nos módulos. Detalhe em [docs/componentes.md](docs/componentes.md).
+* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD, o teclado, o leitor R307S, o LED e as duas ESP32 na mão, e só depois o corte oficial. A disposição segue a altura de uso: tela e câmera em cima, teclado e leitor lado a lado na faixa de 800 a 1000 mm do piso. As duas ESP32 assentam em rebaixos gravados na face de dentro, então a `BSP` vai pra mesa com essa face pra cima e o arquivo sai espelhado. O furo da câmera é provisório até o módulo OV2640 ser medido. Detalhe em [docs/componentes.md](docs/componentes.md).
 * **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
 ## Estrutura

@@ -8,7 +8,41 @@ A linguagem construtiva (enforca-gato, dedos, camada dupla, gota de parede, píl
 
 Os componentes de interface ficam no sub-painel `BSP` (240 x 560 mm, 1 lâmina), que vai atrás da janela de 180 x 500 da frente `B6E`. A regra de montagem é a mesma para todos: **só a parte saltada atravessa a chapa**, e a placa ou base do componente é parafusada por trás, encostada no MDF.
 
-Todos ficam centrados na largura da `BSP`. O LCD tem o centro dos furos a 480 mm da base da peça e o teclado a 380, então o LCD fica 100 mm acima do teclado. O leitor R307S está a 300 e o LED a 265, **em posição provisória**: a ordem do projeto é desenhar o recorte de cada componente primeiro e só depois organizar todos nos módulos.
+### Disposição e ergonomia
+
+A disposição saiu de quem usa: profissional de enfermagem em pé, de qualquer altura, e também quem está sentado ou em cadeira de rodas. Ela separa o painel em duas zonas, **ver** em cima e **agir** embaixo, em vez de empilhar tudo num eixo só.
+
+| zona | o que tem | centro na `BSP` (de baixo) | altura do piso* |
+|---|---|---|---|
+| ver | lente da câmera (direita) e LED (esquerda), na mesma linha | 445 | 1215 mm |
+| ver | LCD, centrado | 400 | 1170 mm |
+| agir | teclado (x = 84) e leitor (x = 166), lado a lado, na mesma altura | 140 | 910 mm |
+
+\* Com o módulo pendurado com a base a **400 mm do piso**. A `BSP` fica centrada a 650 mm da base do módulo, então a altura do piso é 770 + a cota na `BSP`. É uma recomendação de instalação: se o módulo for pendurado mais alto ou mais baixo, tudo sobe ou desce junto.
+
+Por que essas alturas:
+
+- **Teclado e leitor entre 800 e 1000 mm.** É a faixa que a Resolução SEHAB/CPA nº 9 de 2003 (SP) dá para teclado e leitor de cartão, os comandos de coordenação fina. Ela atende quem está em pé e quem está em cadeira de rodas. O ADA põe 1220 mm como teto de alcance frontal. Uma pessoa alta se curva um pouco, como num caixa eletrônico.
+- **Leitor ao lado do teclado, não abaixo.** Empilhados, um dos dois sairia da faixa. Lado a lado, a digital (o caminho normal) e a senha (o reserva) ficam no mesmo gesto. O leitor fica à direita, do lado da mão dominante da maioria.
+- **LCD a ~1170 mm.** O 1602A é um STN com cone de visão estreito, e quem olha muito de cima perde contraste. A 1170 mm, quem tem 1,50 m (olho a ~1,40) vê a tela uns 20° abaixo do olho, a ~0,6 m de distância. Quem tem 1,85 m (olho a ~1,75) vê uns 45° abaixo. Quem está sentado (olho a ~1,20) vê de frente. Mais alto que isso, a tela fugiria de quem está sentado. O contraste do 1602A ainda se ajusta no trimpot.
+- **Câmera na linha mais alta.** Quem lê a tela fica com o rosto virado pra lente, que está 45 mm acima e ao lado do LCD.
+- **LED discreto.** É um ponto de 5 mm no canto de cima à esquerda, na linha da câmera, como a luz de uma webcam. Fica no campo de visão de quem lê a tela sem disputar atenção com o teclado.
+- **Conjunto centrado na janela.** Sobram ~80 mm de respiro em cima e embaixo.
+
+As cotas das peças ficam em `specs/modulos.json`. Lá, `x_mm` e `y_mm` são o centro da feição, vista de frente.
+
+### Rebaixo por dentro: a `BSP` vai pra mesa ao contrário
+
+O DevKit e a ESP32-CAM não atravessam a chapa: cada placa assenta num **rebaixo** gravado na face de dentro da `BSP`, no tamanho da placa mais 0,25 mm por lado. Pra gravar essa face, a `BSP` vai pra mesa **com a face de dentro pra cima**. Por isso a peça tem `"gravar_por_dentro": true` na spec, e o gerador espelha a `BSP` inteira no arquivo de corte. Na mesa, a câmera aparece à esquerda e o LED à direita. Isso está certo.
+
+No LightBurn:
+
+| camada do DXF | cor | modo | parâmetro | ordem |
+|---|---|---|---|---|
+| `MARCAÇÃO` | amarelo | Fill (gravação) | **150 mm/s × 80%**: o quadrado de baixo à direita da grade de gravação da matriz de MDF 3 mm de 27/10/2026 | primeiro |
+| `CORTE` | vermelho | Linha | o de corte de sempre | depois |
+
+A gravação vem antes do corte: com a peça já solta, o rebaixo sairia fora do lugar. A profundidade que 150/80 tira do MDF ainda **não foi medida**. Antes do corte oficial, medir com paquímetro o quadrado 150/80 da matriz.
 
 ### LCD 1602A (16 x 2)
 
@@ -68,11 +102,31 @@ O corpo não passa pelo vão. Os 4 batentes dos cantos ficam por fora da largura
 
 A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o LED é endireitado a 90 graus da placa para atravessar o furo de ⌀5,0. Com 2 porcas M2 de espaçador em cada parafuso, a placa fica ~3 mm atrás da chapa e o LED salta ~2 mm na frente. A furação não aparece em nenhuma loja nem no datasheet da Joy-it: saiu da foto da peça do grupo em resolução cheia, usando como régua o passo de 2,54 mm da barra de pinos e conferindo pela aba de ~5,8 do LED. São 2 furos de ~2,5 a 10,0 mm entre centros, na borda do LED, numa placa de ~15 x 13. Por ser medida de foto, é a primeira coisa a conferir no corte de teste.
 
+### ESP32 DevKitC (Eletrogate E33-003)
+
+| item | valor |
+|---|---|
+| peça do grupo | ESP32 DevKitC S1, 38 pinos, módulo WROOM-32 |
+| placa | 55 x 28 x 13 mm com pinos (anúncio da Eletrogate) |
+| rebaixo | 28,5 x 55,5 mm, em pé, centro em x = 190 e y = 361,5 (vista de frente) |
+
+A placa assenta com o módulo WROOM virado pra chapa e os pinos apontando pra dentro da caixa, onde entram os jumpers. O USB fica embaixo. Ela fica no canto de cima à direita, logo abaixo da ESP32-CAM, encostada na coluna dos parafusos da `BSP`. Não tem furo de fixação: quem segura a placa é o rebaixo.
+
+### ESP32-CAM com OV2640 (Amazon B0CDJQV11V)
+
+| item | valor |
+|---|---|
+| placa | 27 x 40,5 x 4,5 mm (±0,2), ficha Ai-Thinker ESP32-CAM V1.0 |
+| rebaixo | 27,5 x 41,0 mm, em pé, centro em x = 190 e y = 435 |
+| furo da câmera | ⌀12,5, centro em x = 190 e y = 445, **provisório** |
+
+A placa assenta com a câmera virada pra chapa, e o módulo OV2640 atravessa o furo. O furo de 12,5 foi pensado pra passar um corpo quadrado de ~8,5 mm (diagonal ~12). Nenhuma loja nem a ficha da Ai-Thinker cota o módulo da câmera, nem a posição dele na placa. A spec supõe a lente a 10 mm do topo da placa. **Antes do corte, medir com paquímetro o corpo do OV2640 e a posição dele na placa** e trocar os dois números na spec.
+
 ### Ainda sem desenho
 
 | componente | situação |
 |---|---|
-| tranca, 2 botões de porta, ESP32 DevKitC, ESP32-CAM | próximos recortes |
+| tranca, 2 botões de porta | próximos recortes, no módulo armário |
 | monitor touch | desejável, fora do protótipo por ora |
 
 ## Fixação e passagem de cabo
@@ -108,7 +162,7 @@ A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o 
 
 | arquivo | o que é |
 |---|---|
-| `cortes/biometrico/interface-vaos.dxf` | **só os vãos e furos do LCD, do teclado, do leitor R307S e do LED**, sem o contorno da `BSP`, para cortar na peça que já foi cortada, alinhando à mão na mesa |
+| `cortes/biometrico/interface-vaos.dxf` | **só os vãos e furos do LCD, do teclado, do leitor R307S, do LED e da câmera, mais os rebaixos das duas ESP32 na camada `MARCAÇÃO`**, sem o contorno da `BSP`, já espelhado, para cortar na peça que já foi cortada, com a face de dentro pra cima, alinhando à mão na mesa |
 | `cortes/biometrico/interface-vaos.pdf` | o mesmo em escala 1:1, com 5 mm de margem: imprimir em 100% e pôr os componentes de cara para baixo em cima confere tudo sem paquímetro |
 | `cortes/biometrico/modulo-biometrico-bloco3.dxf` | carga 3, que tem a `BSP` inteira já com os vãos |
 | `specs/modulos.json` | peça `BSP`, campo `aberturas`: cada vão com `componente` e `fonte` |
@@ -119,7 +173,8 @@ python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 
 ## Pendências
 
-1. **Corte de teste.** Cortar `interface-vaos.dxf` num retalho, encaixar o LCD, o teclado, o leitor e o LED de verdade e conferir os vãos, os furos e a solda dos pinos.
-2. **Corte oficial.** Só depois do teste: os vãos na `BSP` já cortada, ou a `BSP` nova da carga 3.
-3. **Medida da moldura do LCD.** Se o teste mostrar folga demais ou de menos, trocar os pontos do vão na spec pela medida de paquímetro.
-4. **Batentes do leitor.** Conferir no teste se os batentes de 2,0 mm pegam o corpo e se o dedo alcança o vidro 3 mm abaixo da frente.
+1. **Corte de teste.** Cortar `interface-vaos.dxf` num retalho, encaixar o LCD, o teclado, o leitor, o LED e as duas ESP32 de verdade e conferir os vãos, os furos, os rebaixos e a solda dos pinos.
+2. **Câmera e profundidade do rebaixo.** Medir o módulo OV2640 e a posição dele na placa, e a profundidade que 150 mm/s × 80% tira do MDF 3 mm.
+3. **Corte oficial.** Só depois do teste: os vãos na `BSP` já cortada, ou a `BSP` nova da carga 3.
+4. **Medida da moldura do LCD.** Se o teste mostrar folga demais ou de menos, trocar os pontos do vão na spec pela medida de paquímetro.
+5. **Batentes do leitor.** Conferir no teste se os batentes de 2,0 mm pegam o corpo e se o dedo alcança o vidro 3 mm abaixo da frente.
