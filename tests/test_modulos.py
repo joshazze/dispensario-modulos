@@ -62,11 +62,12 @@ def test_prancha_e_uma_so_com_legenda_portas_tampas_e_sub_painel():
     _, _, engrave, _, _, placed = build()
     codes = {u["code"] for u, _, _, _ in placed}
     gravados = {i["texto"] for i in engrave if i["tipo"] == "texto"}
-    assert len(placed) == 39
+    assert len(placed) == 40
     assert "BPM" in codes                                 # placa de manutencao do fundo
     assert {"BP1", "BP2", "BP3"} <= codes                 # tres prateleiras, uma lamina
     assert {"ATR", "ATF", "BTR", "BTF"} <= codes          # tampa rosqueada e cega
     assert "BSP" in codes                                 # sub-painel da interface
+    assert "BLR" in codes                                 # presilha do leitor R307S
     # tres folhas de porta, duas laminas cada, peca solta na prancha
     assert {"AP1I", "AP2I", "AP3I", "AP1E", "AP2E", "AP3E"} <= codes
     naMaquina = {i["texto"] for i in engrave
@@ -426,10 +427,17 @@ def _passo(centros):
     return max(xs) - min(xs), max(ys) - min(ys), (max(xs) + min(xs)) / 2.0, (max(ys) + min(ys)) / 2.0
 
 
+def _furos_do_teclado(cuts):
+    """Os 4 furos de 2,4 do teclado; a placa do LED usa o mesmo diametro, mas so 2."""
+    centros = _furos(cuts, 2.4)
+    xs = sorted({round(x, 6) for x, _ in centros})
+    return [c for c in centros if round(c[0], 6) in (xs[0], xs[-1])]
+
+
 def test_vaos_da_interface_saem_sem_o_contorno_da_peca():
     """O arquivo de vaos corta numa BSP que ja existe: so componente, nada de borda."""
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
-    assert len(cuts) == 12                      # LCD, teclado e R307S + 8 furos + LED
+    assert len(cuts) == 16                      # 4 vaos/furo de componente + 12 furos de parafuso
     assert min(x for p in cuts for x, _ in p) == 0.0
     assert min(y for p in cuts for _, y in p) == 0.0
     largura = max(x for p in cuts for x, _ in p)
@@ -439,7 +447,7 @@ def test_vaos_da_interface_saem_sem_o_contorno_da_peca():
 def test_furos_do_lcd_e_do_teclado_batem_com_o_datasheet():
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
     lx, ly, lcx, lcy = _passo(_furos(cuts, 2.7))
-    tx, ty, tcx, tcy = _passo(_furos(cuts, 2.4))
+    tx, ty, tcx, tcy = _passo(_furos_do_teclado(cuts))
     assert (round(lx, 2), round(ly, 2)) == (75.0, 31.0)     # LCD 1602A
     assert (round(tx, 2), round(ty, 2)) == (60.0, 59.0)     # teclado 4x4 MCAK1604
     assert abs(lcx - tcx) < 1e-6                             # mesmo eixo vertical
@@ -448,11 +456,11 @@ def test_furos_do_lcd_e_do_teclado_batem_com_o_datasheet():
 
 def test_vao_centrado_nos_furos_de_cada_componente():
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
-    for diametro in (2.7, 2.4):
-        _, _, cx, cy = _passo(_furos(cuts, diametro))
+    for furos in (_furos(cuts, 2.7), _furos_do_teclado(cuts)):
+        _, _, cx, cy = _passo(furos)
         vaos = [p for p in cuts if len(p) > 4 and geom.bbox(p)[0] < cx < geom.bbox(p)[2]
                 and geom.bbox(p)[1] < cy < geom.bbox(p)[3]]
-        assert len(vaos) == 1, diametro
+        assert len(vaos) == 1, furos
         x0, y0, x1, y1 = geom.bbox(vaos[0])
         assert abs((x0 + x1) / 2.0 - cx) < 1e-6
         assert abs((y0 + y1) / 2.0 - cy) < 1e-6
@@ -470,15 +478,44 @@ def test_ponte_fina_so_e_aceita_onde_a_spec_declara():
 
 
 def test_leitor_e_led_saem_no_eixo_da_interface():
-    """R307S pelo manual da Grow (corpo 20,1 x 23,5) e LED de 5 mm por pressao."""
+    """R307S pelo manual da Grow (corpo 20,1 x 23,5) e LED de 5 mm com a placa parafusada."""
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
     _, _, eixo, _ = _passo(_furos(cuts, 2.7))
-    leitor = [p for p in cuts if len(p) == 4]
+    leitor = [p for p in cuts if abs(geom.bbox(p)[2] - geom.bbox(p)[0] - 20.6) < 1e-6]
     assert len(leitor) == 1
     x0, y0, x1, y1 = geom.bbox(leitor[0])
     assert (round(x1 - x0, 2), round(y1 - y0, 2)) == (20.6, 24.0)
     assert abs((x0 + x1) / 2.0 - eixo) < 1e-6
     led = _furos(cuts, 5.0)
-    assert len(led) == 1 and abs(led[0][0] - eixo) < 1e-6
+    assert len(led) == 1 and abs(led[0][0] - (eixo + 3.0)) < 1e-6
+    placa = [c for c in _furos(cuts, 2.4) if abs(c[0] - eixo) < 1e-6]   # o teclado fica a +-30
+    px, py, pcx, pcy = _passo(placa)
+    assert len(placa) == 2
+    assert (round(px, 2), round(py, 2)) == (0.0, 10.0)     # placa do KY-016
+    assert abs(pcx - eixo) < 1e-6 and abs(pcy - led[0][1]) < 1e-6
     assert all(geom.dist_poligonos(leitor[0], b) >= 1.5
                for b in cuts if b is not leitor[0])
+
+
+def test_batentes_seguram_o_r307s_sem_cobrir_o_vidro():
+    """O corpo de 20,1 x 23,5 nao passa pelo vao, e o vidro de 15 fica livre."""
+    cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
+    leitor = next(p for p in cuts if abs(geom.bbox(p)[2] - geom.bbox(p)[0] - 20.6) < 1e-6)
+    x0, _, x1, _ = geom.bbox(leitor)
+    cx = (x0 + x1) / 2.0
+    xs = sorted({round(abs(x - cx), 2) for x, _ in leitor})
+    assert xs == [8.3, 10.3]                       # meio livre de 16,6, vao de 20,6
+    assert 2 * 8.3 < 20.1 < 2 * 10.3               # batente pega o corpo, o vao folga
+    assert 2 * 8.3 > 15.0                          # vidro de 15 passa livre
+
+
+def test_presilha_bate_com_os_parafusos_do_leitor():
+    spec = load_spec()
+    blr = next(e for e in spec["pecas_extras"] if e["codigo"] == "BLR")
+    furos = [a for a in blr["aberturas"] if a["tipo"] == "parafusos"]
+    bsp = next(e for e in spec["pecas_extras"] if e["codigo"] == "BSP")
+    do_leitor = [a for a in bsp["aberturas"]
+                 if a["tipo"] == "parafusos" and a.get("componente") == "r307s"]
+    assert furos[0]["passo_x_mm"] == do_leitor[0]["passo_x_mm"] == 38.0
+    janela = next(a for a in blr["aberturas"] if a["tipo"] == "janela")
+    assert janela["largura_mm"] < 20.1 < 38.0 - 3.2       # apoia na placa, entre os parafusos
