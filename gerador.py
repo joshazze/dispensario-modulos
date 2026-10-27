@@ -297,7 +297,9 @@ def abertura_polys(ab, w, h):
                                         lw, lh, ab.get("raio_mm", 0.0)))
         elif tipo == "furo":
             saida.append(circle_pts(cx, cy, ab["diametro_mm"]))
-        elif tipo == "janela":
+        elif tipo in ("janela", "rebaixo"):
+            # rebaixo tem a geometria da janela, mas e gravado (Fill) e nao
+            # atravessa: e o assento da placa na face que fica pra cima na mesa
             lw = ab["largura_mm"]
             lh = ab["altura_mm"]
             saida.append(geom.rrect(cx - lw / 2.0, cy - lh / 2.0, lw, lh,
@@ -360,6 +362,8 @@ def aberturas_da_face(dono, face_number, layer, w, h):
     """Filtra as aberturas pela face e pela lamina em que elas existem."""
     saida = []
     for ab in dono.get("aberturas", []):
+        if ab["tipo"] == "rebaixo":
+            continue
         if face_number is not None and ab.get("face") != face_number:
             continue
         alvo = ab.get("camadas", "todas")
@@ -367,6 +371,28 @@ def aberturas_da_face(dono, face_number, layer, w, h):
             continue
         saida.extend(abertura_polys(ab, w, h))
     return saida
+
+
+def rebaixos_da_peca(dono, w, h, so_componentes=False):
+    """Areas gravadas em Fill que nao atravessam a chapa (assento de placa)."""
+    saida = []
+    for ab in dono.get("aberturas", []):
+        if ab["tipo"] != "rebaixo":
+            continue
+        if so_componentes and not ab.get("componente"):
+            continue
+        saida.extend(abertura_polys(ab, w, h))
+    return saida
+
+
+def espelha(polys, w):
+    """Espelha no eixo vertical da peca.
+
+    A spec descreve a peca vista de FRENTE. Quando o rebaixo fica na face de
+    dentro, a peca vai pra mesa com essa face pra cima, entao o arquivo de
+    corte sai espelhado: o que esta a esquerda pela frente fica a direita na mesa.
+    """
+    return [[(w - x, y) for x, y in reversed(poly)] for poly in polys]
 
 
 def checa_aberturas(nome, contorno, feicoes, espessura, piso_ponte):
@@ -458,10 +484,15 @@ def pecas_extras(spec):
         for sufixo in sufixos:
             layer = {"I": "interna", "E": "externa", "": "unica"}[sufixo]
             feicoes = aberturas_da_face(extra, None, layer, w, h)
+            rebaixos = rebaixos_da_peca(extra, w, h)
+            if extra.get("gravar_por_dentro"):
+                feicoes, rebaixos = espelha(feicoes, w), espelha(rebaixos, w)
+                contorno = espelha([contorno], w)[0]
             unidades.append({
                 "code": extra["codigo"] + sufixo,
                 "nome": extra["nome"],
                 "polys": [contorno] + feicoes,
+                "rebaixos": rebaixos,
                 "vazios": [],
                 "alojar_em": extra.get("alojar_em"),
                 "w": w,
@@ -520,6 +551,14 @@ def rot90(polys):
     min_x = min(x for poly in turned for x, _ in poly)
     min_y = min(y for poly in turned for _, y in poly)
     return [[(x - min_x, y - min_y) for x, y in poly] for poly in turned]
+
+
+def gira_unidade(unit, gira):
+    """Contorno, feicoes e rebaixos giram juntos, no mesmo referencial."""
+    n = len(unit["polys"])
+    todos = unit["polys"] + unit.get("rebaixos", [])
+    todos = rot90(todos) if gira else todos
+    return todos[:n], todos[n:]
 
 
 LEGENDA_LINHAS = [
@@ -869,7 +908,10 @@ def build_sheet(spec, groups, filtro=None, titulo=None):
     engrave = []
     gravar = spec.get("gravar_codigos", True)
     for unit, x, y, gira in placed:
-        polys = rot90(unit["polys"]) if gira else unit["polys"]
+        polys, rebaixos = gira_unidade(unit, gira)
+        # o rebaixo e gravado antes de qualquer corte: com a peca solta a
+        # gravacao sairia fora do lugar
+        engrave.extend({"tipo": "rebaixo", "pontos": moved(rb, x, y)} for rb in rebaixos)
         # Interno antes de externo, sempre. Cortado o
         # perimetro a peca se solta e desalinha, e furo depois disso sai torto.
         cuts.extend(moved(poly, x, y) for poly in polys[1:])
@@ -921,6 +963,13 @@ def svg_sheet(cuts, engrave, width, height, labels=True):
     for poly in cuts:
         out.append('<path d="%s"/>' % path_d(poly, flip))
     out.append('</g>')
+    rebaixos = [item for item in engrave if item["tipo"] == "rebaixo"]
+    if rebaixos:
+        # azul: gravacao em Fill, vai pra maquina antes do corte
+        out.append('<g fill="#0000ff" fill-opacity="0.15" stroke="#0000ff" stroke-width="0.05">')
+        for item in rebaixos:
+            out.append('<path d="%s"/>' % path_d(item["pontos"], flip))
+        out.append('</g>')
     if labels:
         # so a moldura do bloco de mesa, em cinza. Nada de azul no desenho:
         # gravacao e cabecalho poluem a conferencia e nao vao pra maquina.
@@ -965,7 +1014,13 @@ def valida_prancha(spec, placed):
     piso_ponte = 0.5 * espessura
     problemas = []
     for unit, x, y, gira in placed:
-        polys = rot90(unit["polys"]) if gira else unit["polys"]
+        polys, rebaixos = gira_unidade(unit, gira)
+        bx0, by0, bx1, by1 = geom.bbox(polys[0])
+        for i, rb in enumerate(rebaixos, 1):
+            rx0, ry0, rx1, ry1 = geom.bbox(rb)
+            if min(rx0 - bx0, ry0 - by0, bx1 - rx1, by1 - ry1) < 2.0 * espessura - 1e-6:
+                problemas.append("%s: rebaixo %d fora da peca ou colado na borda"
+                                 % (unit["code"], i))
         # excecao declarada na spec, com o motivo ao lado: o piso cai so
         # naquela peca e o relatorio continua mostrando que caiu
         piso = min(piso_ponte, unit.get("ponte_aceita_mm") or piso_ponte)
@@ -983,35 +1038,47 @@ def vaos_de_componentes(spec, codigo):
     E o arquivo para cortar os componentes numa peca que ja saiu da maquina:
     a peca vai de novo na mesa, alinhada a mao, e o laser corta so isto.
     """
+    return componentes_da_peca(spec, codigo)[0]
+
+
+def componentes_da_peca(spec, codigo):
+    """(cortes, rebaixos) dos componentes, na mesma origem e ja espelhados
+    quando a peca grava por dentro."""
     extra = next(e for e in spec["pecas_extras"] if e["codigo"] == codigo)
     w, h = extra["largura_mm"], extra["altura_mm"]
     polys = []
     for ab in extra.get("aberturas", []):
-        if ab.get("componente"):
+        if ab.get("componente") and ab["tipo"] != "rebaixo":
             polys += abertura_polys(ab, w, h)
     if not polys:
         raise ValueError("a peca %s nao tem abertura com `componente`" % codigo)
-    x0 = min(x for p in polys for x, _ in p)
-    y0 = min(y for p in polys for _, y in p)
-    return [[(x - x0, y - y0) for x, y in p] for p in polys]
+    rebaixos = rebaixos_da_peca(extra, w, h, so_componentes=True)
+    if extra.get("gravar_por_dentro"):
+        polys, rebaixos = espelha(polys, w), espelha(rebaixos, w)
+    todos = polys + rebaixos
+    x0 = min(x for p in todos for x, _ in p)
+    y0 = min(y for p in todos for _, y in p)
+    mover = lambda ps: [[(x - x0, y - y0) for x, y in p] for p in ps]
+    return mover(polys), mover(rebaixos)
 
 
 def exporta_vaos(spec, codigo, nome, margem=5.0):
     """DXF so com os vaos (origem no canto de baixo a esquerda) e PDF 1:1."""
-    cuts = vaos_de_componentes(spec, codigo)
-    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts)
+    cuts, rebaixos = componentes_da_peca(spec, codigo)
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos)
     # o PDF ganha margem para o furo da borda nao sair cortado na pagina
     vis = [[(x + margem, y + margem) for x, y in p] for p in cuts]
-    w = max(x for p in vis for x, _ in p) + margem
-    h = max(y for p in vis for _, y in p) + margem
-    svg = svg_sheet(vis, [], w, h, labels=True)
+    rvis = [[(x + margem, y + margem) for x, y in p] for p in rebaixos]
+    w = max(x for p in vis + rvis for x, _ in p) + margem
+    h = max(y for p in vis + rvis for _, y in p) + margem
+    svg = svg_sheet(vis, [{"tipo": "rebaixo", "pontos": p} for p in rvis], w, h, labels=True)
     with open(os.path.join(OUTPUT, nome + ".svg"), "w", encoding="utf-8") as stream:
         stream.write(svg)
     write_pdf(svg, w, h, os.path.join(OUTPUT, nome + ".pdf"))
     ponte = min((geom.dist_poligonos(a, b) for i, a in enumerate(cuts)
                  for b in cuts[i + 1:]), default=float("inf"))
-    print("vaos %s.dxf | %d contornos | ponte mais fina %.2f mm"
-          % (nome, len(cuts), ponte))
+    print("vaos %s.dxf | %d contornos | %d rebaixos | ponte mais fina %.2f mm"
+          % (nome, len(cuts), len(rebaixos), ponte))
     return cuts
 
 
@@ -1022,7 +1089,7 @@ def relatorio(spec, placed, sheet_w, sheet_h):
     """
     pecas = []
     for unit, x, y, gira in placed:
-        polys = rot90(unit["polys"]) if gira else unit["polys"]
+        polys = gira_unidade(unit, gira)[0]
         pecas.append({
             "nome": unit["code"],
             "contorno": moved(polys[0], x, y),
@@ -1101,7 +1168,9 @@ def main(argv=None):
         stream.write(svg_sheet(cuts, engrave, sheet_w, sheet_h, labels=False))
     textos = [g for g in engrave
               if g["tipo"] == "texto" and g.get("machine", True)]
-    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, textos=textos)
+    rebaixos = [g["pontos"] for g in engrave if g["tipo"] == "rebaixo"]
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, textos=textos,
+                   rebaixos=rebaixos)
     write_pdf(svg_cotado, sheet_w, sheet_h, os.path.join(OUTPUT, nome + ".pdf"))
 
     # um arquivo por bloco: e assim que a peca chega na mesa, uma carga por vez
@@ -1115,10 +1184,14 @@ def main(argv=None):
         x0 = min(x for poly in dentro for x, _ in poly)
         y0 = min(y for poly in dentro for _, y in poly)
         locais = [[(x - x0, y - y0) for x, y in poly] for poly in dentro]
+        rb_locais = [[(x - x0, y - y0) for x, y in rb] for rb in rebaixos
+                     if all(ox - 1e-6 <= x <= ox + bw + 1e-6
+                            and oy - 1e-6 <= y <= oy + bh + 1e-6 for x, y in rb)]
         stem = "%s-bloco%d" % (nome, indice)
         quadro = [(0.0, 0.0), (bw, 0.0), (bw, bh), (0.0, bh)]
-        perfil.escreve(os.path.join(OUTPUT, stem + ".dxf"), locais)
-        svg_bloco = svg_sheet(locais, [{"tipo": "moldura", "pontos": quadro}],
+        perfil.escreve(os.path.join(OUTPUT, stem + ".dxf"), locais, rebaixos=rb_locais)
+        svg_bloco = svg_sheet(locais, [{"tipo": "moldura", "pontos": quadro}]
+                              + [{"tipo": "rebaixo", "pontos": rb} for rb in rb_locais],
                               bw, bh, labels=True)
         with open(os.path.join(OUTPUT, stem + ".svg"), "w", encoding="utf-8") as f:
             f.write(svg_bloco)

@@ -1090,7 +1090,7 @@
             ]
           ],
           "centro_x": true,
-          "y_mm": 480.0,
+          "y_mm": 400.0,
           "componente": "lcd-1602a"
         },
         {
@@ -1101,7 +1101,7 @@
           "passo_x_mm": 75.0,
           "passo_y_mm": 31.0,
           "centro_x": true,
-          "y_mm": 480.0,
+          "y_mm": 400.0,
           "componente": "lcd-1602a"
         },
         {
@@ -1111,9 +1111,9 @@
           "largura_mm": 60.5,
           "altura_mm": 57.5,
           "raio_mm": 4.25,
-          "centro_x": true,
-          "y_mm": 380.0,
-          "componente": "teclado-4x4"
+          "y_mm": 140.0,
+          "componente": "teclado-4x4",
+          "x_mm": 84.0
         },
         {
           "nome": "parafusos do teclado 4x4",
@@ -1122,9 +1122,9 @@
           "diametro_mm": 2.4,
           "passo_x_mm": 60.0,
           "passo_y_mm": 59.0,
-          "centro_x": true,
-          "y_mm": 380.0,
-          "componente": "teclado-4x4"
+          "y_mm": 140.0,
+          "componente": "teclado-4x4",
+          "x_mm": 84.0
         },
         {
           "nome": "vao do leitor biometrico R307S com batentes",
@@ -1180,9 +1180,9 @@
               -8.0
             ]
           ],
-          "centro_x": true,
-          "y_mm": 300.0,
-          "componente": "r307s"
+          "y_mm": 140.0,
+          "componente": "r307s",
+          "x_mm": 166.0
         },
         {
           "nome": "parafusos da presilha do R307S",
@@ -1192,17 +1192,17 @@
           "passo_x_mm": 38.0,
           "passo_y_mm": 0.0,
           "linhas_y": 1,
-          "centro_x": true,
-          "y_mm": 300.0,
-          "componente": "r307s"
+          "y_mm": 140.0,
+          "componente": "r307s",
+          "x_mm": 166.0
         },
         {
           "nome": "led rgb de 5 mm do modulo KY-016",
           "fonte": "LED de 5 mm (Joy-it COM-KY016RGBLED). Furo de 5,0 so para o corpo: o LED e endireitado a 90 graus da placa e atravessa a chapa; a placa fica deitada atras, parafusada pelos 2 furos dela. O centro do LED fica 3,0 mm para dentro da linha dos furos da placa, no meio deles; as pernas do LED absorvem a diferenca na montagem. Posicao provisoria",
           "tipo": "furo",
           "diametro_mm": 5.0,
-          "x_mm": 123.0,
-          "y_mm": 265.0,
+          "x_mm": 50.0,
+          "y_mm": 445.0,
           "componente": "led-rgb-ky016"
         },
         {
@@ -1213,11 +1213,44 @@
           "passo_x_mm": 0.0,
           "passo_y_mm": 10.0,
           "linhas_x": 1,
-          "x_mm": 120.0,
-          "y_mm": 265.0,
+          "x_mm": 47.0,
+          "y_mm": 445.0,
           "componente": "led-rgb-ky016"
+        },
+        {
+          "nome": "furo da camera OV2640 da ESP32-CAM",
+          "fonte": "PROVISORIO, sem medida: furo de 12,5 para passar o corpo quadrado do modulo OV2640 (~8,5 de lado, diagonal ~12) com a lente; nenhuma loja nem a ficha da Ai-Thinker cota o modulo. Medir a peca antes do corte",
+          "tipo": "furo",
+          "diametro_mm": 12.5,
+          "x_mm": 190.0,
+          "y_mm": 445.0,
+          "componente": "esp32-cam"
+        },
+        {
+          "nome": "rebaixo da placa ESP32-CAM",
+          "fonte": "Ai-Thinker ESP32-CAM, ficha V1.0: placa de 27 x 40,5 x 4,5 (+-0,2); folga de 0,25 por lado. Placa em pe, com a camera virada pra chapa e a lente a 10 mm do topo da placa (PROVISORIO: a posicao do modulo na placa nao esta cotada em lugar nenhum)",
+          "tipo": "rebaixo",
+          "largura_mm": 27.5,
+          "altura_mm": 41.0,
+          "raio_mm": 0.5,
+          "x_mm": 190.0,
+          "y_mm": 435.0,
+          "componente": "esp32-cam"
+        },
+        {
+          "nome": "rebaixo da placa ESP32 DevKitC",
+          "fonte": "anuncio Eletrogate E33-003 (ESP32 DevKitC S1, 38 pinos): 55 x 28 x 13 com pinos; folga de 0,25 por lado. Placa em pe, com o modulo WROOM virado pra chapa e os pinos pra dentro da caixa, USB embaixo",
+          "tipo": "rebaixo",
+          "largura_mm": 28.5,
+          "altura_mm": 55.5,
+          "raio_mm": 0.5,
+          "x_mm": 190.0,
+          "y_mm": 361.5,
+          "componente": "esp32-devkitc"
         }
-      ]
+      ],
+      "gravar_por_dentro": true,
+      "gravar_por_dentro_motivo": "os rebaixos das placas sao gravados na face de dentro: a BSP vai pra mesa com ela pra cima, entao o arquivo sai espelhado em relacao a vista de frente que a spec descreve"
     },
     {
       "codigo": "BLR",

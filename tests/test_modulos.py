@@ -1,4 +1,5 @@
 import json
+import math
 from pathlib import Path
 
 import gerador
@@ -83,7 +84,11 @@ def test_desenho_sai_sem_texto_e_sem_azul():
     assert not [i for i in engrave
                 if i["tipo"] == "texto" and i.get("machine", True)]
     svg = gerador.svg_sheet([], engrave, w, h, labels=True)
-    assert "#0000ff" not in svg and "<text" not in svg
+    assert "<text" not in svg
+    # o unico azul e o rebaixo das placas, que precisa ir pra maquina
+    sem_rebaixo = [i for i in engrave if i["tipo"] != "rebaixo"]
+    assert "#0000ff" not in gerador.svg_sheet([], sem_rebaixo, w, h, labels=True)
+    assert len(engrave) - len(sem_rebaixo) == 2
 
 
 def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():
@@ -429,19 +434,21 @@ def _passo(centros):
 
 def _furos_do_teclado(cuts):
     """Os 4 furos de 2,4 do teclado; a placa do LED usa o mesmo diametro, mas so 2."""
-    centros = _furos(cuts, 2.4)
-    xs = sorted({round(x, 6) for x, _ in centros})
-    return [c for c in centros if round(c[0], 6) in (xs[0], xs[-1])]
+    led = _furos(cuts, 5.0)
+    return [c for c in _furos(cuts, 2.4)
+            if all(math.hypot(c[0] - lx, c[1] - ly) > 8.0 for lx, ly in led)]
 
 
 def test_vaos_da_interface_saem_sem_o_contorno_da_peca():
     """O arquivo de vaos corta numa BSP que ja existe: so componente, nada de borda."""
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
-    assert len(cuts) == 16                      # 4 vaos/furo de componente + 12 furos de parafuso
-    assert min(x for p in cuts for x, _ in p) == 0.0
-    assert min(y for p in cuts for _, y in p) == 0.0
-    largura = max(x for p in cuts for x, _ in p)
-    assert largura < 100.0                      # a BSP tem 240: o contorno nao veio junto
+    assert len(cuts) == 17                      # 5 vaos/furo de componente + 12 furos de parafuso
+    _, rebaixos = gerador.componentes_da_peca(load_spec(), "BSP")
+    todos = cuts + rebaixos
+    assert min(x for p in todos for x, _ in p) == 0.0
+    assert min(y for p in todos for _, y in p) == 0.0
+    largura = max(x for p in todos for x, _ in p)
+    assert largura < 180.0                      # a BSP tem 240: o contorno nao veio junto
 
 
 def test_furos_do_lcd_e_do_teclado_batem_com_o_datasheet():
@@ -450,8 +457,7 @@ def test_furos_do_lcd_e_do_teclado_batem_com_o_datasheet():
     tx, ty, tcx, tcy = _passo(_furos_do_teclado(cuts))
     assert (round(lx, 2), round(ly, 2)) == (75.0, 31.0)     # LCD 1602A
     assert (round(tx, 2), round(ty, 2)) == (60.0, 59.0)     # teclado 4x4 MCAK1604
-    assert abs(lcx - tcx) < 1e-6                             # mesmo eixo vertical
-    assert abs((lcy - tcy) - 100.0) < 1e-6                   # LCD 100 mm acima
+    assert abs((lcy - tcy) - 260.0) < 1e-6                   # LCD 260 mm acima
 
 
 def test_vao_centrado_nos_furos_de_cada_componente():
@@ -477,22 +483,28 @@ def test_ponte_fina_so_e_aceita_onde_a_spec_declara():
     assert any("BSP: ponte" in linha for linha in gerador.valida_prancha(spec, placed))
 
 
-def test_leitor_e_led_saem_no_eixo_da_interface():
-    """R307S pelo manual da Grow (corpo 20,1 x 23,5) e LED de 5 mm com a placa parafusada."""
+def test_leitor_ao_lado_do_teclado_e_led_discreto_no_alto():
+    """Entrada numa linha so (teclado e leitor na mesma altura) e o LED longe dela.
+
+    O arquivo sai espelhado (rebaixo por dentro), entao pela frente o leitor fica
+    a direita do teclado e, na mesa, a esquerda.
+    """
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
-    _, _, eixo, _ = _passo(_furos(cuts, 2.7))
     leitor = [p for p in cuts if abs(geom.bbox(p)[2] - geom.bbox(p)[0] - 20.6) < 1e-6]
     assert len(leitor) == 1
     x0, y0, x1, y1 = geom.bbox(leitor[0])
     assert (round(x1 - x0, 2), round(y1 - y0, 2)) == (20.6, 24.0)
-    assert abs((x0 + x1) / 2.0 - eixo) < 1e-6
+    _, _, tcx, tcy = _passo(_furos_do_teclado(cuts))
+    assert abs((y0 + y1) / 2.0 - tcy) < 1e-6               # mesma altura
+    assert (x0 + x1) / 2.0 < tcx                            # espelhado na mesa
     led = _furos(cuts, 5.0)
-    assert len(led) == 1 and abs(led[0][0] - (eixo + 3.0)) < 1e-6
-    placa = [c for c in _furos(cuts, 2.4) if abs(c[0] - eixo) < 1e-6]   # o teclado fica a +-30
+    assert len(led) == 1
+    assert led[0][1] - tcy > 250.0                         # la em cima, longe da entrada
+    placa = [c for c in _furos(cuts, 2.4) if abs(c[1] - led[0][1]) < 6.0]
     px, py, pcx, pcy = _passo(placa)
     assert len(placa) == 2
     assert (round(px, 2), round(py, 2)) == (0.0, 10.0)     # placa do KY-016
-    assert abs(pcx - eixo) < 1e-6 and abs(pcy - led[0][1]) < 1e-6
+    assert abs(abs(pcx - led[0][0]) - 3.0) < 1e-6 and abs(pcy - led[0][1]) < 1e-6
     assert all(geom.dist_poligonos(leitor[0], b) >= 1.5
                for b in cuts if b is not leitor[0])
 
@@ -519,3 +531,33 @@ def test_presilha_bate_com_os_parafusos_do_leitor():
     assert furos[0]["passo_x_mm"] == do_leitor[0]["passo_x_mm"] == 38.0
     janela = next(a for a in blr["aberturas"] if a["tipo"] == "janela")
     assert janela["largura_mm"] < 20.1 < 38.0 - 3.2       # apoia na placa, entre os parafusos
+
+
+def test_rebaixos_das_esp32_ficam_por_dentro_e_nao_atravessam():
+    """DevKit e ESP32-CAM sao gravados (Fill) na face de dentro; so a lente atravessa."""
+    spec = load_spec()
+    bsp = next(e for e in spec["pecas_extras"] if e["codigo"] == "BSP")
+    assert bsp["gravar_por_dentro"]
+    cuts, rebaixos = gerador.componentes_da_peca(spec, "BSP")
+    medidas = sorted((round(geom.bbox(r)[2] - geom.bbox(r)[0], 2),
+                      round(geom.bbox(r)[3] - geom.bbox(r)[1], 2)) for r in rebaixos)
+    assert medidas == [(27.5, 41.0), (28.5, 55.5)]        # placas + 0,25 por lado
+    lente = _furos(cuts, 12.5)
+    assert len(lente) == 1
+    cam = next(r for r in rebaixos if abs(geom.bbox(r)[3] - geom.bbox(r)[1] - 41.0) < 1e-6)
+    bx0, by0, bx1, by1 = geom.bbox(cam)
+    assert bx0 < lente[0][0] < bx1 and by0 < lente[0][1] < by1
+    # nenhum rebaixo encosta em corte que nao seja o da propria lente
+    for r in rebaixos:
+        rx0, ry0, rx1, ry1 = geom.bbox(r)
+        for c in cuts:
+            cx0, cy0, cx1, cy1 = geom.bbox(c)
+            if rx0 <= cx0 and cx1 <= rx1 and ry0 <= cy0 and cy1 <= ry1:
+                continue
+            assert geom.dist_poligonos(r, c) >= 1.5
+
+
+def test_espelho_so_troca_o_lado():
+    poly = [(10.0, 0.0), (30.0, 0.0), (30.0, 5.0), (10.0, 5.0)]
+    (m,) = gerador.espelha([poly], 240.0)
+    assert sorted(m) == sorted([(230.0, 0.0), (210.0, 0.0), (210.0, 5.0), (230.0, 5.0)])

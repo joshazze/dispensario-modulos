@@ -134,19 +134,21 @@ def _circulo_de(pontos, tol=0.05):
     return cx, cy, raio
 
 
-def escreve(caminho, cortes, marcas=(), textos=(), template=None):
+def escreve(caminho, cortes, marcas=(), textos=(), template=None, rebaixos=()):
     """Grava o DXF no perfil do tecnico.
 
     `cortes` sao os contornos fechados, `marcas` as polilinhas de marcacao e
-    `textos` os rotulos. Nada de moldura da mesa no arquivo, e o ponto mais
+    `textos` os rotulos. `rebaixos` sao areas fechadas gravadas em Fill, na
+    camada de marcacao, que o LightBurn separa pela cor. Nada de moldura da mesa no arquivo, e o ponto mais
     baixo a esquerda do desenho vai para (0, 0): e por ele que as pecas se
     alinham na maquina.
     """
-    pontos = [p for poly in list(cortes) + list(marcas) for p in poly]
+    pontos = [p for poly in list(cortes) + list(marcas) + list(rebaixos) for p in poly]
     dx = min((x for x, _ in pontos), default=0.0)
     dy = min((y for _, y in pontos), default=0.0)
     cortes = [[(x - dx, y - dy) for x, y in poly] for poly in cortes]
     marcas = [[(x - dx, y - dy) for x, y in m] for m in marcas]
+    rebaixos = [[(x - dx, y - dy) for x, y in r] for r in rebaixos]
     textos = [dict(t, x=t["x"] - dx, y=t["y"] - dy) for t in textos]
     e = Escritor(template)
     for poly in cortes:
@@ -155,6 +157,8 @@ def escreve(caminho, cortes, marcas=(), textos=(), template=None):
             e.circulo(circ[0], circ[1], circ[2])
         else:
             e.polilinha(poly, camada=CAMADA_CORTE)
+    for r in rebaixos:
+        e.polilinha(r, camada=CAMADA_MARCACAO, fechada=True)
     for m in marcas:
         if len(m) > 1:
             e.polilinha(m, camada=CAMADA_MARCACAO, fechada=False)
