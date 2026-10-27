@@ -1125,6 +1125,25 @@
           "centro_x": true,
           "y_mm": 380.0,
           "componente": "teclado-4x4"
+        },
+        {
+          "nome": "corpo do leitor biometrico R307S",
+          "fonte": "Grow R307S Fingerprint Module User Manual (hzgrow.com), p.2 'Dimension' e 'Exterior Interface': modulo 44,1 x 20 x 23,5, placa de tras 20,1 x 23,5, janela de vidro de 15 x 11,19 na face de cima. Foto da peca do grupo (07/10/2026) confere a placa quadrada com 4 parafusos nos cantos e o conector de 6 vias. Folga 0,25 por lado. O corpo atravessa a chapa com a face do vidro rente a frente; a peca nao tem aba nem furo de fixacao, entao a retencao fica por tras e entra quando os componentes forem organizados no modulo. Posicao provisoria",
+          "tipo": "janela",
+          "largura_mm": 20.6,
+          "altura_mm": 24.0,
+          "centro_x": true,
+          "y_mm": 300.0,
+          "componente": "r307s"
+        },
+        {
+          "nome": "led rgb de 5 mm do modulo KY-016",
+          "fonte": "LED de 5 mm do modulo KY-016 (Joy-it COM-KY016RGBLED: 'uses a 5 mm LED'); fotos da peca do grupo (07/10/2026) mostram o LED dobrado para fora da borda da placa. Corpo de 5 mm passa pelo furo de 5,0 e a aba da base do LED (~5,8, padrao de LED T-1 3/4) para na chapa por tras; a placa fica de pe atras da chapa, presa pelos terminais. Posicao provisoria",
+          "tipo": "furo",
+          "diametro_mm": 5.0,
+          "centro_x": true,
+          "y_mm": 265.0,
+          "componente": "led-rgb-ky016"
         }
       ]
     },

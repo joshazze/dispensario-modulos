@@ -429,7 +429,7 @@ def _passo(centros):
 def test_vaos_da_interface_saem_sem_o_contorno_da_peca():
     """O arquivo de vaos corta numa BSP que ja existe: so componente, nada de borda."""
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
-    assert len(cuts) == 10                      # 2 vaos + 4 furos do LCD + 4 do teclado
+    assert len(cuts) == 12                      # LCD, teclado e R307S + 8 furos + LED
     assert min(x for p in cuts for x, _ in p) == 0.0
     assert min(y for p in cuts for _, y in p) == 0.0
     largura = max(x for p in cuts for x, _ in p)
@@ -467,3 +467,18 @@ def test_ponte_fina_so_e_aceita_onde_a_spec_declara():
     for unit, _, _, _ in placed:
         unit["ponte_aceita_mm"] = None
     assert any("BSP: ponte" in linha for linha in gerador.valida_prancha(spec, placed))
+
+
+def test_leitor_e_led_saem_no_eixo_da_interface():
+    """R307S pelo manual da Grow (corpo 20,1 x 23,5) e LED de 5 mm por pressao."""
+    cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
+    _, _, eixo, _ = _passo(_furos(cuts, 2.7))
+    leitor = [p for p in cuts if len(p) == 4]
+    assert len(leitor) == 1
+    x0, y0, x1, y1 = geom.bbox(leitor[0])
+    assert (round(x1 - x0, 2), round(y1 - y0, 2)) == (20.6, 24.0)
+    assert abs((x0 + x1) / 2.0 - eixo) < 1e-6
+    led = _furos(cuts, 5.0)
+    assert len(led) == 1 and abs(led[0][0] - eixo) < 1e-6
+    assert all(geom.dist_poligonos(leitor[0], b) >= 1.5
+               for b in cuts if b is not leitor[0])
