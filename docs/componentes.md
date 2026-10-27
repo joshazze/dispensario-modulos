@@ -50,12 +50,13 @@ O vendedor só informa 69 x 65 x 10 mm e "furos de fixação nas extremidades". 
 | peça do grupo | Grow R307S, chip AS608, conector de 6 vias (3,3VT, TOUCH, RXD, TXD, GND, VCC) e USB de 4 |
 | corpo | 44,1 de altura, seção de 20,1 x 23,5 mm (a placa de trás tem a mesma seção) |
 | vidro | 15 x 11,19 mm na face de cima |
-| vão na chapa | 20,6 x 24,0 mm, cantos vivos, folga de 0,25 por lado |
-| furos na chapa | nenhum |
+| vão na chapa | 20,6 x 24,0 mm (folga de 0,25 por lado) com 4 batentes de 2,0 x 4,0 nos cantos; meio livre de 16,6 |
+| furos na chapa | 2 de ⌀3,2 a 38 mm entre centros, na altura do leitor, para M3 x 60 |
+| presilha `BLR` | 56 x 40, janela de 17 x 26, 2 furos de ⌀3,2 a 38 |
 
 As lojas dão quatro corpos diferentes para o R307S (52 x 20 x 22, 55 x 21 x 21,5, 46 x 21 x 23,5 e 48 x 24 x 20). Valeu o manual da própria Grow, que tem a única vista cotada: 44,1 x 20 x 23,5, com a placa de trás de 20,1 x 23,5. A foto da peça do grupo confere a placa quadrada com os 4 parafusos nos cantos.
 
-O corpo atravessa a chapa inteiro, com o vidro rente à frente. Ele não tem aba nem furo livre (os 4 parafusos dos cantos já prendem a placa no corpo), então **a retenção fica por trás e ainda não está desenhada**: entra quando os componentes forem organizados no módulo. O manual mostra um entalhe de 1,5 mm de cada lado do corpo, a 22,9 mm do topo, que pode servir de trava para esse suporte.
+O corpo não passa pelo vão. Os 4 batentes dos cantos ficam por fora da largura do vidro (15 mm, centrado) e seguram a face do leitor, que fica 3 mm abaixo da frente da chapa: o vão livre de 16,6 deixa o dedo chegar no vidro. Por trás, a presilha `BLR` aperta a placa do leitor contra os batentes. Ela apoia só nas faixas laterais da placa (~1,5 mm) e nas cabeças dos 4 parafusos dos cantos, e o conector e o cabo passam pela janela do meio. Montagem: 2 parafusos M3 x 60 entram pela frente da `BSP`, ganham uma porca encostada na chapa, atravessam a presilha e levam a porca que aperta. A conta do comprimento é 3 da `BSP` + 44,1 do corpo + 3 da presilha + porca.
 
 ### LED RGB de 5 mm (módulo KY-016)
 
@@ -63,9 +64,9 @@ O corpo atravessa a chapa inteiro, com o vidro rente à frente. Ele não tem aba
 |---|---|
 | peça do grupo | módulo KY-016, 4 pinos (GND, B, G, R) em barra de 90°, 2 furos de fixação, LED dobrado para fora da borda da placa |
 | LED | 5 mm de corpo, aba da base de ~5,8 mm |
-| furo na chapa | ⌀5,0 |
+| furos na chapa | ⌀5,0 para o LED e 2 de ⌀2,4 a 10 mm entre centros para a placa, 3 mm ao lado do LED |
 
-O LED entra por trás e para na chapa pela aba da base. Como ele já sai dobrado para fora da borda, a placa fica de pé atrás da chapa, presa pelos terminais, e os 2 furos dela não são usados. O furo tem o diâmetro nominal do LED porque o laser abre o furo sozinho (kerf estimado em 0,18): se sair frouxo, uma gota de cola quente resolve. A medida do furo é a primeira coisa a conferir no corte de teste.
+A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o LED é endireitado a 90 graus da placa para atravessar o furo de ⌀5,0. Com 2 porcas M2 de espaçador em cada parafuso, a placa fica ~3 mm atrás da chapa e o LED salta ~2 mm na frente. A furação não aparece em nenhuma loja nem no datasheet da Joy-it: saiu da foto da peça do grupo em resolução cheia, usando como régua o passo de 2,54 mm da barra de pinos e conferindo pela aba de ~5,8 do LED. São 2 furos de ~2,5 a 10,0 mm entre centros, na borda do LED, numa placa de ~15 x 13. Por ser medida de foto, é a primeira coisa a conferir no corte de teste.
 
 ### Ainda sem desenho
 
@@ -92,6 +93,7 @@ O LED entra por trás e para na chapa pela aba da base. Como ele já sai dobrado
 | EONE 1602A-1 (Elecrow), p. 12 | furos 75,4 x 31,4 ⌀2,8, moldura 70,7 x 23,8, altura 7,0 | [PDF](https://www.elecrow.com/download/LCD1602.pdf) |
 | HJ1602A, p. 2 | furos 75 x 31 ⌀2,5, moldura 70,8 x 23,8 | [PDF (Northwestern)](https://hades.mech.northwestern.edu/images/f/f7/LCD16x2_HJ1602A.pdf) |
 | Waveshare LCD1602, p. 18 | placa 80 x 36, furos 75 x 31 | [PDF](https://www.waveshare.com/datasheet/LCD_en_PDF/LCD1602.pdf) |
+| foto do KY-016 do grupo (IMG_7664) | furos de ~2,5 a 10,0 entre centros, placa de ~15 x 13 | foto de 07/10/2026, não publicada |
 | foto do LCD do grupo | moldura ~76-77 x ~25, centrada; lingueta do backlight | foto tirada em 01/10/2026, não publicada |
 | Multicomp MCAK1604NBWB, p. 2 | recorte 60 x 57 R4, furos ⌀2,3 em 60 x 59, base 65 x 64 | [PDF (Farnell)](https://www.farnell.com/datasheets/1662717.pdf) |
 | Accord AK-1604 | recorte de painel 60 x 57, base 65 x 64 | [página do produto (TME)](https://www.tme.eu/en/details/kb1604-pnb/plastic-keypads/accord/ak-1604-n-bbw/) |
@@ -120,4 +122,4 @@ python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 1. **Corte de teste.** Cortar `interface-vaos.dxf` num retalho, encaixar o LCD, o teclado, o leitor e o LED de verdade e conferir os vãos, os furos e a solda dos pinos.
 2. **Corte oficial.** Só depois do teste: os vãos na `BSP` já cortada, ou a `BSP` nova da carga 3.
 3. **Medida da moldura do LCD.** Se o teste mostrar folga demais ou de menos, trocar os pontos do vão na spec pela medida de paquímetro.
-4. **Retenção do leitor R307S.** Suporte por trás da `BSP`, desenhado quando os componentes forem organizados nos módulos.
+4. **Batentes do leitor.** Conferir no teste se os batentes de 2,0 mm pegam o corpo e se o dedo alcança o vidro 3 mm abaixo da frente.
