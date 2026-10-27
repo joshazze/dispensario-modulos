@@ -29,7 +29,7 @@ cortes/
 │   ├── modulo-biometrico-bloco3.dxf
 │   ├── modulo-biometrico-bloco4.dxf
 │   ├── modulo-biometrico.dxf          ← as 19 peças numa prancha só
-│   └── interface-vaos.dxf             ← só os vãos do LCD e do teclado, sem contorno
+│   └── interface-vaos.dxf             ← só os vãos dos componentes, sem contorno
 └── armario/
     └── modulo-armario.dxf             ← prancha de conferência, ainda não cortável
 ```
@@ -129,7 +129,7 @@ python3 -m pip install -r requirements-dev.txt
 python3 -m pytest
 ```
 
-São 27 testes. Entre outras coisas, eles garantem que:
+São 28 testes. Entre outras coisas, eles garantem que:
 
 * cada painel tem duas lâminas de 3 mm e a junta de dedos tem 6 mm de profundidade;
 * nenhuma peça invade outra na prancha e toda feição fica dentro da peça, longe da borda;
@@ -147,7 +147,7 @@ São 27 testes. Entre outras coisas, eles garantem que:
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
 * **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
 * **Frente do armário:** visor, dobradiça e tranca ainda não estão no desenho.
-* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD e o teclado na mão, e só depois o corte oficial. O sensor biométrico ainda não foi escolhido. Detalhe em [docs/componentes.md](docs/componentes.md).
+* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD, o teclado, o leitor R307S e o LED na mão, e só depois o corte oficial. O leitor ainda não tem suporte por trás, e as posições do leitor e do LED são provisórias até os componentes serem organizados nos módulos. Detalhe em [docs/componentes.md](docs/componentes.md).
 * **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
 ## Estrutura
