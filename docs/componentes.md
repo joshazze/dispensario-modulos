@@ -106,21 +106,41 @@ A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o 
 
 | item | valor |
 |---|---|
-| peça do grupo | ESP32 DevKitC S1, 38 pinos, módulo WROOM-32 |
-| placa | 55 x 28 x 13 mm com pinos (anúncio da Eletrogate) |
-| rebaixo | 28,5 x 55,5 mm, em pé, centro em x = 190 e y = 361,5 (vista de frente) |
-
-A placa assenta com o módulo WROOM virado pra chapa e os pinos apontando pra dentro da caixa, onde entram os jumpers. O USB fica embaixo. Ela fica no canto de cima à direita, logo abaixo da ESP32-CAM, encostada na coluna dos parafusos da `BSP`. Não tem furo de fixação: quem segura a placa é o rebaixo.
+| peça do grupo | ESP32 DevKitC, 38 pinos, módulo WROOM-32 |
+| placa | 27,94 x 48,26 mm, módulo de 18 mm de largura saindo 6,04 além da placa, total 54,3 ([desenho oficial da Espressif](https://dl.espressif.com/dl/schematics/esp32_devkitc_v4_dimensions.pdf)) |
+| fileiras de pinos | 25,40 mm entre centros, passo 2,54 |
+| furo de fixação | **nenhum** |
+| na `BSP` | rebaixo gravado em T (placa + módulo, +0,25 por lado) e 2 furos de ⌀3,2 a 65,8 mm, centro em x = 190 e y = 290 |
+| berço `BDB` | 41 x 81, janela em T igual ao rebaixo |
+| presilha `BDP` | tira de 20 x 81 |
 
 ### ESP32-CAM com OV2640 (Amazon B0CDJQV11V)
 
 | item | valor |
 |---|---|
 | placa | 27 x 40,5 x 4,5 mm (±0,2), ficha Ai-Thinker ESP32-CAM V1.0 |
-| rebaixo | 27,5 x 41,0 mm, em pé, centro em x = 190 e y = 435 |
-| furo da câmera | ⌀12,5, centro em x = 190 e y = 445, **provisório** |
+| furo de fixação | **nenhum** |
+| na `BSP` | rebaixo gravado de 27,5 x 41, furo da câmera de ⌀12,5 (**provisório**) e 2 furos de ⌀3,2 a 51,5 mm, centro em x = 190 e y = 435 |
+| berço `BCB` | 39,5 x 67, janela de 27,5 x 41 |
+| presilha `BCP` | tira de 16 x 67 |
 
-A placa assenta com a câmera virada pra chapa, e o módulo OV2640 atravessa o furo. O furo de 12,5 foi pensado pra passar um corpo quadrado de ~8,5 mm (diagonal ~12). Nenhuma loja nem a ficha da Ai-Thinker cota o módulo da câmera, nem a posição dele na placa. A spec supõe a lente a 10 mm do topo da placa. **Antes do corte, medir com paquímetro o corpo do OV2640 e a posição dele na placa** e trocar os dois números na spec.
+Nenhuma das duas placas tem furo de fixação. A ESP32-CAM não tem furo nenhum, e quem monta numa caixa costuma usar suporte impresso ou cola quente. No DevKitC, os furos do desenho existem só na serigrafia. Por isso as duas usam a mesma lógica da presilha do leitor: um **sanduíche preso por 2 M3 que atravessam a `BSP`**.
+
+```
+frente  BSP (3) │ berço (3) │ placa │ presilha (3) │ porca   → dentro da caixa
+              rebaixo gravado: onde os componentes afundam
+```
+
+1. Os componentes da face de cima ficam virados pra `BSP`: o módulo WROOM, o USB e os botões no DevKit, a blindagem do ESP32 na CAM. Eles afundam no rebaixo gravado, que tem exatamente a figura da placa.
+2. O berço tem a mesma figura vazada. Com os componentes afundados no rebaixo, a borda da placa entra na janela do berço, e é isso que impede a placa de escorregar. No DevKit sobram só uns décimos de encaixe: o módulo tem ~3,1 de altura, o berço 3,0, mais a profundidade do rebaixo.
+3. A presilha é uma tira que corre entre as duas fileiras de pinos e aperta o meio da placa por trás. Os pinos e os jumpers ficam livres. No DevKit, a tira de 20 deixa ~1,4 mm de cada lado até o conector Dupont.
+4. A porca aperta a presilha contra a placa. A placa fica acima do berço, então a presilha só toca a placa.
+
+O DevKit fica com o módulo pra cima (antena perto da câmera) e o USB pra baixo. **Com a placa montada, o micro USB não entra**, porque o plugue bateria na `BSP`. Pra gravar o firmware, tira a presilha ou usa OTA. A alimentação vai pelo pino de 5 V.
+
+**Cabo da câmera:** o cabo original do OV2640 é curto (cerca de 2 cm). A câmera fica dobrada por cima da placa, então a placa tem que ficar logo atrás da lente, com a câmera atravessando o furo de ⌀12,5. Existe o mesmo OV2640 com cabo de 75 mm, mas ele foi descartado: seria mais uma compra e um cabo comprido. Como a altura da câmera dobrada não está cotada, o comprimento do parafuso (M3 x 20) e o furo seguem provisórios até medir a peça.
+
+As prateleiras passam atrás da `BSP`, a 567, 733 e 900 mm da base do módulo. O DevKit fica entre a de 567 e a de 733, e a CAM entre a de 733 e a de 900. Há um teste que garante que nenhum berço cruza uma prateleira.
 
 ### Ainda sem desenho
 
@@ -164,11 +184,13 @@ A placa assenta com a câmera virada pra chapa, e o módulo OV2640 atravessa o f
 |---|---|
 | `cortes/biometrico/interface-vaos.dxf` | **só os vãos e furos do LCD, do teclado, do leitor R307S, do LED e da câmera, mais os rebaixos das duas ESP32 na camada `MARCAÇÃO`**, sem o contorno da `BSP`, já espelhado, para cortar na peça que já foi cortada, com a face de dentro pra cima, alinhando à mão na mesa |
 | `cortes/biometrico/interface-vaos.pdf` | o mesmo em escala 1:1, com 5 mm de margem: imprimir em 100% e pôr os componentes de cara para baixo em cima confere tudo sem paquímetro |
+| `cortes/biometrico/interface-pecas.dxf` | as peças pequenas da interface: presilha do leitor `BLR`, berço e presilha do DevKit (`BDB`, `BDP`) e da ESP32-CAM (`BCB`, `BCP`) |
 | `cortes/biometrico/modulo-biometrico-bloco3.dxf` | carga 3, que tem a `BSP` inteira já com os vãos |
 | `specs/modulos.json` | peça `BSP`, campo `aberturas`: cada vão com `componente` e `fonte` |
 
 ```bash
 python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
+python3 gerador.py --filtro '^B(LR|DB|DP|CB|CP)$' --nome biometrico/interface-pecas
 ```
 
 ## Pendências
