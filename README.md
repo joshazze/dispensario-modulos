@@ -114,6 +114,7 @@ python3 gerador.py --filtro '^B' --nome biometrico/modulo-biometrico
 python3 gerador.py --filtro '^A' --nome armario/modulo-armario
 python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
 python3 gerador.py --filtro '^B(LR|DB|DP|CB|CP)$' --nome biometrico/interface-pecas
+python3 gerador.py --teste BSP --nome biometrico/teste-interface
 python3 previas.py        # figuras deste README
 ```
 
@@ -148,7 +149,7 @@ São 30 testes. Entre outras coisas, eles garantem que:
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
 * **Armário não cabe na mesa.** Sai por emenda dos painéis ou por uma altura menor.
 * **Frente do armário:** visor, dobradiça e tranca ainda não estão no desenho.
-* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD, o teclado, o leitor R307S, o LED e as duas ESP32 na mão, e só depois o corte oficial. A disposição segue a altura de uso: tela e câmera em cima, teclado e leitor lado a lado na faixa de 800 a 1000 mm do piso. As duas ESP32 não têm furo: cada uma assenta num rebaixo gravado na face de dentro e fica presa por berço e presilha em M3 (`interface-pecas.dxf`). O USB do DevKit aponta pra baixo, por um canal escondido atrás da moldura, com um alívio gravado na `B6I`. A `BSP` vai pra mesa com a face de dentro pra cima, e por isso o arquivo sai espelhado. O furo da câmera é provisório até o módulo OV2640 ser medido. Detalhe em [docs/componentes.md](docs/componentes.md).
+* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD, o teclado, o leitor R307S, o LED e as duas ESP32 na mão, e só depois o corte oficial. A disposição segue a altura de uso: tela e câmera em cima, teclado e leitor lado a lado na faixa de 800 a 1000 mm do piso. As duas ESP32 não têm furo: cada uma assenta num rebaixo gravado na face de dentro e fica presa por berço e presilha em M3 (`interface-pecas.dxf`). O USB do DevKit aponta pra baixo, por um canal escondido atrás da moldura, com um alívio gravado na `B6I`. A `BSP` vai pra mesa com a face de dentro pra cima, e por isso o arquivo sai espelhado. O furo da câmera é provisório até o módulo OV2640 ser medido. Detalhe em [docs/componentes.md](docs/componentes.md); o roteiro do corte de teste está em [docs/teste-interface.md](docs/teste-interface.md).
 * **Armário:** terminar a modelagem do módulo e dos componentes dele.
 
 ## Estrutura
