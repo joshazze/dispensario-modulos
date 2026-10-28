@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tranca em 3D</title>
+<style>
+  :root { --bg:#f4f2ee; --ink:#1d1d1f; --mut:#6b6b70; --line:#d6d3cc; --tag:#c0392b; --est:#b7791f; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16171a; --ink:#ececec; --mut:#9a9aa2; --line:#2e3036; --tag:#ff6b5b; --est:#f0b44c; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 -apple-system, system-ui, sans-serif; display:grid; grid-template-columns:1fr 360px; height:100vh; }
+  #vista { position:relative; overflow:hidden; cursor:grab; }
+  #vista:active { cursor:grabbing; }
+  canvas { display:block; }
+  .num { position:absolute; transform:translate(-50%,-50%); background:var(--tag); color:#fff; font-weight:700; font-size:12px; min-width:22px; height:22px; border-radius:11px; display:grid; place-items:center; padding:0 5px; pointer-events:none; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+  .num.est { background:var(--est); }
+  aside { border-left:1px solid var(--line); padding:18px 18px 24px; overflow:auto; }
+  h1 { font-size:17px; margin:0 0 4px; }
+  p { color:var(--mut); margin:0 0 14px; }
+  table { width:100%; border-collapse:collapse; }
+  td { padding:6px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:first-child { width:30px; }
+  td.v { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; font-weight:600; }
+  .b { display:inline-grid; place-items:center; min-width:22px; height:22px; border-radius:11px; background:var(--tag); color:#fff; font-weight:700; font-size:12px; }
+  .b.est { background:var(--est); }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--mut); margin:18px 0 6px; }
+  .dica { position:absolute; left:12px; bottom:10px; color:var(--mut); font-size:12px; }
+  @media (max-width:760px) { body { grid-template-columns:1fr; grid-template-rows:55vh auto; height:auto; } aside { border-left:0; border-top:1px solid var(--line); } }
+</style>
+</head>
+<body>
+<div id="vista"><div class="dica">arraste para girar, roda do mouse para aproximar</div></div>
+<aside>
+  <h1>Fechadura 12 V e batente</h1>
+  <p>Medidas usadas no cupom de teste (desenho da DFRobot FIT0620). Vermelho tem cota no desenho; amarelo é estimado e precisa de régua.</p>
+  <h2>Corpo</h2>
+  <table id="t-corpo"></table>
+  <h2>Batente em U</h2>
+  <table id="t-gancho"></table>
+</aside>
+<script type="module">
+import * as THREE from "../../../third_party/three/three.module.js";
+
+// [n, descricao, valor, estimado?, ancora xyz em mm]
+// eixos: x ao longo do corpo (boca em x = 0), y altura, z espessura (costas em z = 0)
+const CORPO = [
+  [1, "Comprimento do corpo", "73,0", false, [36.5, -4, 13.3]],
+  [2, "Altura do corpo", "58,0", false, [77, 29, 13.3]],
+  [3, "Espessura do corpo", "13,3", false, [77, 60, 6.65]],
+  [4, "Furos da esquerda: distância até a borda da boca", "6,5", false, [3.2, 10.75, -3]],
+  [5, "Distância entre os dois furos da esquerda", "36,5", false, [6.5, 29, -3]],
+  [6, "3º furo: distância à direita dos furos da esquerda", "36,0", false, [24.5, 6, -3]],
+  [7, "3º furo: altura a partir da base", "≈ 30", true, [42.5, 30, -3]],
+  [8, "Furos da esquerda: distância até a borda de cima e de baixo", "≈ 10,75", true, [6.5, 4, -3]],
+  [9, "Rosca dos 3 furos", "M4", false, [6.5, 47.25, -3]],
+  [10, "Boca da lingueta: abertura", "7,0", false, [-3, 29, 6.65]],
+  [11, "Boca da lingueta: profundidade a partir da borda", "20,5", false, [10.25, 34, 15]],
+];
+const GANCHO = [
+  [12, "Base: comprimento", "34,5", false, [-28.5, 29, -12]],
+  [13, "Base: largura", "20,0", false, [-28.5, 50, 6.65]],
+  [14, "Base: espessura da chapa", "1,5", false, [-29.5, 10, 17]],
+  [15, "Furos da base: diâmetro", "4,2", false, [-28.5, 16.5, 22]],
+  [16, "Furos da base: distância entre centros", "25,0", false, [-32.0, 29, 22]],
+  [17, "Haste: diâmetro", "3,0", false, [-14.0, 29, -4]],
+  [18, "Altura do U (base até a ponta)", "28,0", false, [-13.0, 33, 19]],
+  [19, "Afastamento entre as pernas do U", "≈ 17", true, [-6.0, 25, 6.65]],
+];
+
+for (const [id, lista] of [["t-corpo", CORPO], ["t-gancho", GANCHO]]) {
+  document.getElementById(id).innerHTML = lista.map(([n, d, v, est]) =>
+    `<tr><td><span class="b${est ? " est" : ""}">${n}</span></td><td>${d}</td><td class="v">${v}${v.startsWith("M") ? "" : " mm"}</td></tr>`).join("");
+}
+
+const vista = document.getElementById("vista");
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 1, 2000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+vista.prepend(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x888888, 1.6));
+const sol = new THREE.DirectionalLight(0xffffff, 1.6);
+sol.position.set(60, 120, 90);
+scene.add(sol);
+
+const grupo = new THREE.Group();
+scene.add(grupo);
+const preto = new THREE.MeshStandardMaterial({ color: 0x5a5d66, roughness: 0.6, metalness: 0.2 });
+const inox = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, roughness: 0.35, metalness: 0.8 });
+const furo = new THREE.MeshStandardMaterial({ color: 0xd9a400, roughness: 0.5 });
+
+function caixa(w, h, d, x, y, z, mat) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.position.set(x + w / 2, y + h / 2, z + d / 2);
+  grupo.add(m);
+  return m;
+}
+
+// corpo com a boca recortada: monta em pedacos em volta do rasgo
+const BOCA_Y0 = 29 - 3.5, BOCA_Y1 = 29 + 3.5;
+caixa(73, BOCA_Y0, 13.3, 0, 0, 0, preto);
+caixa(73, 58 - BOCA_Y1, 13.3, 0, BOCA_Y1, 0, preto);
+caixa(73 - 20.5, 7, 13.3, 20.5, BOCA_Y0, 0, preto);
+
+// furos M4 nas costas (marcados em amarelo)
+for (const [x, y, h] of [[6.5, 10.75, 0], [6.5, 47.25, 0], [42.5, 30, 0]]) {
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 1, 24), furo);
+  c.rotation.x = Math.PI / 2;
+  c.position.set(x, y, -0.4);
+  grupo.add(c);
+}
+
+// batente: base na frente da boca, U entrando no rasgo
+const BASE_X = -30;
+caixa(1.5, 34.5, 20, BASE_X, 29 - 17.25, 6.65 - 10, inox);
+for (const dy of [-12.5, 12.5]) {
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.1, 1.7, 24), furo);
+  c.rotation.z = Math.PI / 2;
+  c.position.set(BASE_X + 0.75, 29 + dy, 6.65);
+  grupo.add(c);
+}
+const ponta = BASE_X + 1.5 + 28 - 1.5;
+for (const dz of [-8.5, 8.5]) {
+  const perna = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, ponta - BASE_X - 1.5, 20), inox);
+  perna.rotation.z = Math.PI / 2;
+  perna.position.set((BASE_X + 1.5 + ponta) / 2, 29, 6.65 + dz);
+  grupo.add(perna);
+}
+const barra = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 17 + 3, 20), inox);
+barra.rotation.x = Math.PI / 2;
+barra.position.set(ponta, 29, 6.65);
+grupo.add(barra);
+
+grupo.position.set(-28, -29, -6.65);
+
+// numeros
+const etiquetas = [...CORPO, ...GANCHO].map(([n, , , est, p]) => {
+  const el = document.createElement("div");
+  el.className = "num" + (est ? " est" : "");
+  el.textContent = n;
+  vista.appendChild(el);
+  return { el, p: new THREE.Vector3(...p) };
+});
+
+// orbita simples
+let az = Math.PI + 0.75, el = 0.35, dist = 240, arrasto = null;
+vista.addEventListener("pointerdown", e => { arrasto = [e.clientX, e.clientY]; vista.setPointerCapture(e.pointerId); });
+vista.addEventListener("pointermove", e => {
+  if (!arrasto) return;
+  az -= (e.clientX - arrasto[0]) * 0.008;
+  el = Math.max(-1.4, Math.min(1.4, el + (e.clientY - arrasto[1]) * 0.008));
+  arrasto = [e.clientX, e.clientY];
+});
+vista.addEventListener("pointerup", () => { arrasto = null; });
+vista.addEventListener("wheel", e => { e.preventDefault(); dist = Math.max(90, Math.min(600, dist * (1 + e.deltaY * 0.001))); }, { passive: false });
+
+function ajusta() {
+  const w = vista.clientWidth, h = vista.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener("resize", ajusta);
+ajusta();
+
+const v = new THREE.Vector3();
+function quadro() {
+  camera.position.set(dist * Math.cos(el) * Math.sin(az), dist * Math.sin(el), dist * Math.cos(el) * Math.cos(az));
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+  grupo.updateMatrixWorld();
+  for (const t of etiquetas) {
+    v.copy(t.p).applyMatrix4(grupo.matrixWorld).project(camera);
+    t.el.style.left = ((v.x + 1) / 2 * vista.clientWidth) + "px";
+    t.el.style.top = ((1 - v.y) / 2 * vista.clientHeight) + "px";
+  }
+  requestAnimationFrame(quadro);
+}
+quadro();
+</script>
+</body>
+</html>
