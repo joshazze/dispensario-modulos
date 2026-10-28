@@ -110,9 +110,10 @@ A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o 
 | placa | 27,94 x 48,26 mm, módulo de 18 mm de largura saindo 6,04 além da placa, total 54,3 ([desenho oficial da Espressif](https://dl.espressif.com/dl/schematics/esp32_devkitc_v4_dimensions.pdf)) |
 | fileiras de pinos | 25,40 mm entre centros, passo 2,54 |
 | furo de fixação | **nenhum** |
-| na `BSP` | rebaixo gravado em T (placa + módulo, +0,25 por lado) e 2 furos de ⌀3,2 a 65,8 mm, centro em x = 190 e y = 290 |
-| berço `BDB` | 41 x 81, janela em T igual ao rebaixo |
-| presilha `BDP` | tira de 20 x 81 |
+| na `BSP` | rebaixo gravado em T (placa + módulo, +0,25 por lado) com centro em x = 190 e y = 58,15, em pé e com o USB pra baixo; furo de ⌀3,2 em cima; canal passante de 13 x 24 pro plugue; 2 bolsos sextavados de 5,5 embaixo |
+| na `B6I` | alívio gravado de 15 x 24,5 na face de dentro, embaixo do canal |
+| berço `BDB` | 45,6 x 84,7, janela em T aberta até a borda de baixo por um canal de 13 |
+| presilha `BDP` | tira de 20 entre os pinos, que abre em forquilha na ponta do USB (canal de 15) |
 
 ### ESP32-CAM com OV2640 (Amazon B0CDJQV11V)
 
@@ -124,7 +125,7 @@ A placa fica deitada atrás da chapa, parafusada pelos 2 furos dela com M2, e o 
 | berço `BCB` | 39,5 x 67, janela de 27,5 x 41 |
 | presilha `BCP` | tira de 16 x 67 |
 
-Nenhuma das duas placas tem furo de fixação. A ESP32-CAM não tem furo nenhum, e quem monta numa caixa costuma usar suporte impresso ou cola quente. No DevKitC, os furos do desenho existem só na serigrafia. Por isso as duas usam a mesma lógica da presilha do leitor: um **sanduíche preso por 2 M3 que atravessam a `BSP`**.
+Nenhuma das duas placas tem furo de fixação. A ESP32-CAM não tem furo nenhum, e quem monta numa caixa costuma usar suporte impresso ou cola quente. No DevKitC, os furos do desenho existem só na serigrafia. Por isso as duas usam a mesma lógica da presilha do leitor: um **sanduíche preso por M3 que atravessam a `BSP`** (2 na CAM, 3 no DevKit).
 
 ```
 frente  BSP (3) │ berço (3) │ placa │ presilha (3) │ porca   → dentro da caixa
@@ -136,11 +137,23 @@ frente  BSP (3) │ berço (3) │ placa │ presilha (3) │ porca   → dentro
 3. A presilha é uma tira que corre entre as duas fileiras de pinos e aperta o meio da placa por trás. Os pinos e os jumpers ficam livres. No DevKit, a tira de 20 deixa ~1,4 mm de cada lado até o conector Dupont.
 4. A porca aperta a presilha contra a placa. A placa fica acima do berço, então a presilha só toca a placa.
 
-O DevKit fica com o módulo pra cima (antena perto da câmera) e o USB pra baixo. **Com a placa montada, o micro USB não entra**, porque o plugue bateria na `BSP`. Pra gravar o firmware, tira a presilha ou usa OTA. A alimentação vai pelo pino de 5 V.
+#### Acesso ao USB do DevKit
+
+O micro USB fica na face virada pra `BSP`. O eixo do conector fica a ~1 mm da chapa, e a capa do plugue micro-B tem até 10,6 x 8,5 (fonte secundária: conferir o cabo). Então o plugue entra ~3,3 mm na frente da placa. Pra ele caber:
+
+1. O DevKit fica **em pé, com o USB pra baixo**, e a ponta dele na borda de baixo da janela da frente (y ≈ 31). Todo o caminho do plugue cai na faixa da `BSP` escondida atrás da moldura.
+2. **Canal passante de 13 x 24 na `BSP`** e canal de 13 aberto até a borda no berço. O plugue afunda os 3 mm da `BSP`.
+3. **Alívio gravado na lâmina interna da frente (`B6I`)**, embaixo do canal, pros ~0,25 mm que ainda sobram. A `B6I` vai pra mesa com a face de dentro pra cima. A lâmina é simétrica, então o corte não muda, e o arquivo traz o alívio espelhado.
+4. **A presilha abre em forquilha** na ponta do USB, e os dois parafusos de baixo ficam a ±15,2 mm do eixo, fora do caminho.
+5. **Os parafusos de baixo ficam escondidos.** Atrás da moldura a `BSP` encosta na frente, e não sobra lugar pra cabeça. O M3 x 10 entra por dentro (presilha, berço) e rosqueia numa porca presa no bolso sextavado da `BSP`, que a `B6I` tampa. Pela frente só aparece o parafuso de cima.
+
+O cabo desce reto pra dentro do módulo, abaixo da `BSP`. A sugestão é deixar um cabo plugado o tempo todo até o passa-fio da lateral (a 80 mm da base): o firmware se grava pelo lado de fora, sem abrir nada. A alimentação pode ir pelo próprio USB ou pelo pino de 5 V.
+
+A ESP32-CAM não tem USB. Ela é gravada pelos pinos, que ficam virados pra dentro da caixa, e a base ESP32-CAM-MB encaixa neles por trás sem desmontar.
 
 **Cabo da câmera:** o cabo original do OV2640 é curto (cerca de 2 cm). A câmera fica dobrada por cima da placa, então a placa tem que ficar logo atrás da lente, com a câmera atravessando o furo de ⌀12,5. Existe o mesmo OV2640 com cabo de 75 mm, mas ele foi descartado: seria mais uma compra e um cabo comprido. Como a altura da câmera dobrada não está cotada, o comprimento do parafuso (M3 x 20) e o furo seguem provisórios até medir a peça.
 
-As prateleiras passam atrás da `BSP`, a 567, 733 e 900 mm da base do módulo. O DevKit fica entre a de 567 e a de 733, e a CAM entre a de 733 e a de 900. Há um teste que garante que nenhum berço cruza uma prateleira.
+As prateleiras passam atrás da `BSP`, a 567, 733 e 900 mm da base do módulo. O DevKit fica abaixo da de 567, e a CAM entre a de 733 e a de 900. Há um teste que garante que nenhum berço cruza uma prateleira.
 
 ### Ainda sem desenho
 
