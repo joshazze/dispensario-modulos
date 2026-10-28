@@ -31,7 +31,7 @@ cortes/
 │   ├── modulo-biometrico-bloco3.dxf
 │   ├── modulo-biometrico-bloco4.dxf
 │   ├── modulo-biometrico.dxf          ← as 19 peças numa prancha só
-│   └── interface-vaos.dxf             ← só os vãos do LCD e do teclado, sem contorno
+│   └── interface-vaos.dxf             ← só os vãos dos componentes, sem contorno
 └── armario/
     ├── modulo-armario-bloco1.dxf      ← cargas 1 a 6 da máquina (e .pdf, .svg)
     ├── modulo-armario.dxf             ← as 29 peças numa prancha só
@@ -140,6 +140,8 @@ Requisitos: Python 3.10 ou mais novo, sem biblioteca externa. O PDF usa o Google
 python3 gerador.py --filtro '^B' --nome biometrico/modulo-biometrico
 python3 gerador.py --filtro '^A' --nome armario/modulo-armario
 python3 gerador.py --vaos BSP --nome biometrico/interface-vaos
+python3 gerador.py --filtro '^B(LR|DB|DP|CB|CP)$' --nome biometrico/interface-pecas
+python3 gerador.py --teste BSP --nome biometrico/teste-interface
 python3 previas.py        # figuras deste README
 python3 figuras.py        # diagramas de docs/aprendizados.md
 ```
@@ -168,7 +170,7 @@ python3 -m pip install -r requirements-dev.txt
 python3 -m pytest
 ```
 
-São 31 testes. Entre outras coisas, eles garantem que:
+São 47 testes. Entre outras coisas, eles garantem que:
 
 * cada painel tem duas lâminas de 3 mm e a junta de dedos tem 6 mm de profundidade;
 * nenhuma peça invade outra na prancha e toda feição fica dentro da peça, longe da borda;
@@ -185,8 +187,8 @@ São 31 testes. Entre outras coisas, eles garantem que:
 ## Pendências
 
 * **Kerf e espessura são estimativa.** O kerf de 0,18 mm e a espessura de 3,00 mm do MDF ainda não foram medidos, e a compensação de kerf está desligada. Falta cortar um cupom de calibração e medir com paquímetro.
-* **Armário:** casca, nicho e espaçadores estão desenhados e simulados em 3D. Porta, visor, dobradiça, tranca, fixação do nicho na moldura, divisórias internas e os componentes do módulo ficam para depois. Falta também decidir em que lateral vai cada tampa (`ATR`, `ATF`); a simulação supõe a rosqueada à esquerda.
-* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD e o teclado na mão, e só depois o corte oficial. O sensor biométrico ainda não foi escolhido. Detalhe em [docs/componentes.md](docs/componentes.md).
+* **Armário:** casca, nicho e espaçadores desenhados e simulados em 3D. O vão lateral entre casca e nicho é de 13,8 mm, a espessura da fechadura elétrica de pé (cupom em `cortes/armario/teste-tranca/`, aprovado). A parede leva 6 gotas no fundo. Botões da porta: furo de 10,1 com rebaixo de 13,05 (régua em `cortes/armario/teste-botao/`). Faltam visor, dobradiça, fixação do nicho na moldura e divisórias internas.
+* **Interface do biométrico:** cortar um teste de `interface-vaos.dxf` num retalho com o LCD, o teclado, o leitor R307S, o LED e as duas ESP32 na mão, e só depois o corte oficial. A disposição segue a altura de uso: tela e câmera em cima, teclado e leitor lado a lado na faixa de 800 a 1000 mm do piso. As duas ESP32 não têm furo: cada uma assenta num rebaixo gravado na face de dentro e fica presa por berço e presilha em M3 (`interface-pecas.dxf`). O USB do DevKit aponta pra baixo, por um canal escondido atrás da moldura, com um alívio gravado na `B6I`. A `BSP` vai pra mesa com a face de dentro pra cima, e por isso o arquivo sai espelhado. O furo da câmera é provisório até o módulo OV2640 ser medido. Detalhe em [docs/componentes.md](docs/componentes.md); o roteiro do corte de teste está em [docs/teste-interface.md](docs/teste-interface.md).
 
 ## Estrutura
 

@@ -15,7 +15,7 @@ import shutil
 import subprocess
 import sys
 
-from laser import geom, materials, perfil, report
+from laser import fonte, geom, materials, perfil, report
 from laser.geom import circle_pts, hexagono
 
 
@@ -360,7 +360,14 @@ def abertura_polys(ab, w, h):
                                         lw, lh, ab.get("raio_mm", 0.0)))
         elif tipo == "furo":
             saida.append(circle_pts(cx, cy, ab["diametro_mm"]))
-        elif tipo == "janela":
+        elif tipo == "sextavado":
+            # bolso de porca passante: a porca fica presa na espessura da chapa
+            saida.append(hexagono(cx, cy, ab["entre_faces_mm"]))
+        elif tipo == "rebaixo" and "pontos_mm" in ab:
+            saida.append([(cx + px, cy + py) for px, py in ab["pontos_mm"]])
+        elif tipo in ("janela", "rebaixo"):
+            # rebaixo tem a geometria da janela, mas e gravado (Fill) e nao
+            # atravessa: e o assento da placa na face que fica pra cima na mesa
             lw = ab["largura_mm"]
             lh = ab["altura_mm"]
             saida.append(geom.rrect(cx - lw / 2.0, cy - lh / 2.0, lw, lh,
@@ -423,6 +430,8 @@ def aberturas_da_face(dono, face_number, layer, w, h):
     """Filtra as aberturas pela face e pela lamina em que elas existem."""
     saida = []
     for ab in dono.get("aberturas", []):
+        if ab["tipo"] == "rebaixo":
+            continue
         if face_number is not None and ab.get("face") != face_number:
             continue
         alvo = ab.get("camadas", "todas")
@@ -430,6 +439,52 @@ def aberturas_da_face(dono, face_number, layer, w, h):
             continue
         saida.extend(abertura_polys(ab, w, h))
     return saida
+
+
+def rebaixos_da_peca(dono, w, h, so_componentes=False):
+    """Areas gravadas em Fill que nao atravessam a chapa (assento de placa)."""
+    saida = []
+    for ab in dono.get("aberturas", []):
+        if ab["tipo"] != "rebaixo":
+            continue
+        if so_componentes and not ab.get("componente"):
+            continue
+        saida.extend(abertura_polys(ab, w, h))
+    return saida
+
+
+def rebaixos_da_face(module, face_number, layer, outline, w, h):
+    """Rebaixos gravados numa lamina de face do modulo.
+
+    `lado: dentro` grava a face que olha pra dentro da caixa: a lamina vai pra
+    mesa com ela pra cima e o rebaixo sai espelhado no arquivo. So vale em
+    lamina simetrica, porque o resto do corte nao pode mudar com a virada.
+    """
+    saida = []
+    for ab in module.get("aberturas", []):
+        if ab["tipo"] != "rebaixo" or ab.get("face") != face_number:
+            continue
+        alvo = ab.get("camadas", "todas")
+        if alvo != "todas" and alvo != layer:
+            continue
+        polys = abertura_polys(ab, w, h)
+        if ab.get("lado") == "dentro":
+            pts = {(round(x, 3), round(y, 3)) for x, y in outline}
+            if pts != {(round(w - x, 3), round(y, 3)) for x, y in outline}:
+                raise ValueError("rebaixo por dentro em lamina assimetrica: %s" % ab["nome"])
+            polys = espelha(polys, w)
+        saida.extend(polys)
+    return saida
+
+
+def espelha(polys, w):
+    """Espelha no eixo vertical da peca.
+
+    A spec descreve a peca vista de FRENTE. Quando o rebaixo fica na face de
+    dentro, a peca vai pra mesa com essa face pra cima, entao o arquivo de
+    corte sai espelhado: o que esta a esquerda pela frente fica a direita na mesa.
+    """
+    return [[(w - x, y) for x, y in reversed(poly)] for poly in polys]
 
 
 def checa_aberturas(nome, contorno, feicoes, espessura, piso_ponte):
@@ -539,6 +594,12 @@ def pecas_extras(spec):
             w = extra["largura_mm"]
             h = extra["altura_mm"]
             contorno = geom.rrect(0.0, 0.0, w, h, extra.get("raio_mm", 0.0))
+        elif extra["tipo"] == "poligono":
+            # contorno livre com origem no canto de baixo a esquerda: e a peca
+            # que tem um canal aberto ate a borda, como o berco do DevKit
+            contorno = [tuple(p) for p in extra["pontos_mm"]]
+            w = max(x for x, _ in contorno)
+            h = max(y for _, y in contorno)
         else:
             raise ValueError("tipo de peca extra desconhecido: %s" % extra["tipo"])
         laminas = extra.get("laminas", 1)
@@ -546,10 +607,15 @@ def pecas_extras(spec):
         for sufixo in sufixos:
             layer = {"I": "interna", "E": "externa", "": "unica"}[sufixo]
             feicoes = aberturas_da_face(extra, None, layer, w, h)
+            rebaixos = rebaixos_da_peca(extra, w, h)
+            if extra.get("gravar_por_dentro"):
+                feicoes, rebaixos = espelha(feicoes, w), espelha(rebaixos, w)
+                contorno = espelha([contorno], w)[0]
             unidades.append({
                 "code": extra["codigo"] + sufixo,
                 "nome": extra["nome"],
                 "polys": [contorno] + feicoes,
+                "rebaixos": rebaixos,
                 "vazios": [],
                 "alojar_em": extra.get("alojar_em"),
                 "w": w,
@@ -578,10 +644,12 @@ def make_groups(spec):
                 layer_code = {"interna": "I", "externa": "E", "unica": ""}.get(layer, "C")
                 feicoes = (layer_fasteners(centers, layer, h, spec["m3"])
                            + aberturas_da_face(module, face_number, layer, w, h))
+                rebaixos = rebaixos_da_face(module, face_number, layer, outline, w, h)
                 pieces.append({
                     "code": "%s%d%s" % (module["codigo"], face_number, layer_code),
                     "outline": outline,
                     "fasteners": feicoes,
+                    "rebaixos": rebaixos,
                     "vazios": vazios_da_face(module, face_number, layer, w, h,
                                              spec["encaixe"]["margem_vazio_mm"]),
                     "w": w,
@@ -608,6 +676,14 @@ def rot90(polys):
     min_x = min(x for poly in turned for x, _ in poly)
     min_y = min(y for poly in turned for _, y in poly)
     return [[(x - min_x, y - min_y) for x, y in poly] for poly in turned]
+
+
+def gira_unidade(unit, gira):
+    """Contorno, feicoes e rebaixos giram juntos, no mesmo referencial."""
+    n = len(unit["polys"])
+    todos = unit["polys"] + unit.get("rebaixos", [])
+    todos = rot90(todos) if gira else todos
+    return todos[:n], todos[n:]
 
 
 LEGENDA_LINHAS = [
@@ -637,6 +713,7 @@ def sheet_units(spec, groups):
             units.append({
                 "code": piece["code"],
                 "polys": [piece["outline"]] + list(piece["fasteners"]),
+                "rebaixos": list(piece.get("rebaixos", [])),
                 "vazios": list(piece.get("vazios", [])),
                 "w": piece["w"],
                 "h": piece["h"],
@@ -957,7 +1034,10 @@ def build_sheet(spec, groups, filtro=None, titulo=None):
     engrave = []
     gravar = spec.get("gravar_codigos", True)
     for unit, x, y, gira in placed:
-        polys = rot90(unit["polys"]) if gira else unit["polys"]
+        polys, rebaixos = gira_unidade(unit, gira)
+        # o rebaixo e gravado antes de qualquer corte: com a peca solta a
+        # gravacao sairia fora do lugar
+        engrave.extend({"tipo": "rebaixo", "pontos": moved(rb, x, y)} for rb in rebaixos)
         # Interno antes de externo, sempre. Cortado o
         # perimetro a peca se solta e desalinha, e furo depois disso sai torto.
         cuts.extend(moved(poly, x, y) for poly in polys[1:])
@@ -1009,6 +1089,21 @@ def svg_sheet(cuts, engrave, width, height, labels=True):
     for poly in cuts:
         out.append('<path d="%s"/>' % path_d(poly, flip))
     out.append('</g>')
+    rebaixos = [item for item in engrave if item["tipo"] == "rebaixo"]
+    if rebaixos:
+        # azul: gravacao em Fill, vai pra maquina antes do corte
+        out.append('<g fill="#0000ff" fill-opacity="0.15" stroke="#0000ff" stroke-width="0.05">')
+        for item in rebaixos:
+            out.append('<path d="%s"/>' % path_d(item["pontos"], flip))
+        out.append('</g>')
+    rotulos = [item for item in engrave if item["tipo"] == "rotulo"]
+    if rotulos:
+        # nomes em traco azul: gravacao em Linha, tambem vai pra maquina
+        out.append('<g fill="none" stroke="#0000ff" stroke-width="0.25">')
+        for item in rotulos:
+            pts = " ".join("%.4f,%.4f" % flip(px, py) for px, py in item["pontos"])
+            out.append('<polyline points="%s"/>' % pts)
+        out.append('</g>')
     if labels:
         # so a moldura do bloco de mesa, em cinza. Nada de azul no desenho:
         # gravacao e cabecalho poluem a conferencia e nao vao pra maquina.
@@ -1053,7 +1148,13 @@ def valida_prancha(spec, placed):
     piso_ponte = 0.5 * espessura
     problemas = []
     for unit, x, y, gira in placed:
-        polys = rot90(unit["polys"]) if gira else unit["polys"]
+        polys, rebaixos = gira_unidade(unit, gira)
+        bx0, by0, bx1, by1 = geom.bbox(polys[0])
+        for i, rb in enumerate(rebaixos, 1):
+            rx0, ry0, rx1, ry1 = geom.bbox(rb)
+            if min(rx0 - bx0, ry0 - by0, bx1 - rx1, by1 - ry1) < 2.0 * espessura - 1e-6:
+                problemas.append("%s: rebaixo %d fora da peca ou colado na borda"
+                                 % (unit["code"], i))
         # excecao declarada na spec, com o motivo ao lado: o piso cai so
         # naquela peca e o relatorio continua mostrando que caiu
         piso = min(piso_ponte, unit.get("ponte_aceita_mm") or piso_ponte)
@@ -1071,36 +1172,337 @@ def vaos_de_componentes(spec, codigo):
     E o arquivo para cortar os componentes numa peca que ja saiu da maquina:
     a peca vai de novo na mesa, alinhada a mao, e o laser corta so isto.
     """
+    return componentes_da_peca(spec, codigo)[0]
+
+
+def componentes_da_peca(spec, codigo):
+    """(cortes, rebaixos) dos componentes, na mesma origem e ja espelhados
+    quando a peca grava por dentro."""
     extra = next(e for e in spec["pecas_extras"] if e["codigo"] == codigo)
     w, h = extra["largura_mm"], extra["altura_mm"]
     polys = []
     for ab in extra.get("aberturas", []):
-        if ab.get("componente"):
+        if ab.get("componente") and ab["tipo"] != "rebaixo":
             polys += abertura_polys(ab, w, h)
     if not polys:
         raise ValueError("a peca %s nao tem abertura com `componente`" % codigo)
-    x0 = min(x for p in polys for x, _ in p)
-    y0 = min(y for p in polys for _, y in p)
-    return [[(x - x0, y - y0) for x, y in p] for p in polys]
+    rebaixos = rebaixos_da_peca(extra, w, h, so_componentes=True)
+    if extra.get("gravar_por_dentro"):
+        polys, rebaixos = espelha(polys, w), espelha(rebaixos, w)
+    todos = polys + rebaixos
+    x0 = min(x for p in todos for x, _ in p)
+    y0 = min(y for p in todos for _, y in p)
+    mover = lambda ps: [[(x - x0, y - y0) for x, y in p] for p in ps]
+    return mover(polys), mover(rebaixos)
 
 
 def exporta_vaos(spec, codigo, nome, margem=5.0):
     """DXF so com os vaos (origem no canto de baixo a esquerda) e PDF 1:1."""
-    cuts = vaos_de_componentes(spec, codigo)
-    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts)
+    cuts, rebaixos = componentes_da_peca(spec, codigo)
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos)
     # o PDF ganha margem para o furo da borda nao sair cortado na pagina
     vis = [[(x + margem, y + margem) for x, y in p] for p in cuts]
-    w = max(x for p in vis for x, _ in p) + margem
-    h = max(y for p in vis for _, y in p) + margem
-    svg = svg_sheet(vis, [], w, h, labels=True)
+    rvis = [[(x + margem, y + margem) for x, y in p] for p in rebaixos]
+    w = max(x for p in vis + rvis for x, _ in p) + margem
+    h = max(y for p in vis + rvis for _, y in p) + margem
+    svg = svg_sheet(vis, [{"tipo": "rebaixo", "pontos": p} for p in rvis], w, h, labels=True)
     with open(os.path.join(OUTPUT, nome + ".svg"), "w", encoding="utf-8") as stream:
         stream.write(svg)
     write_pdf(svg, w, h, os.path.join(OUTPUT, nome + ".pdf"))
     ponte = min((geom.dist_poligonos(a, b) for i, a in enumerate(cuts)
                  for b in cuts[i + 1:]), default=float("inf"))
-    print("vaos %s.dxf | %d contornos | ponte mais fina %.2f mm"
-          % (nome, len(cuts), ponte))
+    print("vaos %s.dxf | %d contornos | %d rebaixos | ponte mais fina %.2f mm"
+          % (nome, len(cuts), len(rebaixos), ponte))
     return cuts
+
+
+def cupons_de_teste(spec, codigo, margem=6.0):
+    """Um retalho por componente da peca avulsa, com as feicoes dele e mais nada.
+
+    Serve pro corte de teste: em vez de gastar a BSP inteira, cada componente
+    ganha um pedaco do tamanho dele (feicoes + margem), com os rebaixos na
+    camada de gravacao e ja espelhado quando a peca grava por dentro.
+    """
+    extra = next(e for e in spec["pecas_extras"] if e["codigo"] == codigo)
+    w, h = extra["largura_mm"], extra["altura_mm"]
+    grupos = {}
+    for ab in extra.get("aberturas", []):
+        if not ab.get("componente"):
+            continue
+        cortes, rebaixos = grupos.setdefault(ab["componente"], ([], []))
+        polys = abertura_polys(ab, w, h)
+        if extra.get("gravar_por_dentro"):
+            polys = espelha(polys, w)
+        (rebaixos if ab["tipo"] == "rebaixo" else cortes).extend(polys)
+    cupons = []
+    for nome, (cortes, rebaixos) in grupos.items():
+        todos = cortes + rebaixos
+        x0 = min(x for p in todos for x, _ in p) - margem
+        y0 = min(y for p in todos for _, y in p) - margem
+        x1 = max(x for p in todos for x, _ in p) + margem
+        y1 = max(y for p in todos for _, y in p) + margem
+        mover = lambda ps: [[(x - x0, y - y0) for x, y in p] for p in ps]
+        vazios = []
+        for ab in extra.get("aberturas", []):
+            if ab.get("componente") == nome and ab["tipo"] == "janela":
+                (vx0, vy0, vx1, vy1), = [geom.bbox(p) for p in mover(espelha(abertura_polys(ab, w, h), w)
+                                          if extra.get("gravar_por_dentro") else abertura_polys(ab, w, h))]
+                vazios.append((vx0, vy0, vx1 - vx0, vy1 - vy0))
+        cupons.append({
+            "code": nome,
+            "vazios": vazios,
+            "polys": [geom.rrect(0.0, 0.0, x1 - x0, y1 - y0, 2.0)] + mover(cortes),
+            "rebaixos": mover(rebaixos),
+            "w": x1 - x0,
+            "h": y1 - y0,
+            # a excecao de ponte da peca vale pros pedacos dela
+            "ponte_aceita_mm": extra.get("ponte_aceita_mm"),
+        })
+    return cupons
+
+
+def _skyline(retangulos, largura, gap):
+    """Bottom-left por skyline: cada peca desce ate encostar e vai o mais a esquerda.
+
+    `retangulos` e uma lista de (indice, w, h, pode_girar). Devolve
+    {indice: (x, y, girou)} e a altura usada, ou None se alguma nao couber.
+    """
+    linha = [(0.0, largura, 0.0)]          # segmentos (x, w, y) do horizonte
+    pos = {}
+    for idx, w, h, gira in retangulos:
+        melhor = None
+        for ww, hh, g in ((w, h, False), (h, w, True)) if gira else ((w, h, False),):
+            if ww > largura + 1e-9:
+                continue
+            for k, (sx, _, _) in enumerate(linha):
+                if sx + ww > largura + 1e-9:
+                    break
+                topo = max(sy for x, sw, sy in linha if x < sx + ww - 1e-9 and x + sw > sx + 1e-9)
+                cand = (topo + hh, sx, ww, hh, g, topo)
+                if melhor is None or cand[:2] < melhor[:2]:
+                    melhor = cand
+        if melhor is None:
+            return None, None
+        _, x, ww, hh, g, y = melhor
+        pos[idx] = (x, y, g)
+        novo, fim = [], x + ww + gap
+        for sx, sw, sy in linha:
+            if sx + sw <= x + 1e-9 or sx >= fim - 1e-9:
+                novo.append((sx, sw, sy))
+                continue
+            if sx < x:
+                novo.append((sx, x - sx, sy))
+            if sx + sw > fim:
+                novo.append((fim, sx + sw - fim, sy))
+        novo.append((x, min(fim, largura) - x, y + hh + gap))
+        linha = sorted(novo)
+    return pos, max(y for _, _, y in linha) - gap
+
+
+def encaixa_retalho(unidades, gap=2.0):
+    """Menor retangulo para as pecas: testa largura de chapa, ordem e giro."""
+    melhor = None
+    area_total = sum(u["w"] * u["h"] for u in unidades)
+    maior = max(min(u["w"], u["h"]) for u in unidades)
+    ordens = [
+        sorted(range(len(unidades)), key=lambda i: -max(unidades[i]["w"], unidades[i]["h"])),
+        sorted(range(len(unidades)), key=lambda i: -unidades[i]["w"] * unidades[i]["h"]),
+        sorted(range(len(unidades)), key=lambda i: -unidades[i]["h"]),
+    ]
+    largura = maior
+    while largura <= 2.0 * area_total ** 0.5:
+        for ordem in ordens:
+            rets = [(i, unidades[i]["w"], unidades[i]["h"], True) for i in ordem]
+            pos, altura = _skyline(rets, largura, gap)
+            if pos is None:
+                continue
+            usado = max(pos[i][0] + (unidades[i]["h"] if pos[i][2] else unidades[i]["w"]) for i in pos)
+            area = usado * altura
+            if melhor is None or area < melhor[0]:
+                melhor = (area, pos, usado, altura)
+        largura += 2.0
+    return melhor
+
+
+def aloja_nos_vazios(unidades, folga=2.0):
+    """Peca pequena vai cortada dentro do vao de outra, que viraria refugo.
+
+    Maior peca primeiro, no vao que sobrar menos. Devolve as que ficaram de fora
+    e a lista (hospede, x, y, giro, anfitriao) em coordenadas do anfitriao.
+    """
+    livres = []                                   # (anfitriao, x, y, w, h)
+    for u in unidades:
+        for vx, vy, vw, vh in u.get("vazios", []):
+            livres.append([u, vx + folga, vy + folga, vw - 2 * folga, vh - 2 * folga])
+    pequenas = sorted([u for u in unidades if not u.get("vazios")],
+                      key=lambda u: -u["w"] * u["h"])
+    alojadas, fora = [], []
+    for u in pequenas:
+        achou = None
+        for k, (host, x, y, w, h) in enumerate(livres):
+            for uw, uh, g in ((u["w"], u["h"], False), (u["h"], u["w"], True)):
+                if uw <= w + 1e-9 and uh <= h + 1e-9:
+                    sobra = w * h - uw * uh
+                    if achou is None or sobra < achou[0]:
+                        achou = (sobra, k, uw, uh, g)
+        if achou is None or u["w"] * u["h"] > 1500.0:
+            fora.append(u)
+            continue
+        _, k, uw, uh, g = achou
+        host, x, y, w, h = livres.pop(k)
+        alojadas.append((u, x, y, g, host))
+        # o resto do vao, do lado mais largo, continua livre
+        if w - uw - folga > h - uh - folga:
+            livres.append([host, x + uw + folga, y, w - uw - folga, h])
+        else:
+            livres.append([host, x, y + uh + folga, w, h - uh - folga])
+    return [u for u in unidades if u not in [a[0] for a in alojadas]], alojadas
+
+
+def _gira_local(u, g):
+    """Polys e rebaixos da peca, girados 90 graus se g, com origem no canto."""
+    n = len(u["polys"])
+    todos = u["polys"] + u.get("rebaixos", [])
+    todos = rot90(todos) if g else todos
+    return todos[:n], todos[n:]
+
+
+NOMES_TESTE = {
+    "lcd-1602a": "LCD", "teclado-4x4": "TECLADO", "r307s": "LEITOR",
+    "led-rgb-ky016": "LED", "esp32-devkitc": "DEVKIT", "esp32-cam": "CAM",
+    "alivio": "B6I USB",
+}
+
+
+def lugar_do_nome(texto, contorno, ocupados, alturas=(3.0, 2.5, 2.0), folga=1.5, de_cima=False):
+    """Primeiro lugar, de baixo pra cima (ou de cima pra baixo), onde o nome cabe
+    na peca sem tocar em nenhum corte nem rebaixo. Devolve (x, y, altura) ou None."""
+    bx0, by0, bx1, by1 = geom.bbox(contorno)
+    caixas = [geom.bbox(o) for o in ocupados]
+    for alt in alturas:
+        tw = fonte.largura_texto(texto, alt)
+        passo = -0.5 if de_cima else 0.5
+        y = by1 - folga - alt if de_cima else by0 + folga
+        while by0 + folga <= y and y + alt <= by1 - folga:
+            for x in (((bx0 + bx1) - tw) / 2.0,) + tuple(
+                    bx0 + folga + k * 0.5 for k in range(int((bx1 - bx0) / 0.5))):
+                if x + tw > bx1 - folga:
+                    break
+                caixa = (x - 0.5, y - 0.5, x + tw + 0.5, y + alt + 0.5)
+                amostras = [(caixa[0] + (caixa[2] - caixa[0]) * i / 4.0,
+                             caixa[1] + (caixa[3] - caixa[1]) * j / 2.0)
+                            for i in range(5) for j in range(3)]
+                if not all(geom.ponto_dentro(q, contorno) for q in amostras):
+                    continue
+                quadro = [(caixa[0], caixa[1]), (caixa[2], caixa[1]),
+                          (caixa[2], caixa[3]), (caixa[0], caixa[3])]
+                if geom.dist_poligonos(quadro, contorno) < folga:
+                    continue                      # contorno recortado passando no meio
+                if any(caixa[0] < c[2] + folga and c[0] < caixa[2] + folga
+                       and caixa[1] < c[3] + folga and c[1] < caixa[3] + folga for c in caixas):
+                    continue
+                return x, y, alt
+            y += passo
+    return None
+
+
+def exporta_teste(spec, codigo, extras, alivios, nome, gap=2.0):
+    """Cupons de cada componente + pecas avulsas pequenas num retalho so.
+
+    Peca pequena entra no vao que ia virar refugo; o resto vai no menor
+    retangulo que o encaixe acha.
+    """
+    unidades = cupons_de_teste(spec, codigo)
+    for u in pecas_extras(spec):
+        if u["code"] in extras:
+            unidades.append(u)
+    for a in alivios:
+        # alivio gravado de uma face de modulo, num retalho proprio
+        lw, lh = a["largura_mm"], a["altura_mm"]
+        m = 6.0
+        unidades.append({
+            "code": "alivio",
+            "polys": [geom.rrect(0.0, 0.0, lw + 2 * m, lh + 2 * m, 2.0)],
+            "rebaixos": [geom.rrect(m, m, lw, lh, a.get("raio_mm", 0.0))],
+            "w": lw + 2 * m,
+            "h": lh + 2 * m,
+        })
+    soltas, alojadas = aloja_nos_vazios(unidades)
+    _, pos, largura, altura = encaixa_retalho(soltas, gap)
+    cuts, rebaixos, placed = [], [], []
+    origem = {}
+    for i, u in enumerate(soltas):
+        x, y, g = pos[i]
+        origem[id(u)] = (x, y, g)
+    for u, hx, hy, g, host in alojadas:
+        # coordenada do vao vale no anfitriao sem giro; se o anfitriao girou,
+        # gira o ponto junto
+        x, y, gh = origem[id(host)]
+        if gh:
+            hx, hy = host["h"] - hy - (u["w"] if g else u["h"]), hx
+            g = not g
+        origem[id(u)] = (x + hx, y + hy, g)
+    # pecas de dentro primeiro: cortado o anfitriao, o miolo se solta
+    ordem = [a[0] for a in alojadas] + soltas
+    rotulos, sem_nome = [], []
+    for u in ordem:
+        x, y, g = origem[id(u)]
+        polys, rbs = _gira_local(u, g)
+        cuts.extend(moved(p, x, y) for p in polys[1:])
+        cuts.append(moved(polys[0], x, y))
+        rebaixos.extend(moved(r, x, y) for r in rbs)
+        placed.append((dict(u, legenda=False, gira=False, polys=polys, rebaixos=rbs), x, y, False))
+        texto = NOMES_TESTE.get(u["code"], u["code"])
+        # o vao de um anfitriao pode ter hospede: ele tambem conta como ocupado
+        hospedes = [moved(geom.rrect(0, 0, (a[0]["h"] if origem[id(a[0])][2] else a[0]["w"]),
+                                     (a[0]["w"] if origem[id(a[0])][2] else a[0]["h"]), 0.0),
+                          origem[id(a[0])][0] - x, origem[id(a[0])][1] - y)
+                    for a in alojadas if a[4] is u]
+        lugar = lugar_do_nome(texto, polys[0], polys[1:] + rbs + hospedes)
+        if lugar is None:
+            sem_nome.append(u["code"])
+            continue
+        lx, ly, alt = lugar
+        rotulos.extend(moved(t, x, y) for t in fonte.rotulo(texto, lx, ly, alt))
+        # retalho da tampa e face; berco e presilha avulsos ficam nas costas
+        lado = "COSTAS" if u["code"] in extras else "FACE"
+        caixa_nome = geom.rrect(lx, ly, fonte.largura_texto(texto, alt), alt, 0.0)
+        lugar = lugar_do_nome(lado, polys[0], polys[1:] + rbs + hospedes + [caixa_nome],
+                              alturas=(1.5, 1.2))
+        if lugar is None:
+            sem_nome.append(u["code"] + " (" + lado + ")")
+            continue
+        rotulos.extend(moved(t, x, y) for t in fonte.rotulo(lado, *lugar))
+        ocupados = polys[1:] + rbs + hospedes + [caixa_nome, geom.rrect(
+            lugar[0], lugar[1], fonte.largura_texto(lado, lugar[2]), lugar[2], 0.0)]
+        if u["code"] not in extras:
+            # sigla da peca de origem, no lado oposto ao nome
+            sigla = "B6I" if u["code"] == "alivio" else codigo
+            lugar = lugar_do_nome(sigla, polys[0], ocupados, alturas=(2.5, 2.0, 1.5), de_cima=True)
+            if lugar is None:
+                sem_nome.append(u["code"] + " (" + sigla + ")")
+                continue
+            rotulos.extend(moved(t, x, y) for t in fonte.rotulo(sigla, *lugar))
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos,
+                   rotulos=rotulos)
+    svg = svg_sheet(cuts, [{"tipo": "rebaixo", "pontos": r} for r in rebaixos]
+                    + [{"tipo": "rotulo", "pontos": t} for t in rotulos],
+                    largura, altura, labels=True)
+    with open(os.path.join(OUTPUT, nome + ".svg"), "w", encoding="utf-8") as stream:
+        stream.write(svg)
+    write_pdf(svg, largura, altura, os.path.join(OUTPUT, nome + ".pdf"))
+    problemas = valida_prancha(spec, placed)
+    area = sum(u["w"] * u["h"] for u in unidades)
+    if sem_nome:
+        print("AVISO sem lugar pro nome: " + ", ".join(sem_nome))
+    print("teste %s.dxf | %.0f x %.0f mm | %d pecas (%d dentro de vao) | %d rebaixos | "
+          "%d com nome | aproveitamento %.0f%% | %s"
+          % (nome, largura, altura, len(placed), len(alojadas), len(rebaixos),
+             len(placed) - len(sem_nome),
+             100.0 * area / (largura * altura), "DFM ok" if not problemas else "DFM REPROVADO"))
+    for linha_p in problemas:
+        print("  " + linha_p)
+    return placed, problemas
 
 
 def relatorio(spec, placed, sheet_w, sheet_h):
@@ -1110,7 +1512,7 @@ def relatorio(spec, placed, sheet_w, sheet_h):
     """
     pecas = []
     for unit, x, y, gira in placed:
-        polys = rot90(unit["polys"]) if gira else unit["polys"]
+        polys = gira_unidade(unit, gira)[0]
         pecas.append({
             "nome": unit["code"],
             "contorno": moved(polys[0], x, y),
@@ -1149,7 +1551,7 @@ def opcoes(argv):
 
     --vaos CODIGO exporta so os vaos de componente daquela peca avulsa.
     """
-    filtro = nome = titulo = vaos = None
+    filtro = nome = titulo = vaos = teste = None
     argv = list(argv)
     while argv:
         arg = argv.pop(0)
@@ -1161,17 +1563,26 @@ def opcoes(argv):
             titulo = argv.pop(0)
         elif arg == "--vaos" and argv:
             vaos = argv.pop(0)
+        elif arg == "--teste" and argv:
+            teste = argv.pop(0)
         else:
             raise SystemExit(
                 "uso: gerador.py [--filtro REGEX] [--nome PASTA/STEM] [--titulo TEXTO]"
-                " | --vaos CODIGO --nome PASTA/STEM")
-    return filtro, nome, titulo, vaos
+                " | --vaos CODIGO --nome PASTA/STEM | --teste CODIGO --nome PASTA/STEM")
+    return filtro, nome, titulo, vaos, teste
 
 
 def main(argv=None):
-    filtro, nome_saida, titulo, vaos = opcoes(sys.argv[1:] if argv is None else argv)
+    filtro, nome_saida, titulo, vaos, teste = opcoes(sys.argv[1:] if argv is None else argv)
     with open(SPEC_PATH, encoding="utf-8") as stream:
         spec = json.load(stream)
+    if teste:
+        nome = nome_saida or "teste-" + teste.lower()
+        os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)
+        alivios = [a for m in spec["modulos"] for a in m.get("aberturas", [])
+                   if a["tipo"] == "rebaixo"]
+        exporta_teste(spec, teste, {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, nome)
+        return
     if vaos:
         nome = nome_saida or "vaos-" + vaos.lower()
         os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)
@@ -1189,7 +1600,9 @@ def main(argv=None):
         stream.write(svg_sheet(cuts, engrave, sheet_w, sheet_h, labels=False))
     textos = [g for g in engrave
               if g["tipo"] == "texto" and g.get("machine", True)]
-    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, textos=textos)
+    rebaixos = [g["pontos"] for g in engrave if g["tipo"] == "rebaixo"]
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, textos=textos,
+                   rebaixos=rebaixos)
     write_pdf(svg_cotado, sheet_w, sheet_h, os.path.join(OUTPUT, nome + ".pdf"))
 
     # um arquivo por bloco: e assim que a peca chega na mesa, uma carga por vez
@@ -1203,10 +1616,14 @@ def main(argv=None):
         x0 = min(x for poly in dentro for x, _ in poly)
         y0 = min(y for poly in dentro for _, y in poly)
         locais = [[(x - x0, y - y0) for x, y in poly] for poly in dentro]
+        rb_locais = [[(x - x0, y - y0) for x, y in rb] for rb in rebaixos
+                     if all(ox - 1e-6 <= x <= ox + bw + 1e-6
+                            and oy - 1e-6 <= y <= oy + bh + 1e-6 for x, y in rb)]
         stem = "%s-bloco%d" % (nome, indice)
         quadro = [(0.0, 0.0), (bw, 0.0), (bw, bh), (0.0, bh)]
-        perfil.escreve(os.path.join(OUTPUT, stem + ".dxf"), locais)
-        svg_bloco = svg_sheet(locais, [{"tipo": "moldura", "pontos": quadro}],
+        perfil.escreve(os.path.join(OUTPUT, stem + ".dxf"), locais, rebaixos=rb_locais)
+        svg_bloco = svg_sheet(locais, [{"tipo": "moldura", "pontos": quadro}]
+                              + [{"tipo": "rebaixo", "pontos": rb} for rb in rb_locais],
                               bw, bh, labels=True)
         with open(os.path.join(OUTPUT, stem + ".svg"), "w", encoding="utf-8") as f:
             f.write(svg_bloco)

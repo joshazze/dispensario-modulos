@@ -16,7 +16,7 @@ Perfil extraido (ver `perfis/perfil-tecnico.json`):
 | camada de marcacao | `MARCACAO` com cedilha e til, cor ACI 2 (amarelo) |
 | moldura da folha | camada `0`, cor 7 |
 | entidades | LWPOLYLINE, CIRCLE, LINE |
-| arquivo | cp1252 com fim de linha CRLF |
+| arquivo | UTF-8 (AC1032) com fim de linha CRLF |
 
 Handle e owner importam: toda entidade leva grupo 5 (handle hexadecimal unico)
 e grupo 330 apontando para o model space. Sem isso o AutoCAD recusa o arquivo.
@@ -26,7 +26,7 @@ import os
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(BASE, "perfis", "chapa-tecnico.dxf")
-ENCODING = "cp1252"
+ENCODING = "utf-8"
 CAMADA_CORTE = "CORTE"
 CAMADA_MARCACAO = "MARCAÇÃO"
 CAMADA_MOLDURA = "0"
@@ -64,13 +64,17 @@ class Escritor:
         self.prefixo, self.sufixo, self._handle = carrega(template)
         self.pares = []
 
-    def _cabecalho(self, tipo, camada, subclasse):
+    def _cabecalho(self, tipo, camada, subclasse, cor=None):
         self.pares += [("0", tipo), ("5", "%X" % self._handle), ("330", MODEL_SPACE),
-                       ("100", "AcDbEntity"), ("8", camada), ("100", subclasse)]
+                       ("100", "AcDbEntity"), ("8", camada)]
+        if cor is not None:
+            # cor da entidade por cima da camada: o LightBurn separa camada por cor
+            self.pares.append(("62", str(cor)))
+        self.pares.append(("100", subclasse))
         self._handle += 1
 
-    def polilinha(self, pontos, camada=CAMADA_CORTE, fechada=True):
-        self._cabecalho("LWPOLYLINE", camada, "AcDbPolyline")
+    def polilinha(self, pontos, camada=CAMADA_CORTE, fechada=True, cor=None):
+        self._cabecalho("LWPOLYLINE", camada, "AcDbPolyline", cor)
         self.pares += [("90", str(len(pontos))), ("70", "1" if fechada else "0"),
                        ("43", "0.0")]
         for x, y in pontos:
@@ -134,19 +138,27 @@ def _circulo_de(pontos, tol=0.05):
     return cx, cy, raio
 
 
-def escreve(caminho, cortes, marcas=(), textos=(), template=None):
+COR_ROTULO = 5      # azul: gravacao em Linha, separada do Fill amarelo dos rebaixos
+
+
+def escreve(caminho, cortes, marcas=(), textos=(), template=None, rebaixos=(), rotulos=()):
     """Grava o DXF no perfil do tecnico.
 
     `cortes` sao os contornos fechados, `marcas` as polilinhas de marcacao e
-    `textos` os rotulos. Nada de moldura da mesa no arquivo, e o ponto mais
+    `textos` os rotulos. `rotulos` sao tracos de texto (fonte de traco) na
+    camada de marcacao com a cor azul, gravados em Linha. `rebaixos` sao areas fechadas gravadas em Fill, na
+    camada de marcacao, que o LightBurn separa pela cor. Nada de moldura da mesa no arquivo, e o ponto mais
     baixo a esquerda do desenho vai para (0, 0): e por ele que as pecas se
     alinham na maquina.
     """
-    pontos = [p for poly in list(cortes) + list(marcas) for p in poly]
+    pontos = [p for poly in list(cortes) + list(marcas) + list(rebaixos) + list(rotulos)
+              for p in poly]
     dx = min((x for x, _ in pontos), default=0.0)
     dy = min((y for _, y in pontos), default=0.0)
     cortes = [[(x - dx, y - dy) for x, y in poly] for poly in cortes]
     marcas = [[(x - dx, y - dy) for x, y in m] for m in marcas]
+    rebaixos = [[(x - dx, y - dy) for x, y in r] for r in rebaixos]
+    rotulos = [[(x - dx, y - dy) for x, y in r] for r in rotulos]
     textos = [dict(t, x=t["x"] - dx, y=t["y"] - dy) for t in textos]
     e = Escritor(template)
     for poly in cortes:
@@ -155,6 +167,11 @@ def escreve(caminho, cortes, marcas=(), textos=(), template=None):
             e.circulo(circ[0], circ[1], circ[2])
         else:
             e.polilinha(poly, camada=CAMADA_CORTE)
+    for r in rebaixos:
+        e.polilinha(r, camada=CAMADA_MARCACAO, fechada=True)
+    for r in rotulos:
+        if len(r) > 1:
+            e.polilinha(r, camada=CAMADA_MARCACAO, fechada=False, cor=COR_ROTULO)
     for m in marcas:
         if len(m) > 1:
             e.polilinha(m, camada=CAMADA_MARCACAO, fechada=False)
