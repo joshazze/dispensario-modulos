@@ -91,7 +91,8 @@ def test_desenho_sai_sem_texto_e_sem_azul():
     # o unico azul e o rebaixo das placas, que precisa ir pra maquina
     sem_rebaixo = [i for i in engrave if i["tipo"] != "rebaixo"]
     assert "#0000ff" not in gerador.svg_sheet([], sem_rebaixo, w, h, labels=True)
-    assert len(engrave) - len(sem_rebaixo) == 3       # 2 placas na BSP + alivio do USB na B6I
+    # 2 placas na BSP + alivio do USB na B6I + rebaixo dos 2 botoes da porta na A6E
+    assert len(engrave) - len(sem_rebaixo) == 5
 
 
 def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():
@@ -803,7 +804,8 @@ def test_retalho_de_teste_encaixa_apertado_e_usa_o_vao_do_teclado(tmp_path, monk
     monkeypatch.setattr(gerador, "OUTPUT", str(tmp_path))
     monkeypatch.setattr(gerador, "write_pdf", lambda *a, **k: None)
     spec = load_spec()
-    alivios = [a for m in spec["modulos"] for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
+    alivios = [a for m in spec["modulos"] if m["codigo"] == "B"
+               for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
     placed, problemas = gerador.exporta_teste(
         spec, "BSP", {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, "t")
     assert problemas == []
@@ -824,7 +826,8 @@ def test_toda_peca_do_retalho_tem_nome_longe_dos_cortes(tmp_path, monkeypatch, c
     monkeypatch.setattr(gerador, "OUTPUT", str(tmp_path))
     monkeypatch.setattr(gerador, "write_pdf", lambda *a, **k: None)
     spec = load_spec()
-    alivios = [a for m in spec["modulos"] for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
+    alivios = [a for m in spec["modulos"] if m["codigo"] == "B"
+               for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
     gerador.exporta_teste(spec, "BSP", {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, "t")
     saida = capsys.readouterr().out
     assert "sem lugar pro nome" not in saida and "12 com nome" in saida

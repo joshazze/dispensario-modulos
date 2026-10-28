@@ -2974,6 +2974,50 @@
           "comprimento_mm": 10.0,
           "x_mm": 375.0,
           "y_mm": 970.0
+        },
+        {
+          "nome": "botao da porta",
+          "fonte": "furo 10,1 e rebaixo 13,05 escolhidos nas reguas cortadas em 28/10/2026; centrado num dedo cheio da junta (30,6 mm) e 1,2 mm pra dentro do meio da borda de 22,8, para o rebaixo ficar a 6 mm da aresta",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 10.1,
+          "x_mm": 737.4,
+          "y_mm": 136.47
+        },
+        {
+          "nome": "rebaixo do botao da porta",
+          "fonte": "aba do botao assenta faceada; Fill 150/80 em 2 passadas; centrado num dedo cheio da junta (30,6 mm) e 1,2 mm pra dentro do meio da borda de 22,8, para o rebaixo ficar a 6 mm da aresta",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 13.05,
+          "altura_mm": 13.05,
+          "raio_mm": 6.525,
+          "x_mm": 737.4,
+          "y_mm": 136.47
+        },
+        {
+          "nome": "botao da porta",
+          "fonte": "furo 10,1 e rebaixo 13,05 escolhidos nas reguas cortadas em 28/10/2026; centrado num dedo cheio da junta (30,6 mm) e 1,2 mm pra dentro do meio da borda de 22,8, para o rebaixo ficar a 6 mm da aresta",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 10.1,
+          "x_mm": 737.4,
+          "y_mm": 863.53
+        },
+        {
+          "nome": "rebaixo do botao da porta",
+          "fonte": "aba do botao assenta faceada; Fill 150/80 em 2 passadas; centrado num dedo cheio da junta (30,6 mm) e 1,2 mm pra dentro do meio da borda de 22,8, para o rebaixo ficar a 6 mm da aresta",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 13.05,
+          "altura_mm": 13.05,
+          "raio_mm": 6.525,
+          "x_mm": 737.4,
+          "y_mm": 863.53
         }
       ],
       "enforca_gato": {

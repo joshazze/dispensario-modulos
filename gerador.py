@@ -1579,8 +1579,9 @@ def main(argv=None):
     if teste:
         nome = nome_saida or "teste-" + teste.lower()
         os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)
-        alivios = [a for m in spec["modulos"] for a in m.get("aberturas", [])
-                   if a["tipo"] == "rebaixo"]
+        # so os rebaixos do modulo dono da peca testada (BSP -> B)
+        alivios = [a for m in spec["modulos"] if m["codigo"] == teste[0]
+                   for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
         exporta_teste(spec, teste, {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, nome)
         return
     if vaos:
