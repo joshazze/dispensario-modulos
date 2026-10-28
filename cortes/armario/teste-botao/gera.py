@@ -28,12 +28,13 @@ BORDA = 4.0                                  # da borda da placa ate o rebaixo
 
 
 def main():
-    linhas = -(-len(REBAIXOS) // COLUNAS)
-    w = 2 * BORDA + REBAIXO + PASSO * (COLUNAS - 1)
+    colunas = min(COLUNAS, len(REBAIXOS))
+    linhas = -(-len(REBAIXOS) // colunas)
+    w = 2 * BORDA + REBAIXO + PASSO * (colunas - 1)
     h = 2 * BORDA + LINHA * linhas - 3.0
     cortes, rebaixos, rotulos = [], [], []
     for i, d in enumerate(REBAIXOS):
-        col, lin = i % COLUNAS, i // COLUNAS
+        col, lin = i % colunas, i // colunas
         cx = BORDA + REBAIXO / 2.0 + PASSO * col
         cy = h - BORDA - REBAIXO / 2.0 - LINHA * lin      # menor em cima, a esquerda
         cortes.append(circle_pts(cx, cy, FURO))
@@ -44,7 +45,7 @@ def main():
     cortes.append(geom.rrect(0.0, 0.0, w, h, 2.0))
     nome = os.path.join(AQUI, "teste-botao.dxf")
     perfil.escreve(nome, cortes, rebaixos=rebaixos, rotulos=rotulos)
-    print("%s | %.1f x %.1f mm | %d rebaixos em %d x %d" % (nome, w, h, len(REBAIXOS), COLUNAS, linhas))
+    print("%s | %.1f x %.1f mm | %d rebaixos em %d x %d" % (nome, w, h, len(REBAIXOS), colunas, linhas))
 
 
 if __name__ == "__main__":
