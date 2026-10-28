@@ -1286,15 +1286,16 @@ NOMES_TESTE = {
 }
 
 
-def lugar_do_nome(texto, contorno, ocupados, alturas=(3.0, 2.5, 2.0), folga=1.5):
-    """Primeiro lugar, de baixo pra cima, onde o nome cabe na peca sem tocar
-    em nenhum corte nem rebaixo. Devolve (x, y, altura) ou None."""
+def lugar_do_nome(texto, contorno, ocupados, alturas=(3.0, 2.5, 2.0), folga=1.5, de_cima=False):
+    """Primeiro lugar, de baixo pra cima (ou de cima pra baixo), onde o nome cabe
+    na peca sem tocar em nenhum corte nem rebaixo. Devolve (x, y, altura) ou None."""
     bx0, by0, bx1, by1 = geom.bbox(contorno)
     caixas = [geom.bbox(o) for o in ocupados]
     for alt in alturas:
         tw = fonte.largura_texto(texto, alt)
-        y = by0 + folga
-        while y + alt <= by1 - folga:
+        passo = -0.5 if de_cima else 0.5
+        y = by1 - folga - alt if de_cima else by0 + folga
+        while by0 + folga <= y and y + alt <= by1 - folga:
             for x in (((bx0 + bx1) - tw) / 2.0,) + tuple(
                     bx0 + folga + k * 0.5 for k in range(int((bx1 - bx0) / 0.5))):
                 if x + tw > bx1 - folga:
@@ -1313,7 +1314,7 @@ def lugar_do_nome(texto, contorno, ocupados, alturas=(3.0, 2.5, 2.0), folga=1.5)
                        and caixa[1] < c[3] + folga and c[1] < caixa[3] + folga for c in caixas):
                     continue
                 return x, y, alt
-            y += 0.5
+            y += passo
     return None
 
 
@@ -1375,6 +1376,25 @@ def exporta_teste(spec, codigo, extras, alivios, nome, gap=2.0):
             continue
         lx, ly, alt = lugar
         rotulos.extend(moved(t, x, y) for t in fonte.rotulo(texto, lx, ly, alt))
+        # retalho da tampa e face; berco e presilha avulsos ficam nas costas
+        lado = "COSTAS" if u["code"] in extras else "FACE"
+        caixa_nome = geom.rrect(lx, ly, fonte.largura_texto(texto, alt), alt, 0.0)
+        lugar = lugar_do_nome(lado, polys[0], polys[1:] + rbs + hospedes + [caixa_nome],
+                              alturas=(1.5, 1.2))
+        if lugar is None:
+            sem_nome.append(u["code"] + " (" + lado + ")")
+            continue
+        rotulos.extend(moved(t, x, y) for t in fonte.rotulo(lado, *lugar))
+        ocupados = polys[1:] + rbs + hospedes + [caixa_nome, geom.rrect(
+            lugar[0], lugar[1], fonte.largura_texto(lado, lugar[2]), lugar[2], 0.0)]
+        if u["code"] not in extras:
+            # sigla da peca de origem, no lado oposto ao nome
+            sigla = "B6I" if u["code"] == "alivio" else codigo
+            lugar = lugar_do_nome(sigla, polys[0], ocupados, alturas=(2.5, 2.0, 1.5), de_cima=True)
+            if lugar is None:
+                sem_nome.append(u["code"] + " (" + sigla + ")")
+                continue
+            rotulos.extend(moved(t, x, y) for t in fonte.rotulo(sigla, *lugar))
     perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos,
                    rotulos=rotulos)
     svg = svg_sheet(cuts, [{"tipo": "rebaixo", "pontos": r} for r in rebaixos]
