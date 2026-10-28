@@ -1,7 +1,7 @@
 """Regua de furos para o botao de pressao da porta do armario (28/10/2026).
 
 O Josh mediu o botao com 10 mm de diametro. A primeira regua (9,7 a 10,4) ficou
-apertada ate o fim, entao esta vai de 10,5 a 11,4 mm de 0,1 em 0,1, cada
+apertada ate o fim, entao esta vai de 10,5 a 12,5 mm de 0,1 em 0,1, cada
 furo com a medida gravada embaixo. O que segurar o botao sem folga e sem forcar
 vira o diametro da porta.
 
@@ -18,7 +18,7 @@ from laser.geom import circle_pts
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 # 1a regua (9,7 a 10,4) cortada em 28/10: 10,4 ainda ficou apertado
-DIAMETROS = [10.5, 10.6, 10.7, 10.8, 10.9, 11.0, 11.1, 11.2, 11.3, 11.4]
+DIAMETROS = [round(10.5 + 0.1 * i, 1) for i in range(21)]   # 10,5 a 12,5
 PASSO, MARGEM, ALT_TEXTO = 16.0, 8.0, 2.5
 REBAIXO = 12.7
 
