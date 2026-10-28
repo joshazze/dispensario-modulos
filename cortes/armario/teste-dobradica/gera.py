@@ -2,7 +2,7 @@
 
 Medidas do Josh com paquimetro: aberta, 15,40 de comprimento (ao longo do pino)
 por 11,61 de largura, entao cada aba tem ~5,8. Dois furos de 2,33 por aba,
-7,70 de ponta a ponta (centros a 5,37) e a 1,20 da borda de fora da aba.
+7,70 entre as bordas de dentro (centros a 10,03) e a 1,20 da borda de fora da aba.
 
 Duas plaquinhas, MOLDURA e PORTA, com o pino na aresta de encontro: cada uma tem
 o bolso gravado do tamanho da aba (com 0,25 de folga) encostado na aresta e os 2
@@ -19,8 +19,8 @@ from laser.geom import circle_pts
 AQUI = os.path.dirname(os.path.abspath(__file__))
 COMP, LARG_ABERTA = 15.40, 11.61
 ABA = LARG_ABERTA / 2.0
-FURO, PONTA_A_PONTA, BORDA_FURO = 2.33, 7.70, 1.20
-PASSO = PONTA_A_PONTA - FURO
+FURO, VAO_ENTRE_FUROS, BORDA_FURO = 2.33, 7.70, 1.20
+PASSO = VAO_ENTRE_FUROS + FURO   # 7,70 medido pelas bordas de dentro
 FOLGA = 0.25
 RAIO = 2.0   # canto arredondado da aba (estimado, conferir)
 W, H, GAP = 40.0, 22.0, 5.0
