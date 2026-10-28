@@ -1,5 +1,6 @@
 import json
 import math
+import re
 from pathlib import Path
 
 import gerador
@@ -723,3 +724,15 @@ def test_retalho_de_teste_encaixa_apertado_e_usa_o_vao_do_teclado(tmp_path, monk
               and tx0 < x and x + geom.bbox(u["polys"][0])[2] < tx1
               and ty0 < y and y + geom.bbox(u["polys"][0])[3] < ty1]
     assert dentro                                         # alguma peca saiu do refugo do vao
+
+
+def test_toda_peca_do_retalho_tem_nome_longe_dos_cortes(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(gerador, "OUTPUT", str(tmp_path))
+    monkeypatch.setattr(gerador, "write_pdf", lambda *a, **k: None)
+    spec = load_spec()
+    alivios = [a for m in spec["modulos"] for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
+    gerador.exporta_teste(spec, "BSP", {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, "t")
+    saida = capsys.readouterr().out
+    assert "sem lugar pro nome" not in saida and "12 com nome" in saida
+    dxf = (tmp_path / "t.dxf").read_text(encoding="cp1252")
+    assert re.search(r"\n\s*62\n\s*5\n", dxf)                   # traco azul, cor 5 na entidade

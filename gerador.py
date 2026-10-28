@@ -15,7 +15,7 @@ import shutil
 import subprocess
 import sys
 
-from laser import geom, materials, perfil, report
+from laser import fonte, geom, materials, perfil, report
 from laser.geom import circle_pts, hexagono
 
 
@@ -1008,6 +1008,14 @@ def svg_sheet(cuts, engrave, width, height, labels=True):
         for item in rebaixos:
             out.append('<path d="%s"/>' % path_d(item["pontos"], flip))
         out.append('</g>')
+    rotulos = [item for item in engrave if item["tipo"] == "rotulo"]
+    if rotulos:
+        # nomes em traco azul: gravacao em Linha, tambem vai pra maquina
+        out.append('<g fill="none" stroke="#0000ff" stroke-width="0.25">')
+        for item in rotulos:
+            pts = " ".join("%.4f,%.4f" % flip(px, py) for px, py in item["pontos"])
+            out.append('<polyline points="%s"/>' % pts)
+        out.append('</g>')
     if labels:
         # so a moldura do bloco de mesa, em cinza. Nada de azul no desenho:
         # gravacao e cabecalho poluem a conferencia e nao vao pra maquina.
@@ -1271,6 +1279,44 @@ def _gira_local(u, g):
     return todos[:n], todos[n:]
 
 
+NOMES_TESTE = {
+    "lcd-1602a": "LCD", "teclado-4x4": "TECLADO", "r307s": "LEITOR",
+    "led-rgb-ky016": "LED", "esp32-devkitc": "DEVKIT", "esp32-cam": "CAM",
+    "alivio": "B6I USB",
+}
+
+
+def lugar_do_nome(texto, contorno, ocupados, alturas=(3.0, 2.5, 2.0), folga=1.5):
+    """Primeiro lugar, de baixo pra cima, onde o nome cabe na peca sem tocar
+    em nenhum corte nem rebaixo. Devolve (x, y, altura) ou None."""
+    bx0, by0, bx1, by1 = geom.bbox(contorno)
+    caixas = [geom.bbox(o) for o in ocupados]
+    for alt in alturas:
+        tw = fonte.largura_texto(texto, alt)
+        y = by0 + folga
+        while y + alt <= by1 - folga:
+            for x in (((bx0 + bx1) - tw) / 2.0,) + tuple(
+                    bx0 + folga + k * 0.5 for k in range(int((bx1 - bx0) / 0.5))):
+                if x + tw > bx1 - folga:
+                    break
+                caixa = (x - 0.5, y - 0.5, x + tw + 0.5, y + alt + 0.5)
+                amostras = [(caixa[0] + (caixa[2] - caixa[0]) * i / 4.0,
+                             caixa[1] + (caixa[3] - caixa[1]) * j / 2.0)
+                            for i in range(5) for j in range(3)]
+                if not all(geom.ponto_dentro(q, contorno) for q in amostras):
+                    continue
+                quadro = [(caixa[0], caixa[1]), (caixa[2], caixa[1]),
+                          (caixa[2], caixa[3]), (caixa[0], caixa[3])]
+                if geom.dist_poligonos(quadro, contorno) < folga:
+                    continue                      # contorno recortado passando no meio
+                if any(caixa[0] < c[2] + folga and c[0] < caixa[2] + folga
+                       and caixa[1] < c[3] + folga and c[1] < caixa[3] + folga for c in caixas):
+                    continue
+                return x, y, alt
+            y += 0.5
+    return None
+
+
 def exporta_teste(spec, codigo, extras, alivios, nome, gap=2.0):
     """Cupons de cada componente + pecas avulsas pequenas num retalho so.
 
@@ -1309,6 +1355,7 @@ def exporta_teste(spec, codigo, extras, alivios, nome, gap=2.0):
         origem[id(u)] = (x + hx, y + hy, g)
     # pecas de dentro primeiro: cortado o anfitriao, o miolo se solta
     ordem = [a[0] for a in alojadas] + soltas
+    rotulos, sem_nome = [], []
     for u in ordem:
         x, y, g = origem[id(u)]
         polys, rbs = _gira_local(u, g)
@@ -1316,17 +1363,34 @@ def exporta_teste(spec, codigo, extras, alivios, nome, gap=2.0):
         cuts.append(moved(polys[0], x, y))
         rebaixos.extend(moved(r, x, y) for r in rbs)
         placed.append((dict(u, legenda=False, gira=False, polys=polys, rebaixos=rbs), x, y, False))
-    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos)
-    svg = svg_sheet(cuts, [{"tipo": "rebaixo", "pontos": r} for r in rebaixos],
+        texto = NOMES_TESTE.get(u["code"], u["code"])
+        # o vao de um anfitriao pode ter hospede: ele tambem conta como ocupado
+        hospedes = [moved(geom.rrect(0, 0, (a[0]["h"] if origem[id(a[0])][2] else a[0]["w"]),
+                                     (a[0]["w"] if origem[id(a[0])][2] else a[0]["h"]), 0.0),
+                          origem[id(a[0])][0] - x, origem[id(a[0])][1] - y)
+                    for a in alojadas if a[4] is u]
+        lugar = lugar_do_nome(texto, polys[0], polys[1:] + rbs + hospedes)
+        if lugar is None:
+            sem_nome.append(u["code"])
+            continue
+        lx, ly, alt = lugar
+        rotulos.extend(moved(t, x, y) for t in fonte.rotulo(texto, lx, ly, alt))
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos,
+                   rotulos=rotulos)
+    svg = svg_sheet(cuts, [{"tipo": "rebaixo", "pontos": r} for r in rebaixos]
+                    + [{"tipo": "rotulo", "pontos": t} for t in rotulos],
                     largura, altura, labels=True)
     with open(os.path.join(OUTPUT, nome + ".svg"), "w", encoding="utf-8") as stream:
         stream.write(svg)
     write_pdf(svg, largura, altura, os.path.join(OUTPUT, nome + ".pdf"))
     problemas = valida_prancha(spec, placed)
     area = sum(u["w"] * u["h"] for u in unidades)
+    if sem_nome:
+        print("AVISO sem lugar pro nome: " + ", ".join(sem_nome))
     print("teste %s.dxf | %.0f x %.0f mm | %d pecas (%d dentro de vao) | %d rebaixos | "
-          "aproveitamento %.0f%% | %s"
+          "%d com nome | aproveitamento %.0f%% | %s"
           % (nome, largura, altura, len(placed), len(alojadas), len(rebaixos),
+             len(placed) - len(sem_nome),
              100.0 * area / (largura * altura), "DFM ok" if not problemas else "DFM REPROVADO"))
     for linha_p in problemas:
         print("  " + linha_p)

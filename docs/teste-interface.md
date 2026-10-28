@@ -1,6 +1,6 @@
 # Corte de teste da interface do biométrico
 
-Antes de cortar a `BSP` de verdade, cada componente é testado num retalho do tamanho dele. Sai tudo numa chapa só, `cortes/biometrico/teste-interface.dxf` (146 x 257 mm, 12 peças). Ela tem um retalho por componente, com os mesmos vãos, furos e rebaixos da `BSP`, mais as peças pequenas (`BLR`, `BDB`, `BDP`, `BCB`, `BCP`) e um retalho com o alívio da `B6I`. Pra não desperdiçar, os retalhos têm a margem mínima do DFM (6 mm), as peças ficam a 2 mm umas das outras, o encaixe testa giro e largura até achar o menor retângulo, e o LED e o alívio são cortados **dentro do vão do teclado**, que ia virar refugo. Esses dois saem primeiro.
+Antes de cortar a `BSP` de verdade, cada componente é testado num retalho do tamanho dele. Sai tudo numa chapa só, `cortes/biometrico/teste-interface.dxf` (146 x 257 mm, 12 peças). Ela tem um retalho por componente, com os mesmos vãos, furos e rebaixos da `BSP`, mais as peças pequenas (`BLR`, `BDB`, `BDP`, `BCB`, `BCP`) e um retalho com o alívio da `B6I`. Pra não desperdiçar, os retalhos têm a margem mínima do DFM (6 mm), as peças ficam a 2 mm umas das outras, o encaixe testa giro e largura até achar o menor retângulo, e o LED e o alívio são cortados **dentro do vão do teclado**, que ia virar refugo. Esses dois saem primeiro. Cada peça leva o nome gravado em traço fino num canto livre: `LCD`, `TECLADO`, `LEITOR`, `LED`, `DEVKIT`, `CAM`, `B6I USB` (alívio) e os códigos das peças avulsas (`BLR` presilha do leitor, `BDB`/`BDP` berço e presilha do DevKit, `BCB`/`BCP` berço e presilha da CAM).
 
 ```bash
 python3 gerador.py --teste BSP --nome biometrico/teste-interface
@@ -27,6 +27,7 @@ python3 gerador.py --teste BSP --nome biometrico/teste-interface
 | camada do DXF | cor | modo | parâmetro | ordem |
 |---|---|---|---|---|
 | `MARCAÇÃO` | amarelo | Fill | 150 mm/s × 80% (quadrado de baixo à direita da grade de gravação da matriz de MDF 3 mm) | primeiro |
+| `MARCAÇÃO` | azul (cor da entidade) | Linha | 100 mm/s × 18% (contorno, tabela do fabricante): o nome de cada peça | depois do Fill |
 | `CORTE` | vermelho | Linha | o quadrado da grade de corte da matriz que atravessou limpo; sem ele, 26 mm/s × 65% (tabela do fabricante) | depois |
 
 A face que fica pra cima na mesa é a **face de dentro**. Os rebaixos são gravados nela, e por isso o desenho sai espelhado em relação à vista de frente.

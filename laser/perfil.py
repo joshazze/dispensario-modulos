@@ -64,13 +64,17 @@ class Escritor:
         self.prefixo, self.sufixo, self._handle = carrega(template)
         self.pares = []
 
-    def _cabecalho(self, tipo, camada, subclasse):
+    def _cabecalho(self, tipo, camada, subclasse, cor=None):
         self.pares += [("0", tipo), ("5", "%X" % self._handle), ("330", MODEL_SPACE),
-                       ("100", "AcDbEntity"), ("8", camada), ("100", subclasse)]
+                       ("100", "AcDbEntity"), ("8", camada)]
+        if cor is not None:
+            # cor da entidade por cima da camada: o LightBurn separa camada por cor
+            self.pares.append(("62", str(cor)))
+        self.pares.append(("100", subclasse))
         self._handle += 1
 
-    def polilinha(self, pontos, camada=CAMADA_CORTE, fechada=True):
-        self._cabecalho("LWPOLYLINE", camada, "AcDbPolyline")
+    def polilinha(self, pontos, camada=CAMADA_CORTE, fechada=True, cor=None):
+        self._cabecalho("LWPOLYLINE", camada, "AcDbPolyline", cor)
         self.pares += [("90", str(len(pontos))), ("70", "1" if fechada else "0"),
                        ("43", "0.0")]
         for x, y in pontos:
@@ -134,21 +138,27 @@ def _circulo_de(pontos, tol=0.05):
     return cx, cy, raio
 
 
-def escreve(caminho, cortes, marcas=(), textos=(), template=None, rebaixos=()):
+COR_ROTULO = 5      # azul: gravacao em Linha, separada do Fill amarelo dos rebaixos
+
+
+def escreve(caminho, cortes, marcas=(), textos=(), template=None, rebaixos=(), rotulos=()):
     """Grava o DXF no perfil do tecnico.
 
     `cortes` sao os contornos fechados, `marcas` as polilinhas de marcacao e
-    `textos` os rotulos. `rebaixos` sao areas fechadas gravadas em Fill, na
+    `textos` os rotulos. `rotulos` sao tracos de texto (fonte de traco) na
+    camada de marcacao com a cor azul, gravados em Linha. `rebaixos` sao areas fechadas gravadas em Fill, na
     camada de marcacao, que o LightBurn separa pela cor. Nada de moldura da mesa no arquivo, e o ponto mais
     baixo a esquerda do desenho vai para (0, 0): e por ele que as pecas se
     alinham na maquina.
     """
-    pontos = [p for poly in list(cortes) + list(marcas) + list(rebaixos) for p in poly]
+    pontos = [p for poly in list(cortes) + list(marcas) + list(rebaixos) + list(rotulos)
+              for p in poly]
     dx = min((x for x, _ in pontos), default=0.0)
     dy = min((y for _, y in pontos), default=0.0)
     cortes = [[(x - dx, y - dy) for x, y in poly] for poly in cortes]
     marcas = [[(x - dx, y - dy) for x, y in m] for m in marcas]
     rebaixos = [[(x - dx, y - dy) for x, y in r] for r in rebaixos]
+    rotulos = [[(x - dx, y - dy) for x, y in r] for r in rotulos]
     textos = [dict(t, x=t["x"] - dx, y=t["y"] - dy) for t in textos]
     e = Escritor(template)
     for poly in cortes:
@@ -159,6 +169,9 @@ def escreve(caminho, cortes, marcas=(), textos=(), template=None, rebaixos=()):
             e.polilinha(poly, camada=CAMADA_CORTE)
     for r in rebaixos:
         e.polilinha(r, camada=CAMADA_MARCACAO, fechada=True)
+    for r in rotulos:
+        if len(r) > 1:
+            e.polilinha(r, camada=CAMADA_MARCACAO, fechada=False, cor=COR_ROTULO)
     for m in marcas:
         if len(m) > 1:
             e.polilinha(m, camada=CAMADA_MARCACAO, fechada=False)
