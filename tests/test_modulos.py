@@ -419,8 +419,13 @@ def test_junta_horizontal_tem_dupla_em_cada_parede_e_quatro_no_piso(modulo):
     por_codigo = {p["code"]: p for g in groups for p in g["pieces"]}
     _, _, longa = _eg_do_modulo(spec, modulo)
     n_longa = len(longa) if longa else 1      # duplas por aresta longa
+    mod = next(m for m in spec["modulos"] if m["codigo"] == modulo)
+    # o fundo pode abrir mao de uma dupla onde entra a gota de parede do meio
+    fundo = mod.get("enforca_gato", {}).get("centros_fundo_mm")
     for face in eg["faces"]:
         duplas = n_longa if face in (1, 6) else 1
+        if face == 1 and fundo is not None:
+            duplas = len(fundo)
         for lamina in ("I", "E"):
             peca = por_codigo["%s%d%s" % (modulo, face, lamina)]
             deitados = _rasgos_eg(peca, eg, em_pe=False)
