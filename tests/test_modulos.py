@@ -89,7 +89,7 @@ def test_desenho_sai_sem_texto_e_sem_azul():
     # o unico azul e o rebaixo das placas, que precisa ir pra maquina
     sem_rebaixo = [i for i in engrave if i["tipo"] != "rebaixo"]
     assert "#0000ff" not in gerador.svg_sheet([], sem_rebaixo, w, h, labels=True)
-    assert len(engrave) - len(sem_rebaixo) == 2
+    assert len(engrave) - len(sem_rebaixo) == 3       # 2 placas na BSP + alivio do USB na B6I
 
 
 def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():
@@ -443,7 +443,7 @@ def _furos_do_teclado(cuts):
 def test_vaos_da_interface_saem_sem_o_contorno_da_peca():
     """O arquivo de vaos corta numa BSP que ja existe: so componente, nada de borda."""
     cuts = gerador.vaos_de_componentes(load_spec(), "BSP")
-    assert len(cuts) == 21                      # 5 vaos/furo de componente + 16 furos de parafuso
+    assert len(cuts) == 23                      # 6 vaos/furo/canal + 15 furos + 2 bolsos de porca
     _, rebaixos = gerador.componentes_da_peca(load_spec(), "BSP")
     todos = cuts + rebaixos
     assert min(x for p in todos for x, _ in p) == 0.0
@@ -555,7 +555,8 @@ def test_rebaixos_das_esp32_ficam_por_dentro_e_nao_atravessam():
             cx0, cy0, cx1, cy1 = geom.bbox(c)
             if rx0 <= cx0 and cx1 <= rx1 and ry0 <= cy0 and cy1 <= ry1:
                 continue
-            assert geom.dist_poligonos(r, c) >= 1.5
+            # o canal do USB nasce colado no rebaixo do DevKit, de proposito
+            assert geom.dist_poligonos(r, c) >= 0.5
 
 
 def test_espelho_so_troca_o_lado():
@@ -568,38 +569,103 @@ def _extra(spec, codigo):
     return next(e for e in spec["pecas_extras"] if e["codigo"] == codigo)
 
 
-def test_berco_e_presilha_das_esp32_usam_os_parafusos_da_bsp():
-    """A placa nao tem furo: BSP, berco e presilha se alinham pelos mesmos 2 M3."""
+def test_cam_berco_presilha_e_bsp_no_mesmo_par_de_m3():
     spec = load_spec()
     bsp = _extra(spec, "BSP")
-    for comp, berco, presilha in (("esp32-devkitc", "BDB", "BDP"), ("esp32-cam", "BCB", "BCP")):
-        na_bsp = next(a for a in bsp["aberturas"]
-                      if a["tipo"] == "parafusos" and a.get("componente") == comp)
-        for codigo in (berco, presilha):
-            furo = next(a for a in _extra(spec, codigo)["aberturas"] if a["tipo"] == "parafusos")
-            assert (furo["passo_x_mm"], furo["passo_y_mm"]) == (na_bsp["passo_x_mm"], na_bsp["passo_y_mm"])
-        rebaixo = next(a for a in bsp["aberturas"]
-                       if a["tipo"] == "rebaixo" and a.get("componente") == comp)
-        assert (rebaixo["x_mm"], rebaixo["y_mm"]) == (na_bsp["x_mm"], na_bsp["y_mm"])
+    na_bsp = next(a for a in bsp["aberturas"]
+                  if a["tipo"] == "parafusos" and a.get("componente") == "esp32-cam")
+    for codigo in ("BCB", "BCP"):
+        furo = next(a for a in _extra(spec, codigo)["aberturas"] if a["tipo"] == "parafusos")
+        assert (furo["passo_x_mm"], furo["passo_y_mm"]) == (na_bsp["passo_x_mm"], na_bsp["passo_y_mm"])
+
+
+def _devkit_na_bsp(spec):
+    """Os 3 pontos de fixacao do DevKit na BSP, vista de frente."""
+    bsp = _extra(spec, "BSP")
+    cima = next(a for a in bsp["aberturas"]
+                if a.get("componente") == "esp32-devkitc" and a["tipo"] == "furo")
+    porcas = [a for a in bsp["aberturas"]
+              if a.get("componente") == "esp32-devkitc" and a["tipo"] == "sextavado"]
+    return (cima["x_mm"], cima["y_mm"]), sorted((a["x_mm"], a["y_mm"]) for a in porcas)
+
+
+def _furos_relativos(peca):
+    w = max(x for x, _ in peca["pontos_mm"])
+    h = max(y for _, y in peca["pontos_mm"])
+    centros = []
+    for f in gerador.aberturas_da_face(peca, None, "unica", w, h):
+        x0, y0, x1, y1 = geom.bbox(f)
+        centros.append(((x0 + x1) / 2.0, (y0 + y1) / 2.0))
+    return sorted(centros, key=lambda c: -c[1])
+
+
+def test_devkit_berco_presilha_e_bsp_no_mesmo_terno_de_parafusos():
+    spec = load_spec()
+    (cx, cy), porcas = _devkit_na_bsp(spec)
+    alvo = sorted([(px - cx, py - cy) for px, py in porcas])
+    for codigo in ("BDB", "BDP"):
+        cima, *baixo = _furos_relativos(_extra(spec, codigo))
+        rel = sorted((round(x - cima[0], 6), round(y - cima[1], 6)) for x, y in baixo)
+        assert [(round(a, 6), round(b, 6)) for a, b in alvo] == rel, codigo
+
+
+def test_parafusos_de_baixo_do_devkit_ficam_atras_da_moldura():
+    """Abaixo de y = 30 a BSP encosta na lamina da frente: so porca presa, sem cabeca."""
+    spec = load_spec()
+    (_, cy), porcas = _devkit_na_bsp(spec)
+    assert cy > 30.0                               # o de cima aparece, com cabeca
+    for _, y in porcas:
+        assert y + 5.5 / 3 ** 0.5 < 30.0           # bolso inteiro escondido
+
+
+def test_canal_do_usb_atras_da_moldura_e_alinhado_com_o_berco():
+    spec = load_spec()
+    bsp = _extra(spec, "BSP")
+    canal = next(a for a in bsp["aberturas"] if a["nome"].startswith("canal do plugue"))
+    assert canal["y_mm"] + canal["altura_mm"] / 2.0 <= 30.0      # nao aparece na janela
+    assert canal["largura_mm"] > 10.6                            # capa do micro-B
+    berco = _extra(spec, "BDB")["pontos_mm"]
+    w = max(x for x, _ in berco)
+    xs = sorted({x for x, y in berco if y == 0.0})                # borda de baixo
+    assert round(xs[2] - xs[1], 2) == canal["largura_mm"]        # canal do berco = canal da BSP
+    assert abs((xs[1] + xs[2]) / 2.0 - w / 2.0) < 1e-6
+    face = next(m for m in spec["modulos"] if m["codigo"] == "B")
+    alivio = next(a for a in face["aberturas"] if a["tipo"] == "rebaixo")
+    assert alivio["camadas"] == "interna" and alivio["lado"] == "dentro"
+    assert alivio["largura_mm"] > canal["largura_mm"]
+
+
+def test_alivio_da_b6i_sai_espelhado_e_so_na_interna():
+    spec = load_spec()
+    pecas = {p["code"]: p for g in gerador.make_groups(spec) for p in g["pieces"]}
+    assert not pecas["B6E"]["rebaixos"]
+    (r,) = pecas["B6I"]["rebaixos"]
+    x0, _, x1, _ = geom.bbox(r)
+    assert abs((x0 + x1) / 2.0 - (250.0 - 195.0)) < 1e-6         # espelhado na mesa
 
 
 def test_janela_do_berco_do_devkit_e_a_figura_do_desenho_da_espressif():
     """Placa de 27,94 x 48,26 com o modulo de 18 saindo 6,04: janela em T, igual ao rebaixo."""
     spec = load_spec()
-    janela = next(a for a in _extra(spec, "BDB")["aberturas"] if a["tipo"] == "poligono")
     rebaixo = next(a for a in _extra(spec, "BSP")["aberturas"]
                    if a.get("componente") == "esp32-devkitc" and a["tipo"] == "rebaixo")
-    assert janela["pontos_mm"] == rebaixo["pontos_mm"]
-    xs = sorted({abs(x) for x, _ in janela["pontos_mm"]})
-    ys = sorted({y for _, y in janela["pontos_mm"]})
+    xs = sorted({abs(x) for x, _ in rebaixo["pontos_mm"]})
+    ys = sorted({y for _, y in rebaixo["pontos_mm"]})
     assert xs == [9.25, 14.22]                     # modulo 18 e placa 27,94, +0,25 por lado
     assert round(ys[-1] - ys[0], 2) == 54.8        # 48,26 + 6,04 + 0,5
     assert round(ys[-1] - ys[-2], 2) == 6.04       # o modulo saindo da placa
+    berco = _extra(spec, "BDB")["pontos_mm"]
+    w = max(x for x, _ in berco)
+    larguras = sorted({round(abs(x - w / 2.0), 2) for x, _ in berco})
+    assert {9.25, 14.22} <= set(larguras)          # o berco tem a mesma figura
 
 
 def test_presilha_do_devkit_passa_entre_as_fileiras_de_pinos():
     spec = load_spec()
-    meia = _extra(spec, "BDP")["largura_mm"] / 2.0
+    p = _extra(spec, "BDP")["pontos_mm"]
+    w = max(x for x, _ in p)
+    topo = max(y for _, y in p)
+    meia = max(abs(x - w / 2.0) for x, y in p if y == topo)
     fileira = 25.40 / 2.0                          # Espressif: 25,40 entre centros
     jumper = 2.54 / 2.0                            # conector Dupont centrado no pino
     assert meia < fileira - jumper - 1.0
@@ -611,9 +677,14 @@ def test_berco_das_esp32_nao_cruza_prateleira():
     interface = spec["interface"]
     base = interface["altura_centro_mm"] - interface["sub_painel_altura_mm"] / 2.0
     planos = [a - base for a in spec["prateleiras"]["alturas_mm"]]
-    for codigo, comp in (("BDB", "esp32-devkitc"), ("BCB", "esp32-cam")):
-        h = _extra(spec, codigo)["altura_mm"]
-        furo = next(a for a in _extra(spec, "BSP")["aberturas"]
-                    if a["tipo"] == "parafusos" and a.get("componente") == comp)
-        y0, y1 = furo["y_mm"] - h / 2.0, furo["y_mm"] + h / 2.0
-        assert all(not (y0 - 3.0 < p < y1 + 3.0) for p in planos), (codigo, y0, y1, planos)
+    cam = next(a for a in _extra(spec, "BSP")["aberturas"]
+               if a["tipo"] == "parafusos" and a.get("componente") == "esp32-cam")
+    h = _extra(spec, "BCB")["altura_mm"]
+    faixas = [(cam["y_mm"] - h / 2.0, cam["y_mm"] + h / 2.0)]
+    (_, cy), porcas = _devkit_na_bsp(spec)
+    berco = _extra(spec, "BDB")["pontos_mm"]
+    hb = max(y for _, y in berco)
+    _, furo_y = _furos_relativos(_extra(spec, "BDB"))[0]
+    faixas.append((cy - furo_y, cy - furo_y + hb))
+    for y0, y1 in faixas:
+        assert all(not (y0 - 3.0 < p < y1 + 3.0) for p in planos), (y0, y1, planos)

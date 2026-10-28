@@ -297,6 +297,9 @@ def abertura_polys(ab, w, h):
                                         lw, lh, ab.get("raio_mm", 0.0)))
         elif tipo == "furo":
             saida.append(circle_pts(cx, cy, ab["diametro_mm"]))
+        elif tipo == "sextavado":
+            # bolso de porca passante: a porca fica presa na espessura da chapa
+            saida.append(hexagono(cx, cy, ab["entre_faces_mm"]))
         elif tipo == "rebaixo" and "pontos_mm" in ab:
             saida.append([(cx + px, cy + py) for px, py in ab["pontos_mm"]])
         elif tipo in ("janela", "rebaixo"):
@@ -384,6 +387,30 @@ def rebaixos_da_peca(dono, w, h, so_componentes=False):
         if so_componentes and not ab.get("componente"):
             continue
         saida.extend(abertura_polys(ab, w, h))
+    return saida
+
+
+def rebaixos_da_face(module, face_number, layer, outline, w, h):
+    """Rebaixos gravados numa lamina de face do modulo.
+
+    `lado: dentro` grava a face que olha pra dentro da caixa: a lamina vai pra
+    mesa com ela pra cima e o rebaixo sai espelhado no arquivo. So vale em
+    lamina simetrica, porque o resto do corte nao pode mudar com a virada.
+    """
+    saida = []
+    for ab in module.get("aberturas", []):
+        if ab["tipo"] != "rebaixo" or ab.get("face") != face_number:
+            continue
+        alvo = ab.get("camadas", "todas")
+        if alvo != "todas" and alvo != layer:
+            continue
+        polys = abertura_polys(ab, w, h)
+        if ab.get("lado") == "dentro":
+            pts = {(round(x, 3), round(y, 3)) for x, y in outline}
+            if pts != {(round(w - x, 3), round(y, 3)) for x, y in outline}:
+                raise ValueError("rebaixo por dentro em lamina assimetrica: %s" % ab["nome"])
+            polys = espelha(polys, w)
+        saida.extend(polys)
     return saida
 
 
@@ -479,6 +506,12 @@ def pecas_extras(spec):
             w = extra["largura_mm"]
             h = extra["altura_mm"]
             contorno = geom.rrect(0.0, 0.0, w, h, extra.get("raio_mm", 0.0))
+        elif extra["tipo"] == "poligono":
+            # contorno livre com origem no canto de baixo a esquerda: e a peca
+            # que tem um canal aberto ate a borda, como o berco do DevKit
+            contorno = [tuple(p) for p in extra["pontos_mm"]]
+            w = max(x for x, _ in contorno)
+            h = max(y for _, y in contorno)
         else:
             raise ValueError("tipo de peca extra desconhecido: %s" % extra["tipo"])
         laminas = extra.get("laminas", 1)
@@ -523,10 +556,12 @@ def make_groups(spec):
                 layer_code = "I" if layer == "interna" else ("E" if layer == "externa" else "C")
                 feicoes = (layer_fasteners(centers, layer, h, spec["m3"])
                            + aberturas_da_face(module, face_number, layer, w, h))
+                rebaixos = rebaixos_da_face(module, face_number, layer, outline, w, h)
                 pieces.append({
                     "code": "%s%d%s" % (module["codigo"], face_number, layer_code),
                     "outline": outline,
                     "fasteners": feicoes,
+                    "rebaixos": rebaixos,
                     "vazios": vazios_da_face(module, face_number, layer, w, h,
                                              spec["encaixe"]["margem_vazio_mm"]),
                     "w": w,
@@ -590,6 +625,7 @@ def sheet_units(spec, groups):
             units.append({
                 "code": piece["code"],
                 "polys": [piece["outline"]] + list(piece["fasteners"]),
+                "rebaixos": list(piece.get("rebaixos", [])),
                 "vazios": list(piece.get("vazios", [])),
                 "w": piece["w"],
                 "h": piece["h"],
