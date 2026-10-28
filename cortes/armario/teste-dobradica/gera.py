@@ -6,8 +6,8 @@ por 11,61 de largura, entao cada aba tem ~5,8. Dois furos de 2,33 por aba,
 
 Duas plaquinhas, MOLDURA e PORTA, com o pino na aresta de encontro: cada uma tem
 o bolso gravado do tamanho da aba (com 0,25 de folga) encostado na aresta e os 2
-furos. A espessura da aba ainda nao foi medida; o bolso vai com o Fill do botao
-(150/80, 2 passadas) e a profundidade se confere no cupom.
+furos. A aba tem 0,48 de espessura: o bolso vai com Fill 150/80 em 1 passada
+(a de 2 passadas e a do botao, mais funda) e a profundidade se confere no cupom.
 
     PYTHONPATH=~/Projetos/dispensario-modulos python3 gera.py
 """
@@ -22,13 +22,17 @@ ABA = LARG_ABERTA / 2.0
 FURO, PONTA_A_PONTA, BORDA_FURO = 2.33, 7.70, 1.20
 PASSO = PONTA_A_PONTA - FURO
 FOLGA = 0.25
+RAIO = 2.0   # canto arredondado da aba (estimado, conferir)
 W, H, GAP = 40.0, 22.0, 5.0
 
 
 def plaquinha(x0, nome):
     """Aresta do pino em y = 0 da plaquinha; bolso e furos encostados nela."""
     cx = x0 + W / 2.0
-    bolso = geom.rrect(cx - COMP / 2.0 - FOLGA, 0.0, COMP + 2 * FOLGA, ABA + FOLGA, 0.0)
+    # cantos de fora arredondados como a aba; os da aresta do pino ficam retos
+    # (o retangulo desce RAIO abaixo da aresta e e recortado nela)
+    bolso = [(x, max(y, 0.0)) for x, y in
+             geom.rrect(cx - COMP / 2.0 - FOLGA, -RAIO, COMP + 2 * FOLGA, ABA + FOLGA + RAIO, RAIO)]
     fy = ABA - BORDA_FURO - FURO / 2.0
     furos = [circle_pts(cx - PASSO / 2.0, fy, FURO), circle_pts(cx + PASSO / 2.0, fy, FURO)]
     tw = fonte.largura_texto(nome, 3.0)
