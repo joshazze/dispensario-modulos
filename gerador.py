@@ -1120,6 +1120,92 @@ def exporta_vaos(spec, codigo, nome, margem=5.0):
     return cuts
 
 
+def cupons_de_teste(spec, codigo, margem=8.0):
+    """Um retalho por componente da peca avulsa, com as feicoes dele e mais nada.
+
+    Serve pro corte de teste: em vez de gastar a BSP inteira, cada componente
+    ganha um pedaco do tamanho dele (feicoes + margem), com os rebaixos na
+    camada de gravacao e ja espelhado quando a peca grava por dentro.
+    """
+    extra = next(e for e in spec["pecas_extras"] if e["codigo"] == codigo)
+    w, h = extra["largura_mm"], extra["altura_mm"]
+    grupos = {}
+    for ab in extra.get("aberturas", []):
+        if not ab.get("componente"):
+            continue
+        cortes, rebaixos = grupos.setdefault(ab["componente"], ([], []))
+        polys = abertura_polys(ab, w, h)
+        if extra.get("gravar_por_dentro"):
+            polys = espelha(polys, w)
+        (rebaixos if ab["tipo"] == "rebaixo" else cortes).extend(polys)
+    cupons = []
+    for nome, (cortes, rebaixos) in grupos.items():
+        todos = cortes + rebaixos
+        x0 = min(x for p in todos for x, _ in p) - margem
+        y0 = min(y for p in todos for _, y in p) - margem
+        x1 = max(x for p in todos for x, _ in p) + margem
+        y1 = max(y for p in todos for _, y in p) + margem
+        mover = lambda ps: [[(x - x0, y - y0) for x, y in p] for p in ps]
+        cupons.append({
+            "code": nome,
+            "polys": [geom.rrect(0.0, 0.0, x1 - x0, y1 - y0, 2.0)] + mover(cortes),
+            "rebaixos": mover(rebaixos),
+            "w": x1 - x0,
+            "h": y1 - y0,
+            # a excecao de ponte da peca vale pros pedacos dela
+            "ponte_aceita_mm": extra.get("ponte_aceita_mm"),
+        })
+    return cupons
+
+
+def exporta_teste(spec, codigo, extras, alivios, nome, gap=4.0):
+    """Cupons de cada componente + pecas avulsas pequenas numa chapa de retalho."""
+    unidades = cupons_de_teste(spec, codigo)
+    for u in pecas_extras(spec):
+        if u["code"] in extras:
+            unidades.append(u)
+    for a in alivios:
+        # alivio gravado de uma face de modulo, num retalho proprio
+        lw, lh = a["largura_mm"], a["altura_mm"]
+        m = 8.0
+        unidades.append({
+            "code": "alivio",
+            "polys": [geom.rrect(0.0, 0.0, lw + 2 * m, lh + 2 * m, 2.0)],
+            "rebaixos": [geom.rrect(m, m, lw, lh, a.get("raio_mm", 0.0))],
+            "w": lw + 2 * m,
+            "h": lh + 2 * m,
+        })
+    # prateleira simples: maior primeiro, linhas de ate 300 mm
+    unidades.sort(key=lambda u: -u["h"])
+    x = y = linha = 0.0
+    cuts, rebaixos, placed = [], [], []
+    for u in unidades:
+        if x > 0 and x + u["w"] > 300.0:
+            x, y, linha = 0.0, y + linha + gap, 0.0
+        polys = u["polys"]
+        cuts.extend(moved(p, x, y) for p in polys[1:])
+        cuts.append(moved(polys[0], x, y))
+        rebaixos.extend(moved(r, x, y) for r in u.get("rebaixos", []))
+        placed.append((dict(u, legenda=False, gira=False), x, y, False))
+        x += u["w"] + gap
+        linha = max(linha, u["h"])
+    largura = max(px + u["w"] for u, px, _, _ in placed)
+    altura = max(py + u["h"] for u, _, py, _ in placed)
+    perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos)
+    svg = svg_sheet(cuts, [{"tipo": "rebaixo", "pontos": r} for r in rebaixos],
+                    largura, altura, labels=True)
+    with open(os.path.join(OUTPUT, nome + ".svg"), "w", encoding="utf-8") as stream:
+        stream.write(svg)
+    write_pdf(svg, largura, altura, os.path.join(OUTPUT, nome + ".pdf"))
+    problemas = valida_prancha(spec, placed)
+    print("teste %s.dxf | %.0f x %.0f mm | %d pecas | %d rebaixos | %s"
+          % (nome, largura, altura, len(placed), len(rebaixos),
+             "DFM ok" if not problemas else "DFM REPROVADO"))
+    for linha_p in problemas:
+        print("  " + linha_p)
+    return placed, problemas
+
+
 def relatorio(spec, placed, sheet_w, sheet_h):
     """Aproveitamento, perimetro e tamanho de peca.
 
@@ -1166,7 +1252,7 @@ def opcoes(argv):
 
     --vaos CODIGO exporta so os vaos de componente daquela peca avulsa.
     """
-    filtro = nome = titulo = vaos = None
+    filtro = nome = titulo = vaos = teste = None
     argv = list(argv)
     while argv:
         arg = argv.pop(0)
@@ -1178,17 +1264,26 @@ def opcoes(argv):
             titulo = argv.pop(0)
         elif arg == "--vaos" and argv:
             vaos = argv.pop(0)
+        elif arg == "--teste" and argv:
+            teste = argv.pop(0)
         else:
             raise SystemExit(
                 "uso: gerador.py [--filtro REGEX] [--nome PASTA/STEM] [--titulo TEXTO]"
-                " | --vaos CODIGO --nome PASTA/STEM")
-    return filtro, nome, titulo, vaos
+                " | --vaos CODIGO --nome PASTA/STEM | --teste CODIGO --nome PASTA/STEM")
+    return filtro, nome, titulo, vaos, teste
 
 
 def main(argv=None):
-    filtro, nome_saida, titulo, vaos = opcoes(sys.argv[1:] if argv is None else argv)
+    filtro, nome_saida, titulo, vaos, teste = opcoes(sys.argv[1:] if argv is None else argv)
     with open(SPEC_PATH, encoding="utf-8") as stream:
         spec = json.load(stream)
+    if teste:
+        nome = nome_saida or "teste-" + teste.lower()
+        os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)
+        alivios = [a for m in spec["modulos"] for a in m.get("aberturas", [])
+                   if a["tipo"] == "rebaixo"]
+        exporta_teste(spec, teste, {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, nome)
+        return
     if vaos:
         nome = nome_saida or "vaos-" + vaos.lower()
         os.makedirs(os.path.dirname(os.path.join(OUTPUT, nome)), exist_ok=True)

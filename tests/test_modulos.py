@@ -688,3 +688,17 @@ def test_berco_das_esp32_nao_cruza_prateleira():
     faixas.append((cy - furo_y, cy - furo_y + hb))
     for y0, y1 in faixas:
         assert all(not (y0 - 3.0 < p < y1 + 3.0) for p in planos), (y0, y1, planos)
+
+
+def test_retalho_de_teste_tem_um_cupom_por_componente_e_passa_no_dfm():
+    spec = load_spec()
+    cupons = gerador.cupons_de_teste(spec, "BSP")
+    nomes = {c["code"] for c in cupons}
+    assert nomes == {"lcd-1602a", "teclado-4x4", "r307s", "led-rgb-ky016",
+                     "esp32-devkitc", "esp32-cam"}
+    for c in cupons:
+        contorno = c["polys"][0]
+        x0, y0, x1, y1 = geom.bbox(contorno)
+        for p in c["polys"][1:] + c["rebaixos"]:
+            px0, py0, px1, py1 = geom.bbox(p)
+            assert min(px0 - x0, py0 - y0, x1 - px1, y1 - py1) >= 6.0 - 1e-6, c["code"]
