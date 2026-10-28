@@ -2,9 +2,9 @@
 
 O furo do botao ficou definido em 10,1 mm (reguas de furo de 9,7 a 10,4 e 10,5
 a 11,4 cortadas antes). Agora o que varia e o rebaixo por fora, onde a aba do
-botao assenta: 21 rebaixos de 10,5 a 12,5 mm de 0,1 em 0,1, todos com 1 mm de
-profundidade e o furo de 10,1 no centro, cada um com o diametro do rebaixo
-gravado embaixo. A face de fora vai pra cima na mesa.
+botao assenta. Depois da grade de 10,5 a 12,5 mm, o Josh fechou em furo de
+10,1 com rebaixo de 12,8 mm e 1 mm de profundidade: sai uma peca so, com o
+diametro do rebaixo gravado embaixo. A face de fora vai pra cima na mesa.
 
 Usa o pacote `laser` da branch da interface (rebaixo, rotulo em traco, UTF-8):
     PYTHONPATH=~/Projetos/dispensario-modulos python3 gera.py
@@ -16,7 +16,8 @@ from laser.geom import circle_pts
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 FURO = 10.1
-REBAIXOS = [round(10.5 + 0.1 * i, 1) for i in range(21)]   # 10,5 a 12,5
+# grade 10,5 a 12,5 cortada em 28/10; o Josh escolheu 12,8: sai uma peca so
+REBAIXOS = [12.8]
 PASSO, MARGEM, ALT_TEXTO = 16.0, 8.0, 2.5
 REBAIXO = max(REBAIXOS)   # maior rebaixo, manda no espacamento
 
