@@ -1818,7 +1818,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
-          "y_mm": 7.5
+          "y_mm": 10.65
         },
         {
           "nome": "enforca gato",
@@ -1829,7 +1829,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 250.0,
-          "y_mm": 7.5
+          "y_mm": 10.65
         },
         {
           "nome": "enforca gato",
@@ -1840,7 +1840,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 375.0,
-          "y_mm": 7.5
+          "y_mm": 10.65
         },
         {
           "nome": "enforca gato",
@@ -1851,7 +1851,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 500.0,
-          "y_mm": 7.5
+          "y_mm": 10.65
         },
         {
           "nome": "enforca gato",
@@ -1862,7 +1862,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 625.0,
-          "y_mm": 7.5
+          "y_mm": 10.65
         },
         {
           "nome": "enforca gato",
@@ -1873,7 +1873,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
-          "y_mm": 15.0
+          "y_mm": 18.15
         },
         {
           "nome": "enforca gato",
@@ -1884,7 +1884,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 250.0,
-          "y_mm": 15.0
+          "y_mm": 18.15
         },
         {
           "nome": "enforca gato",
@@ -1895,7 +1895,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 375.0,
-          "y_mm": 15.0
+          "y_mm": 18.15
         },
         {
           "nome": "enforca gato",
@@ -1906,7 +1906,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 500.0,
-          "y_mm": 15.0
+          "y_mm": 18.15
         },
         {
           "nome": "enforca gato",
@@ -1917,7 +1917,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 625.0,
-          "y_mm": 15.0
+          "y_mm": 18.15
         },
         {
           "nome": "enforca gato",
@@ -1928,7 +1928,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
-          "y_mm": 985.0
+          "y_mm": 981.85
         },
         {
           "nome": "enforca gato",
@@ -1939,7 +1939,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 250.0,
-          "y_mm": 985.0
+          "y_mm": 981.85
         },
         {
           "nome": "enforca gato",
@@ -1950,7 +1950,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 375.0,
-          "y_mm": 985.0
+          "y_mm": 981.85
         },
         {
           "nome": "enforca gato",
@@ -1961,7 +1961,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 500.0,
-          "y_mm": 985.0
+          "y_mm": 981.85
         },
         {
           "nome": "enforca gato",
@@ -1972,7 +1972,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 625.0,
-          "y_mm": 985.0
+          "y_mm": 981.85
         },
         {
           "nome": "enforca gato",
@@ -1983,7 +1983,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
-          "y_mm": 992.5
+          "y_mm": 989.35
         },
         {
           "nome": "enforca gato",
@@ -1994,7 +1994,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 250.0,
-          "y_mm": 992.5
+          "y_mm": 989.35
         },
         {
           "nome": "enforca gato",
@@ -2005,7 +2005,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 375.0,
-          "y_mm": 992.5
+          "y_mm": 989.35
         },
         {
           "nome": "enforca gato",
@@ -2016,7 +2016,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 500.0,
-          "y_mm": 992.5
+          "y_mm": 989.35
         },
         {
           "nome": "enforca gato",
@@ -2027,7 +2027,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 625.0,
-          "y_mm": 992.5
+          "y_mm": 989.35
         },
         {
           "nome": "enforca gato",
@@ -2037,7 +2037,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 100.0,
           "espelhado": true
         },
@@ -2049,7 +2049,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 100.0,
           "espelhado": true
         },
@@ -2061,7 +2061,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 220.0,
           "espelhado": true
         },
@@ -2073,7 +2073,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 220.0,
           "espelhado": true
         },
@@ -2085,7 +2085,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 330.0,
           "espelhado": true
         },
@@ -2097,7 +2097,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 330.0,
           "espelhado": true
         },
@@ -2109,7 +2109,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 450.0,
           "espelhado": true
         },
@@ -2121,7 +2121,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 450.0,
           "espelhado": true
         },
@@ -2133,7 +2133,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 575.0,
           "espelhado": true
         },
@@ -2145,7 +2145,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 575.0,
           "espelhado": true
         },
@@ -2157,7 +2157,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 700.0,
           "espelhado": true
         },
@@ -2169,7 +2169,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 700.0,
           "espelhado": true
         },
@@ -2181,7 +2181,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 825.0,
           "espelhado": true
         },
@@ -2193,7 +2193,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 825.0,
           "espelhado": true
         },
@@ -2205,7 +2205,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 7.5,
+          "x_mm": 10.65,
           "y_mm": 950.0,
           "espelhado": true
         },
@@ -2217,7 +2217,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 15.0,
+          "x_mm": 18.15,
           "y_mm": 950.0,
           "espelhado": true
         },

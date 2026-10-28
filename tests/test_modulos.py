@@ -505,8 +505,9 @@ def test_enforca_gato_nao_encosta_em_outra_feicao(modulo):
                       + _rasgos_eg(peca, eg, em_pe=False))
             outros = [f for f in peca["fasteners"] if f not in rasgos]
             # a moldura da frente ficou com 22,8 mm quando o vao lateral caiu para
-            # a espessura da tranca: ali a barra vai a 2x a espessura
-            minimo = 2.0 * spec["espessura_mm"] if face == 6 else piso
+            # a espessura da tranca; tirando os 6 do dedo sobram 16,8, e o par
+            # centrado nela deixa 3,4 de cada lado: ali a barra vai a 1x a espessura
+            minimo = 1.0 * spec["espessura_mm"] if face == 6 else piso
             for r in rasgos:
                 for o in outros:
                     d = geom.dist_poligonos(r, o)
