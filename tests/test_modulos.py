@@ -91,8 +91,9 @@ def test_desenho_sai_sem_texto_e_sem_azul():
     # o unico azul e o rebaixo das placas, que precisa ir pra maquina
     sem_rebaixo = [i for i in engrave if i["tipo"] != "rebaixo"]
     assert "#0000ff" not in gerador.svg_sheet([], sem_rebaixo, w, h, labels=True)
-    # 2 placas na BSP + alivio do USB na B6I + rebaixo dos 2 botoes da porta na A6E
-    assert len(engrave) - len(sem_rebaixo) == 5
+    # 2 placas na BSP + alivio do USB na B6I + rebaixo dos 2 botoes da porta
+    # e bolso das 6 dobradicas na A6E
+    assert len(engrave) - len(sem_rebaixo) == 11
 
 
 def test_passa_fio_fica_nas_laterais_e_nao_nas_faces_grandes():

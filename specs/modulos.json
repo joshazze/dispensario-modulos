@@ -3074,6 +3074,198 @@
           "raio_mm": 0.0,
           "x_mm": 17.5,
           "y_mm": 621.18
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 154.985
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 165.015
+        },
+        {
+          "nome": "bolso da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0; so na lamina de fora, aberto pra janela",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 5.505,
+          "altura_mm": 15.8,
+          "raio_mm": 1.0,
+          "x_mm": 20.047,
+          "y_mm": 160.0
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 269.985
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 280.015
+        },
+        {
+          "nome": "bolso da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0; so na lamina de fora, aberto pra janela",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 5.505,
+          "altura_mm": 15.8,
+          "raio_mm": 1.0,
+          "x_mm": 20.047,
+          "y_mm": 275.0
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 384.985
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 395.015
+        },
+        {
+          "nome": "bolso da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0; so na lamina de fora, aberto pra janela",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 5.505,
+          "altura_mm": 15.8,
+          "raio_mm": 1.0,
+          "x_mm": 20.047,
+          "y_mm": 390.0
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 632.485
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 642.515
+        },
+        {
+          "nome": "bolso da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0; so na lamina de fora, aberto pra janela",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 5.505,
+          "altura_mm": 15.8,
+          "raio_mm": 1.0,
+          "x_mm": 20.047,
+          "y_mm": 637.5
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 757.485
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 767.515
+        },
+        {
+          "nome": "bolso da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0; so na lamina de fora, aberto pra janela",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 5.505,
+          "altura_mm": 15.8,
+          "raio_mm": 1.0,
+          "x_mm": 20.047,
+          "y_mm": 762.5
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 882.485
+        },
+        {
+          "nome": "furo da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0",
+          "tipo": "furo",
+          "face": 6,
+          "camadas": "todas",
+          "diametro_mm": 2.33,
+          "x_mm": 19.86,
+          "y_mm": 892.515
+        },
+        {
+          "nome": "bolso da dobradica",
+          "fonte": "dobradica borboleta 15,40 x 11,61, aba 0,48, furos 2,33 a 10,03; folga 0,20 escolhida na regua cortada em 28/10/2026; porta embutida na janela, pino na fresta de 1,0; so na lamina de fora, aberto pra janela",
+          "tipo": "rebaixo",
+          "face": 6,
+          "camadas": "externa",
+          "largura_mm": 5.505,
+          "altura_mm": 15.8,
+          "raio_mm": 1.0,
+          "x_mm": 20.047,
+          "y_mm": 887.5
         }
       ],
       "enforca_gato": {
