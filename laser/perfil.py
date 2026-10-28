@@ -16,7 +16,7 @@ Perfil extraido (ver `perfis/perfil-tecnico.json`):
 | camada de marcacao | `MARCACAO` com cedilha e til, cor ACI 2 (amarelo) |
 | moldura da folha | camada `0`, cor 7 |
 | entidades | LWPOLYLINE, CIRCLE, LINE |
-| arquivo | cp1252 com fim de linha CRLF |
+| arquivo | UTF-8 (AC1032) com fim de linha CRLF |
 
 Handle e owner importam: toda entidade leva grupo 5 (handle hexadecimal unico)
 e grupo 330 apontando para o model space. Sem isso o AutoCAD recusa o arquivo.
@@ -26,7 +26,7 @@ import os
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(BASE, "perfis", "chapa-tecnico.dxf")
-ENCODING = "cp1252"
+ENCODING = "utf-8"
 CAMADA_CORTE = "CORTE"
 CAMADA_MARCACAO = "MARCAÇÃO"
 CAMADA_MOLDURA = "0"
