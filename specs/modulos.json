@@ -3051,20 +3051,20 @@
         },
         {
           "nome": "entrada do gancho da tranca",
-          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026; U de ~21 x 4 com folga, as duas pernas",
-          "entalhe": "abre na janela da moldura e deixa 2,1 mm na aresta: o U nao cabe na borda de 22,8",
+          "fonte": "gancho U de 15,90 de largura (Josh, 28/10/2026) + 0,25 por lado; centrado na borda de 22,8 da moldura, 3,2 mm de MDF de cada lado",
           "tipo": "janela",
           "face": 6,
           "camadas": "todas",
-          "largura_mm": 21.0,
+          "largura_mm": 16.4,
           "altura_mm": 4.0,
           "raio_mm": 0.0,
-          "x_mm": 737.35,
-          "y_mm": 621.18
+          "x_mm": 738.6,
+          "y_mm": 621.18,
+          "entalhe": "fenda fechada com 3,2 mm de borda de cada lado: e o maximo que cabe na borda de 22,8 com o U de 16,4 (o DFM pede 6)"
         },
         {
           "nome": "perna do gancho, lado da casca",
-          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026; com o U centrado na borda (x 738,6) a perna de fora cai em 743,6 a 746,6, dentro da lamina de dentro",
           "entalhe": "perna passa no recorte do dedo da junta da frente",
           "tipo": "janela",
           "face": 4,
@@ -3337,19 +3337,6 @@
           "raio_mm": 0.6,
           "x_mm": 480.2,
           "y_mm": 158.0
-        },
-        {
-          "nome": "perna do gancho, lado do nicho",
-          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026; AN4 monta espelhada (giro em u), entao x conta a partir do fundo",
-          "entalhe": "perna entra pela aresta da frente do nicho",
-          "tipo": "janela",
-          "face": 4,
-          "camadas": "todas",
-          "largura_mm": 25.0,
-          "altura_mm": 4.0,
-          "raio_mm": 0.0,
-          "x_mm": 224.5,
-          "y_mm": 601.38
         }
       ]
     }
