@@ -4,7 +4,7 @@ Fixo: a dobradica aberta (15,40 ao longo do pino x 11,61, abas de 0,48), furos
 de 2,33 a 10,03 entre centros (7,70 pelas bordas de dentro) e a 1,20 da borda de
 fora de cada aba. Varia: a folga do bolso por lado, 0,10 a 0,40, gravada embaixo
 de cada um. O pino, mais grosso que a aba, passa num rasgo vazado no meio
-(PINO_MM estimado ate o Josh medir).
+(fechada ela mede 1,77; rasgo de 2,0).
 
     PYTHONPATH=~/Projetos/dispensario-modulos python3 gera_completo.py
 """
@@ -18,7 +18,7 @@ COMP, LARG = 15.40, 11.61
 ABA = LARG / 2.0
 FURO, PASSO, BORDA_FURO = 2.33, 7.70 + 2.33, 1.20
 RAIO = 2.0
-PINO_MM = 2.6
+PINO_MM = 2.0   # dobradica fechada mede 1,77 (rolo do pino) + folga
 FOLGAS = [0.10, 0.20, 0.30, 0.40]
 PASSO_X, MARGEM, ALT = 30.0, 8.0, 2.5
 
