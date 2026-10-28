@@ -27,10 +27,10 @@
     <CutSetting type="Cut">
         <index Value="2"/>
         <name Value="C02"/>
-        <minPower Value="57"/>
-        <maxPower Value="57"/>
+        <minPower Value="67"/>
+        <maxPower Value="67"/>
         <maxPower2 Value="20"/>
-        <speed Value="12"/>
+        <speed Value="10"/>
         <fgPathAlgorithm Value="CutGantry"/>
         <priority Value="0"/>
     </CutSetting>
