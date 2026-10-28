@@ -437,8 +437,23 @@ def aberturas_da_face(dono, face_number, layer, w, h):
         alvo = ab.get("camadas", "todas")
         if alvo != "todas" and alvo != layer:
             continue
-        saida.extend(abertura_polys(ab, w, h))
+        polys = abertura_polys(ab, w, h)
+        if ab.get("entalhe"):
+            ENTALHES.update(_assinatura(q) for q in polys)
+        saida.extend(polys)
     return saida
+
+
+# Feicoes que encostam na borda ou numa janela de proposito (a spec diz o
+# motivo em `entalhe`). Guardadas pela forma, que nao muda com giro nem
+# translado na prancha, para o DFM avisar em vez de barrar.
+ENTALHES = set()
+
+
+def _assinatura(poly):
+    area = 0.5 * abs(sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(poly, poly[1:] + poly[:1])))
+    per = sum(((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5 for (x0, y0), (x1, y1) in zip(poly, poly[1:] + poly[:1]))
+    return (round(area, 2), round(per, 2), len(poly))
 
 
 def rebaixos_da_peca(dono, w, h, so_componentes=False):
@@ -498,6 +513,9 @@ def checa_aberturas(nome, contorno, feicoes, espessura, piso_ponte):
     bx0, by0, bx1, by1 = geom.bbox(contorno)
     folga_borda = 2.0 * espessura
     for i, f in enumerate(feicoes):
+        if _assinatura(f) in ENTALHES:
+            print("EXCECAO DFM %s: feicao %d e entalhe declarado na spec" % (nome, i + 1))
+            continue
         fx0, fy0, fx1, fy1 = geom.bbox(f)
         if fx0 < bx0 or fy0 < by0 or fx1 > bx1 or fy1 > by1:
             problemas.append("%s: feicao %d cai fora do contorno" % (nome, i + 1))
@@ -507,6 +525,8 @@ def checa_aberturas(nome, contorno, feicoes, espessura, piso_ponte):
             problemas.append("%s: feicao %d a %.1f mm da borda, minimo %.1f"
                              % (nome, i + 1, borda, folga_borda))
         for j, g in enumerate(feicoes[i + 1:], i + 2):
+            if _assinatura(g) in ENTALHES:
+                continue
             d = geom.dist_poligonos(f, g)
             if d < piso_ponte - 1e-6:
                 problemas.append("%s: ponte de %.1f mm entre feicoes %d e %d, minimo %.1f"

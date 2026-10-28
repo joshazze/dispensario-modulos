@@ -3018,6 +3018,62 @@
           "raio_mm": 6.525,
           "x_mm": 737.4,
           "y_mm": 863.53
+        },
+        {
+          "nome": "parafuso da tranca",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026",
+          "tipo": "furo",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 4.4,
+          "x_mm": 12.5,
+          "y_mm": 602.93
+        },
+        {
+          "nome": "parafuso da tranca",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026",
+          "tipo": "furo",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 4.4,
+          "x_mm": 12.5,
+          "y_mm": 639.43
+        },
+        {
+          "nome": "parafuso da tranca",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026",
+          "tipo": "furo",
+          "face": 4,
+          "camadas": "todas",
+          "diametro_mm": 4.4,
+          "x_mm": 48.5,
+          "y_mm": 622.18
+        },
+        {
+          "nome": "entrada do gancho da tranca",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026; U de ~21 x 4 com folga, as duas pernas",
+          "entalhe": "abre na janela da moldura e deixa 2,1 mm na aresta: o U nao cabe na borda de 22,8",
+          "tipo": "janela",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 21.0,
+          "altura_mm": 4.0,
+          "raio_mm": 0.0,
+          "x_mm": 737.35,
+          "y_mm": 621.18
+        },
+        {
+          "nome": "perna do gancho, lado da casca",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026",
+          "entalhe": "perna passa no recorte do dedo da junta da frente",
+          "tipo": "janela",
+          "face": 4,
+          "camadas": "interna",
+          "largura_mm": 25.0,
+          "altura_mm": 4.0,
+          "raio_mm": 0.0,
+          "x_mm": 17.5,
+          "y_mm": 621.18
         }
       ],
       "enforca_gato": {
@@ -3281,6 +3337,19 @@
           "raio_mm": 0.6,
           "x_mm": 480.2,
           "y_mm": 158.0
+        },
+        {
+          "nome": "perna do gancho, lado do nicho",
+          "fonte": "tranca FIT0620 de pe no vao direito, centro a 621,18 (dedo cheio da moldura); conferida com regua em 28/10/2026; AN4 monta espelhada (giro em u), entao x conta a partir do fundo",
+          "entalhe": "perna entra pela aresta da frente do nicho",
+          "tipo": "janela",
+          "face": 4,
+          "camadas": "todas",
+          "largura_mm": 25.0,
+          "altura_mm": 4.0,
+          "raio_mm": 0.0,
+          "x_mm": 224.5,
+          "y_mm": 601.38
         }
       ]
     }
