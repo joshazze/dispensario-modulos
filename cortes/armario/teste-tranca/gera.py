@@ -76,7 +76,9 @@ def main():
     ct, mt, rt, wt, ht = cupom_tranca(0.0, 0.0)
     cg, rg, rotg, wg, hg = cupom_gancho(wt + GAP, 0.0)
     nome = os.path.join(AQUI, "teste-tranca.dxf")
-    perfil.escreve(nome, ct + cg, marcas=mt, rebaixos=rg, rotulos=rt + rotg)
+    # contorno da tranca vai em linha azul junto com os nomes: no amarelo o Fill
+    # do bolso do gancho preencheria o corpo inteiro
+    perfil.escreve(nome, ct + cg, rebaixos=rg, rotulos=mt + rt + rotg)
     print("%s | %.1f x %.1f mm" % (nome, wt + GAP + wg, max(ht, hg)))
 
 
