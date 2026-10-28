@@ -403,14 +403,15 @@ def vazios_da_face(dono, face_number, layer, w, h, margem):
     """
     saida = []
     for ab in dono.get("aberturas", []):
-        if ab["tipo"] not in ("janela", "pilula"):
+        # poligono so vira vazio quando a spec diz o retangulo livre dentro dele
+        if ab["tipo"] not in ("janela", "pilula") and "vazio_mm" not in ab:
             continue
         if face_number is not None and ab.get("face") != face_number:
             continue
         alvo = ab.get("camadas", "todas")
         if alvo != "todas" and alvo != layer:
             continue
-        lw, lh = ab["largura_mm"], ab["altura_mm"]
+        lw, lh = ab.get("vazio_mm") or (ab["largura_mm"], ab["altura_mm"])
         if ab["tipo"] == "pilula":
             # so o trecho reto do estadio e retangulo de verdade
             raio = min(lw, lh) / 2.0
