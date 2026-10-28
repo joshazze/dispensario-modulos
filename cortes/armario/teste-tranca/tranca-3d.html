@@ -32,7 +32,7 @@
 <div id="vista"><div class="dica">arraste para girar, roda do mouse para aproximar</div></div>
 <aside>
   <h1>Fechadura 12 V e batente</h1>
-  <p>Medidas usadas no cupom de teste (desenho da DFRobot FIT0620). Vermelho tem cota no desenho; amarelo é estimado e precisa de régua.</p>
+  <p>Medidas usadas no cupom de teste (desenho da DFRobot FIT0620). Conferidas com régua em 28/10/2026.</p>
   <h2>Corpo</h2>
   <table id="t-corpo"></table>
   <h2>Batente em U</h2>
@@ -50,21 +50,21 @@ const CORPO = [
   [4, "Furos da esquerda: distância até a borda da boca", "6,5", false, [3.2, 10.75, -3]],
   [5, "Distância entre os dois furos da esquerda", "36,5", false, [6.5, 29, -3]],
   [6, "3º furo: distância à direita dos furos da esquerda", "36,0", false, [24.5, 6, -3]],
-  [7, "3º furo: altura a partir da base", "≈ 30", true, [42.5, 30, -3]],
-  [8, "Furos da esquerda: distância até a borda de cima e de baixo", "≈ 10,75", true, [6.5, 4, -3]],
+  [7, "3º furo: altura a partir da base", "30,0", false, [42.5, 30, -3]],
+  [8, "Furos da esquerda: distância até a borda de cima e de baixo", "10,75", false, [6.5, 4, -3]],
   [9, "Rosca dos 3 furos", "M4", false, [6.5, 47.25, -3]],
   [10, "Boca da lingueta: abertura", "7,0", false, [-3, 29, 6.65]],
   [11, "Boca da lingueta: profundidade a partir da borda", "20,5", false, [10.25, 34, 15]],
 ];
 const GANCHO = [
-  [12, "Base: comprimento", "34,5", false, [-28.5, 29, -12]],
+  [12, "Base: comprimento", "34,65", false, [-28.5, 29, -12]],
   [13, "Base: largura", "20,0", false, [-28.5, 50, 6.65]],
-  [14, "Base: espessura da chapa", "1,5", false, [-29.5, 10, 17]],
-  [15, "Furos da base: diâmetro", "4,2", false, [-28.5, 16.5, 22]],
+  [14, "Base: espessura da chapa", "1,6", false, [-29.5, 10, 17]],
+  [15, "Furos da base: diâmetro", "4,4", false, [-28.5, 16.5, 22]],
   [16, "Furos da base: distância entre centros", "25,0", false, [-32.0, 29, 22]],
   [17, "Haste: diâmetro", "3,0", false, [-14.0, 29, -4]],
   [18, "Altura do U (base até a ponta)", "28,0", false, [-13.0, 33, 19]],
-  [19, "Afastamento entre as pernas do U", "≈ 17", true, [-6.0, 25, 6.65]],
+  [19, "Afastamento entre as pernas do U", "≈ 17", false, [-6.0, 25, 6.65]],
 ];
 
 for (const [id, lista] of [["t-corpo", CORPO], ["t-gancho", GANCHO]]) {

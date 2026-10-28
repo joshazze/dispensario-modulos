@@ -1,16 +1,18 @@
 """Cupons de teste da fechadura eletrica do armario (28/10/2026).
 
-Medidas da fechadura do desenho da DFRobot FIT0620 (73 x 58 x 13,3 mm), que o
-Josh confirmou na espessura com regua. Duas pecas num retalho de MDF 3 mm:
+Medidas da fechadura do desenho da DFRobot FIT0620 (73 x 58 x 13,3 mm),
+conferidas pelo Josh com regua em 28/10/2026 (base do batente 34,65 x 20 x 1,6,
+furos da base de 4,4). Duas pecas num retalho de MDF 3 mm:
 
 - TRANCA: pedaco da lateral da casca. A fechadura fica de pe, com as costas
   encostadas na parede, presa por fora com 3 parafusos M4 nas roscas dela. O
   contorno do corpo sai gravado em linha, com a boca da lingueta para a frente.
-  Os dois furos da esquerda tem cota (36,5 mm entre eles); o terceiro nao tem
-  cota vertical no desenho, entao sai como rasgo vertical de 12 mm.
+  Furos a 6,5 mm da boca, 36,5 entre eles e centrados na altura; o terceiro
+  36 mm a direita, a 30 mm da base.
 - GANCHO: pedaco da porta. Bolso gravado do tamanho da base do batente em U
-  (34,5 x 20 mm, folga de 0,25 por lado), para 1 mm de profundidade e a base
-  entrar faceada com a porta, mais os 2 furos a 25 mm entre centros.
+  (34,65 x 20 mm, folga de 0,25 por lado), para 1,6 mm de profundidade, a
+  espessura da chapa, e a base entrar faceada com a porta, mais os 2 furos a
+  25 mm entre centros.
 
 Usa o pacote `laser` da branch da interface (rebaixo, rotulo em traco, UTF-8):
     PYTHONPATH=~/Projetos/dispensario-modulos python3 gera.py
@@ -27,17 +29,12 @@ FURO_M4 = 4.4
 # fechadura, vista pelas costas, boca da lingueta na aresta esquerda
 CORPO_W, CORPO_H = 73.0, 58.0
 FURO_X, FURO_DY = 6.5, 36.5
-FURO3_X, FURO3_Y, FURO3_CURSO = 6.5 + 36.0, 30.0, 12.0
+FURO3_X, FURO3_Y = 6.5 + 36.0, 30.0
 BOCA_ABERTURA = 7.0
 
 # batente em U
-BASE_W, BASE_H, FOLGA = 34.5, 20.0, 0.25
+BASE_W, BASE_H, FOLGA = 34.65, 20.0, 0.25
 FURO_BASE, PASSO_BASE = 4.4, 25.0
-
-
-def oblongo(cx, cy, d, curso):
-    """Rasgo vertical de largura d e curso total `curso` entre centros extremos."""
-    return geom.rrect(cx - d / 2.0, cy - curso / 2.0 - d / 2.0, d, curso + d, d / 2.0)
 
 
 def cupom_tranca(x0, y0):
@@ -47,7 +44,7 @@ def cupom_tranca(x0, y0):
     cortes = [
         circle_pts(bx + FURO_X, cy - FURO_DY / 2.0, FURO_M4),
         circle_pts(bx + FURO_X, cy + FURO_DY / 2.0, FURO_M4),
-        oblongo(bx + FURO3_X, by + FURO3_Y, FURO_M4, FURO3_CURSO),
+        circle_pts(bx + FURO3_X, by + FURO3_Y, FURO_M4),
         geom.rrect(x0, y0, w, h, 2.0),
     ]
     corpo = geom.rrect(bx, by, CORPO_W, CORPO_H, 0.0)
