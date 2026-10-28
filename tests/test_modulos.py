@@ -702,3 +702,24 @@ def test_retalho_de_teste_tem_um_cupom_por_componente_e_passa_no_dfm():
         for p in c["polys"][1:] + c["rebaixos"]:
             px0, py0, px1, py1 = geom.bbox(p)
             assert min(px0 - x0, py0 - y0, x1 - px1, y1 - py1) >= 6.0 - 1e-6, c["code"]
+
+
+def test_retalho_de_teste_encaixa_apertado_e_usa_o_vao_do_teclado(tmp_path, monkeypatch):
+    monkeypatch.setattr(gerador, "OUTPUT", str(tmp_path))
+    monkeypatch.setattr(gerador, "write_pdf", lambda *a, **k: None)
+    spec = load_spec()
+    alivios = [a for m in spec["modulos"] for a in m.get("aberturas", []) if a["tipo"] == "rebaixo"]
+    placed, problemas = gerador.exporta_teste(
+        spec, "BSP", {"BLR", "BDB", "BDP", "BCB", "BCP"}, alivios, "t")
+    assert problemas == []
+    largura = max(x + u["w"] if not u.get("polys") else x + geom.bbox(u["polys"][0])[2]
+                  for u, x, _, _ in placed)
+    altura = max(y + geom.bbox(u["polys"][0])[3] for u, _, y, _ in placed)
+    assert largura * altura < 0.65 * 282 * 218          # o primeiro encaixe, em fila, era 282 x 218
+    teclado = next((u, x, y) for u, x, y, _ in placed if u["code"] == "teclado-4x4")
+    tx0, ty0, tx1, ty1 = geom.bbox(gerador.moved(teclado[0]["polys"][0], teclado[1], teclado[2]))
+    dentro = [u["code"] for u, x, y, _ in placed
+              if u["code"] != "teclado-4x4"
+              and tx0 < x and x + geom.bbox(u["polys"][0])[2] < tx1
+              and ty0 < y and y + geom.bbox(u["polys"][0])[3] < ty1]
+    assert dentro                                         # alguma peca saiu do refugo do vao

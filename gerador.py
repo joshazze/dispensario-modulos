@@ -1120,7 +1120,7 @@ def exporta_vaos(spec, codigo, nome, margem=5.0):
     return cuts
 
 
-def cupons_de_teste(spec, codigo, margem=8.0):
+def cupons_de_teste(spec, codigo, margem=6.0):
     """Um retalho por componente da peca avulsa, com as feicoes dele e mais nada.
 
     Serve pro corte de teste: em vez de gastar a BSP inteira, cada componente
@@ -1146,8 +1146,15 @@ def cupons_de_teste(spec, codigo, margem=8.0):
         x1 = max(x for p in todos for x, _ in p) + margem
         y1 = max(y for p in todos for _, y in p) + margem
         mover = lambda ps: [[(x - x0, y - y0) for x, y in p] for p in ps]
+        vazios = []
+        for ab in extra.get("aberturas", []):
+            if ab.get("componente") == nome and ab["tipo"] == "janela":
+                (vx0, vy0, vx1, vy1), = [geom.bbox(p) for p in mover(espelha(abertura_polys(ab, w, h), w)
+                                          if extra.get("gravar_por_dentro") else abertura_polys(ab, w, h))]
+                vazios.append((vx0, vy0, vx1 - vx0, vy1 - vy0))
         cupons.append({
             "code": nome,
+            "vazios": vazios,
             "polys": [geom.rrect(0.0, 0.0, x1 - x0, y1 - y0, 2.0)] + mover(cortes),
             "rebaixos": mover(rebaixos),
             "w": x1 - x0,
@@ -1158,8 +1165,118 @@ def cupons_de_teste(spec, codigo, margem=8.0):
     return cupons
 
 
-def exporta_teste(spec, codigo, extras, alivios, nome, gap=4.0):
-    """Cupons de cada componente + pecas avulsas pequenas numa chapa de retalho."""
+def _skyline(retangulos, largura, gap):
+    """Bottom-left por skyline: cada peca desce ate encostar e vai o mais a esquerda.
+
+    `retangulos` e uma lista de (indice, w, h, pode_girar). Devolve
+    {indice: (x, y, girou)} e a altura usada, ou None se alguma nao couber.
+    """
+    linha = [(0.0, largura, 0.0)]          # segmentos (x, w, y) do horizonte
+    pos = {}
+    for idx, w, h, gira in retangulos:
+        melhor = None
+        for ww, hh, g in ((w, h, False), (h, w, True)) if gira else ((w, h, False),):
+            if ww > largura + 1e-9:
+                continue
+            for k, (sx, _, _) in enumerate(linha):
+                if sx + ww > largura + 1e-9:
+                    break
+                topo = max(sy for x, sw, sy in linha if x < sx + ww - 1e-9 and x + sw > sx + 1e-9)
+                cand = (topo + hh, sx, ww, hh, g, topo)
+                if melhor is None or cand[:2] < melhor[:2]:
+                    melhor = cand
+        if melhor is None:
+            return None, None
+        _, x, ww, hh, g, y = melhor
+        pos[idx] = (x, y, g)
+        novo, fim = [], x + ww + gap
+        for sx, sw, sy in linha:
+            if sx + sw <= x + 1e-9 or sx >= fim - 1e-9:
+                novo.append((sx, sw, sy))
+                continue
+            if sx < x:
+                novo.append((sx, x - sx, sy))
+            if sx + sw > fim:
+                novo.append((fim, sx + sw - fim, sy))
+        novo.append((x, min(fim, largura) - x, y + hh + gap))
+        linha = sorted(novo)
+    return pos, max(y for _, _, y in linha) - gap
+
+
+def encaixa_retalho(unidades, gap=2.0):
+    """Menor retangulo para as pecas: testa largura de chapa, ordem e giro."""
+    melhor = None
+    area_total = sum(u["w"] * u["h"] for u in unidades)
+    maior = max(min(u["w"], u["h"]) for u in unidades)
+    ordens = [
+        sorted(range(len(unidades)), key=lambda i: -max(unidades[i]["w"], unidades[i]["h"])),
+        sorted(range(len(unidades)), key=lambda i: -unidades[i]["w"] * unidades[i]["h"]),
+        sorted(range(len(unidades)), key=lambda i: -unidades[i]["h"]),
+    ]
+    largura = maior
+    while largura <= 2.0 * area_total ** 0.5:
+        for ordem in ordens:
+            rets = [(i, unidades[i]["w"], unidades[i]["h"], True) for i in ordem]
+            pos, altura = _skyline(rets, largura, gap)
+            if pos is None:
+                continue
+            usado = max(pos[i][0] + (unidades[i]["h"] if pos[i][2] else unidades[i]["w"]) for i in pos)
+            area = usado * altura
+            if melhor is None or area < melhor[0]:
+                melhor = (area, pos, usado, altura)
+        largura += 2.0
+    return melhor
+
+
+def aloja_nos_vazios(unidades, folga=2.0):
+    """Peca pequena vai cortada dentro do vao de outra, que viraria refugo.
+
+    Maior peca primeiro, no vao que sobrar menos. Devolve as que ficaram de fora
+    e a lista (hospede, x, y, giro, anfitriao) em coordenadas do anfitriao.
+    """
+    livres = []                                   # (anfitriao, x, y, w, h)
+    for u in unidades:
+        for vx, vy, vw, vh in u.get("vazios", []):
+            livres.append([u, vx + folga, vy + folga, vw - 2 * folga, vh - 2 * folga])
+    pequenas = sorted([u for u in unidades if not u.get("vazios")],
+                      key=lambda u: -u["w"] * u["h"])
+    alojadas, fora = [], []
+    for u in pequenas:
+        achou = None
+        for k, (host, x, y, w, h) in enumerate(livres):
+            for uw, uh, g in ((u["w"], u["h"], False), (u["h"], u["w"], True)):
+                if uw <= w + 1e-9 and uh <= h + 1e-9:
+                    sobra = w * h - uw * uh
+                    if achou is None or sobra < achou[0]:
+                        achou = (sobra, k, uw, uh, g)
+        if achou is None or u["w"] * u["h"] > 1500.0:
+            fora.append(u)
+            continue
+        _, k, uw, uh, g = achou
+        host, x, y, w, h = livres.pop(k)
+        alojadas.append((u, x, y, g, host))
+        # o resto do vao, do lado mais largo, continua livre
+        if w - uw - folga > h - uh - folga:
+            livres.append([host, x + uw + folga, y, w - uw - folga, h])
+        else:
+            livres.append([host, x, y + uh + folga, w, h - uh - folga])
+    return [u for u in unidades if u not in [a[0] for a in alojadas]], alojadas
+
+
+def _gira_local(u, g):
+    """Polys e rebaixos da peca, girados 90 graus se g, com origem no canto."""
+    n = len(u["polys"])
+    todos = u["polys"] + u.get("rebaixos", [])
+    todos = rot90(todos) if g else todos
+    return todos[:n], todos[n:]
+
+
+def exporta_teste(spec, codigo, extras, alivios, nome, gap=2.0):
+    """Cupons de cada componente + pecas avulsas pequenas num retalho so.
+
+    Peca pequena entra no vao que ia virar refugo; o resto vai no menor
+    retangulo que o encaixe acha.
+    """
     unidades = cupons_de_teste(spec, codigo)
     for u in pecas_extras(spec):
         if u["code"] in extras:
@@ -1167,7 +1284,7 @@ def exporta_teste(spec, codigo, extras, alivios, nome, gap=4.0):
     for a in alivios:
         # alivio gravado de uma face de modulo, num retalho proprio
         lw, lh = a["largura_mm"], a["altura_mm"]
-        m = 8.0
+        m = 6.0
         unidades.append({
             "code": "alivio",
             "polys": [geom.rrect(0.0, 0.0, lw + 2 * m, lh + 2 * m, 2.0)],
@@ -1175,22 +1292,30 @@ def exporta_teste(spec, codigo, extras, alivios, nome, gap=4.0):
             "w": lw + 2 * m,
             "h": lh + 2 * m,
         })
-    # prateleira simples: maior primeiro, linhas de ate 300 mm
-    unidades.sort(key=lambda u: -u["h"])
-    x = y = linha = 0.0
+    soltas, alojadas = aloja_nos_vazios(unidades)
+    _, pos, largura, altura = encaixa_retalho(soltas, gap)
     cuts, rebaixos, placed = [], [], []
-    for u in unidades:
-        if x > 0 and x + u["w"] > 300.0:
-            x, y, linha = 0.0, y + linha + gap, 0.0
-        polys = u["polys"]
+    origem = {}
+    for i, u in enumerate(soltas):
+        x, y, g = pos[i]
+        origem[id(u)] = (x, y, g)
+    for u, hx, hy, g, host in alojadas:
+        # coordenada do vao vale no anfitriao sem giro; se o anfitriao girou,
+        # gira o ponto junto
+        x, y, gh = origem[id(host)]
+        if gh:
+            hx, hy = host["h"] - hy - (u["w"] if g else u["h"]), hx
+            g = not g
+        origem[id(u)] = (x + hx, y + hy, g)
+    # pecas de dentro primeiro: cortado o anfitriao, o miolo se solta
+    ordem = [a[0] for a in alojadas] + soltas
+    for u in ordem:
+        x, y, g = origem[id(u)]
+        polys, rbs = _gira_local(u, g)
         cuts.extend(moved(p, x, y) for p in polys[1:])
         cuts.append(moved(polys[0], x, y))
-        rebaixos.extend(moved(r, x, y) for r in u.get("rebaixos", []))
-        placed.append((dict(u, legenda=False, gira=False), x, y, False))
-        x += u["w"] + gap
-        linha = max(linha, u["h"])
-    largura = max(px + u["w"] for u, px, _, _ in placed)
-    altura = max(py + u["h"] for u, _, py, _ in placed)
+        rebaixos.extend(moved(r, x, y) for r in rbs)
+        placed.append((dict(u, legenda=False, gira=False, polys=polys, rebaixos=rbs), x, y, False))
     perfil.escreve(os.path.join(OUTPUT, nome + ".dxf"), cuts, rebaixos=rebaixos)
     svg = svg_sheet(cuts, [{"tipo": "rebaixo", "pontos": r} for r in rebaixos],
                     largura, altura, labels=True)
@@ -1198,9 +1323,11 @@ def exporta_teste(spec, codigo, extras, alivios, nome, gap=4.0):
         stream.write(svg)
     write_pdf(svg, largura, altura, os.path.join(OUTPUT, nome + ".pdf"))
     problemas = valida_prancha(spec, placed)
-    print("teste %s.dxf | %.0f x %.0f mm | %d pecas | %d rebaixos | %s"
-          % (nome, largura, altura, len(placed), len(rebaixos),
-             "DFM ok" if not problemas else "DFM REPROVADO"))
+    area = sum(u["w"] * u["h"] for u in unidades)
+    print("teste %s.dxf | %.0f x %.0f mm | %d pecas (%d dentro de vao) | %d rebaixos | "
+          "aproveitamento %.0f%% | %s"
+          % (nome, largura, altura, len(placed), len(alojadas), len(rebaixos),
+             100.0 * area / (largura * altura), "DFM ok" if not problemas else "DFM REPROVADO"))
     for linha_p in problemas:
         print("  " + linha_p)
     return placed, problemas

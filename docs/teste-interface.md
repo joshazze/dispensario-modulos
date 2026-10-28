@@ -1,6 +1,6 @@
 # Corte de teste da interface do biométrico
 
-Antes de cortar a `BSP` de verdade, cada componente é testado num retalho do tamanho dele. Sai tudo numa chapa só, `cortes/biometrico/teste-interface.dxf` (282 x 218 mm, 12 peças). Ela tem um retalho por componente, com os mesmos vãos, furos e rebaixos da `BSP`, mais as peças pequenas (`BLR`, `BDB`, `BDP`, `BCB`, `BCP`) e um retalho com o alívio da `B6I`.
+Antes de cortar a `BSP` de verdade, cada componente é testado num retalho do tamanho dele. Sai tudo numa chapa só, `cortes/biometrico/teste-interface.dxf` (146 x 257 mm, 12 peças). Ela tem um retalho por componente, com os mesmos vãos, furos e rebaixos da `BSP`, mais as peças pequenas (`BLR`, `BDB`, `BDP`, `BCB`, `BCP`) e um retalho com o alívio da `B6I`. Pra não desperdiçar, os retalhos têm a margem mínima do DFM (6 mm), as peças ficam a 2 mm umas das outras, o encaixe testa giro e largura até achar o menor retângulo, e o LED e o alívio são cortados **dentro do vão do teclado**, que ia virar refugo. Esses dois saem primeiro.
 
 ```bash
 python3 gerador.py --teste BSP --nome biometrico/teste-interface
@@ -10,7 +10,7 @@ python3 gerador.py --teste BSP --nome biometrico/teste-interface
 
 | item | quantidade |
 |---|---|
-| retalho de MDF 3 mm | pelo menos 300 x 230 mm |
+| retalho de MDF 3 mm | pelo menos 160 x 270 mm |
 | LCD 1602A, teclado 4x4, R307S, módulo KY-016, ESP32 DevKitC, ESP32-CAM | 1 de cada |
 | o cabo micro USB que vai ficar instalado no DevKit | 1 |
 | M3 x 60 + 4 porcas (leitor) | 2 |
