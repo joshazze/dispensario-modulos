@@ -1849,6 +1849,61 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
+          "y_mm": 7.5
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "x_mm": 250.0,
+          "y_mm": 7.5
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "x_mm": 375.0,
+          "y_mm": 7.5
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "x_mm": 500.0,
+          "y_mm": 7.5
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "x_mm": 625.0,
+          "y_mm": 7.5
+        },
+        {
+          "nome": "enforca gato",
+          "tipo": "rasgo",
+          "face": 6,
+          "camadas": "todas",
+          "largura_mm": 6.5,
+          "altura_mm": 2.5,
+          "raio_mm": 0.6,
+          "x_mm": 125.0,
           "y_mm": 15.0
         },
         {
@@ -1904,7 +1959,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
-          "y_mm": 33.0
+          "y_mm": 985.0
         },
         {
           "nome": "enforca gato",
@@ -1915,7 +1970,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 250.0,
-          "y_mm": 33.0
+          "y_mm": 985.0
         },
         {
           "nome": "enforca gato",
@@ -1926,7 +1981,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 375.0,
-          "y_mm": 33.0
+          "y_mm": 985.0
         },
         {
           "nome": "enforca gato",
@@ -1937,7 +1992,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 500.0,
-          "y_mm": 33.0
+          "y_mm": 985.0
         },
         {
           "nome": "enforca gato",
@@ -1948,7 +2003,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 625.0,
-          "y_mm": 33.0
+          "y_mm": 985.0
         },
         {
           "nome": "enforca gato",
@@ -1959,7 +2014,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 125.0,
-          "y_mm": 967.0
+          "y_mm": 992.5
         },
         {
           "nome": "enforca gato",
@@ -1970,7 +2025,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 250.0,
-          "y_mm": 967.0
+          "y_mm": 992.5
         },
         {
           "nome": "enforca gato",
@@ -1981,7 +2036,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 375.0,
-          "y_mm": 967.0
+          "y_mm": 992.5
         },
         {
           "nome": "enforca gato",
@@ -1992,7 +2047,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 500.0,
-          "y_mm": 967.0
+          "y_mm": 992.5
         },
         {
           "nome": "enforca gato",
@@ -2003,62 +2058,7 @@
           "altura_mm": 2.5,
           "raio_mm": 0.6,
           "x_mm": 625.0,
-          "y_mm": 967.0
-        },
-        {
-          "nome": "enforca gato",
-          "tipo": "rasgo",
-          "face": 6,
-          "camadas": "todas",
-          "largura_mm": 6.5,
-          "altura_mm": 2.5,
-          "raio_mm": 0.6,
-          "x_mm": 125.0,
-          "y_mm": 985.0
-        },
-        {
-          "nome": "enforca gato",
-          "tipo": "rasgo",
-          "face": 6,
-          "camadas": "todas",
-          "largura_mm": 6.5,
-          "altura_mm": 2.5,
-          "raio_mm": 0.6,
-          "x_mm": 250.0,
-          "y_mm": 985.0
-        },
-        {
-          "nome": "enforca gato",
-          "tipo": "rasgo",
-          "face": 6,
-          "camadas": "todas",
-          "largura_mm": 6.5,
-          "altura_mm": 2.5,
-          "raio_mm": 0.6,
-          "x_mm": 375.0,
-          "y_mm": 985.0
-        },
-        {
-          "nome": "enforca gato",
-          "tipo": "rasgo",
-          "face": 6,
-          "camadas": "todas",
-          "largura_mm": 6.5,
-          "altura_mm": 2.5,
-          "raio_mm": 0.6,
-          "x_mm": 500.0,
-          "y_mm": 985.0
-        },
-        {
-          "nome": "enforca gato",
-          "tipo": "rasgo",
-          "face": 6,
-          "camadas": "todas",
-          "largura_mm": 6.5,
-          "altura_mm": 2.5,
-          "raio_mm": 0.6,
-          "x_mm": 625.0,
-          "y_mm": 985.0
+          "y_mm": 992.5
         },
         {
           "nome": "enforca gato",
@@ -2068,7 +2068,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 100.0,
           "espelhado": true
         },
@@ -2080,7 +2080,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 100.0,
           "espelhado": true
         },
@@ -2092,7 +2092,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 220.0,
           "espelhado": true
         },
@@ -2104,7 +2104,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 220.0,
           "espelhado": true
         },
@@ -2116,7 +2116,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 330.0,
           "espelhado": true
         },
@@ -2128,7 +2128,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 330.0,
           "espelhado": true
         },
@@ -2140,7 +2140,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 450.0,
           "espelhado": true
         },
@@ -2152,7 +2152,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 450.0,
           "espelhado": true
         },
@@ -2164,7 +2164,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 575.0,
           "espelhado": true
         },
@@ -2176,7 +2176,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 575.0,
           "espelhado": true
         },
@@ -2188,7 +2188,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 700.0,
           "espelhado": true
         },
@@ -2200,7 +2200,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 700.0,
           "espelhado": true
         },
@@ -2212,7 +2212,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 825.0,
           "espelhado": true
         },
@@ -2224,7 +2224,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 825.0,
           "espelhado": true
         },
@@ -2236,7 +2236,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 12.0,
+          "x_mm": 7.5,
           "y_mm": 950.0,
           "espelhado": true
         },
@@ -2248,7 +2248,7 @@
           "largura_mm": 2.5,
           "altura_mm": 6.5,
           "raio_mm": 0.6,
-          "x_mm": 30.0,
+          "x_mm": 15.0,
           "y_mm": 950.0,
           "espelhado": true
         },
@@ -3006,7 +3006,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 78.0,
-          "y_mm": 183.0
+          "y_mm": 230.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3017,7 +3017,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 158.0,
-          "y_mm": 183.0
+          "y_mm": 230.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3028,7 +3028,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 78.0,
-          "y_mm": 433.0
+          "y_mm": 480.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3039,7 +3039,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 158.0,
-          "y_mm": 433.0
+          "y_mm": 480.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3050,7 +3050,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 78.0,
-          "y_mm": 683.0
+          "y_mm": 730.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3061,7 +3061,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 158.0,
-          "y_mm": 683.0
+          "y_mm": 730.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3072,7 +3072,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 78.0,
-          "y_mm": 183.0
+          "y_mm": 230.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3083,7 +3083,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 158.0,
-          "y_mm": 183.0
+          "y_mm": 230.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3094,7 +3094,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 78.0,
-          "y_mm": 433.0
+          "y_mm": 480.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3105,7 +3105,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 158.0,
-          "y_mm": 433.0
+          "y_mm": 480.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3116,7 +3116,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 78.0,
-          "y_mm": 683.0
+          "y_mm": 730.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3127,7 +3127,7 @@
           "altura_mm": 3.0,
           "raio_mm": 0.6,
           "x_mm": 158.0,
-          "y_mm": 683.0
+          "y_mm": 730.2
         },
         {
           "nome": "rasgo de espacador",
@@ -3137,7 +3137,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 183.0,
+          "x_mm": 230.2,
           "y_mm": 78.0
         },
         {
@@ -3148,7 +3148,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 183.0,
+          "x_mm": 230.2,
           "y_mm": 158.0
         },
         {
@@ -3159,7 +3159,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 433.0,
+          "x_mm": 480.2,
           "y_mm": 78.0
         },
         {
@@ -3170,7 +3170,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 433.0,
+          "x_mm": 480.2,
           "y_mm": 158.0
         },
         {
@@ -3181,7 +3181,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 183.0,
+          "x_mm": 230.2,
           "y_mm": 78.0
         },
         {
@@ -3192,7 +3192,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 183.0,
+          "x_mm": 230.2,
           "y_mm": 158.0
         },
         {
@@ -3203,7 +3203,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 433.0,
+          "x_mm": 480.2,
           "y_mm": 78.0
         },
         {
@@ -3214,7 +3214,7 @@
           "largura_mm": 3.0,
           "altura_mm": 30.0,
           "raio_mm": 0.6,
-          "x_mm": 433.0,
+          "x_mm": 480.2,
           "y_mm": 158.0
         }
       ]

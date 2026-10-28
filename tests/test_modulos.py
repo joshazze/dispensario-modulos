@@ -124,9 +124,9 @@ def test_nicho_tem_cinco_faces_e_a_boca_do_tamanho_do_vao_da_moldura():
     assert "AN6" not in por_codigo
     P, H, W = (nicho["profundidade_externa_mm"], nicho["altura_externa_mm"],
                nicho["largura_externa_mm"])
-    assert (por_codigo["AN1"]["w"], por_codigo["AN1"]["h"]) == (W, H)
+    assert (por_codigo["AN1"]["w"], por_codigo["AN1"]["h"]) == pytest.approx((W, H))
     for code in ("AN2", "AN4"):
-        assert (por_codigo[code]["w"], por_codigo[code]["h"]) == (P, H)
+        assert (por_codigo[code]["w"], por_codigo[code]["h"]) == pytest.approx((P, H))
     for code in ("AN3", "AN5"):
         assert (por_codigo[code]["w"], por_codigo[code]["h"]) == (W, P)
 
@@ -155,7 +155,8 @@ def test_espacador_bate_com_os_rasgos_das_duas_caixas():
     nw, nh, np_ = (nicho["largura_externa_mm"], nicho["altura_externa_mm"],
                    nicho["profundidade_externa_mm"])
     # a mesma folga nos quatro lados, e o corpo do espacador e exatamente ela
-    assert (W - 2 * tf - nw) / 2.0 == (H - 2 * tf - nh) / 2.0 == cfg["folga_mm"]
+    assert (W - 2 * tf - nw) / 2.0 == pytest.approx(cfg["folga_mm"])
+    assert (H - 2 * tf - nh) / 2.0 == pytest.approx(cfg["folga_mm"])
     assert cfg["aba_mm"] == t                 # atravessa o nicho, para na lamina interna
 
     por_codigo = {p["code"]: p for g in gerador.make_groups(spec) for p in g["pieces"]}
@@ -489,10 +490,13 @@ def test_enforca_gato_nao_encosta_em_outra_feicao(modulo):
             rasgos = (_rasgos_eg(peca, eg, em_pe=True)
                       + _rasgos_eg(peca, eg, em_pe=False))
             outros = [f for f in peca["fasteners"] if f not in rasgos]
+            # a moldura da frente ficou com 22,8 mm quando o vao lateral caiu para
+            # a espessura da tranca: ali a barra vai a 2x a espessura
+            minimo = 2.0 * spec["espessura_mm"] if face == 6 else piso
             for r in rasgos:
                 for o in outros:
                     d = geom.dist_poligonos(r, o)
-                    assert d >= piso, "%s%d%s: ponte de %.2f mm" % (modulo, face, lamina, d)
+                    assert d >= minimo, "%s%d%s: ponte de %.2f mm" % (modulo, face, lamina, d)
 
 
 def _furos(polys, diametro):
