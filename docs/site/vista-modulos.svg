@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -1185 1822.1 2165" font-family="Helvetica, Arial, sans-serif" fill="#202124">
+<rect x="-160" y="-1185" width="1822.1" height="2165" fill="#ffffff"/>
+<path d="M0,0L649.5,375L649.5,-625L0,-1000Z" fill="#f3ede4" stroke="#3c4043" stroke-width="3" stroke-linejoin="round"/>
+<path d="M649.5,375L866,250L866,-750L649.5,-625Z" fill="#e2d8c9" stroke="#3c4043" stroke-width="3" stroke-linejoin="round"/>
+<path d="M0,-1000L649.5,-625L866,-750L216.5,-1125Z" fill="#faf7f2" stroke="#3c4043" stroke-width="3" stroke-linejoin="round"/>
+<text x="649.5" y="455" text-anchor="middle" font-size="46" font-weight="700">Armario</text>
+<text x="649.5" y="500" text-anchor="middle" font-size="34" fill="#5f6368">750 x 1000 x 250 mm</text>
+<path d="M1169.1,675L1385.6,800L1385.6,-200L1169.1,-325Z" fill="#f3ede4" stroke="#3c4043" stroke-width="3" stroke-linejoin="round"/>
+<path d="M1385.6,800L1602.1,675L1602.1,-325L1385.6,-200Z" fill="#e2d8c9" stroke="#3c4043" stroke-width="3" stroke-linejoin="round"/>
+<path d="M1169.1,-325L1385.6,-200L1602.1,-325L1385.6,-450Z" fill="#faf7f2" stroke="#3c4043" stroke-width="3" stroke-linejoin="round"/>
+<path d="M1352.7,381L1353,381.1L1353.3,381.3L1353.6,381.3L1353.9,381.4L1354.1,381.3L1354.4,381.3L1354.6,381.2L1354.8,381L1354.9,380.9L1355.1,380.7L1355.2,380.4L1355.3,380.1L1355.3,379.8L1355.3,379.5L1355.3,-114.5L1355.3,-114.8L1355.3,-115.2L1355.2,-115.6L1355.1,-116L1354.9,-116.3L1354.8,-116.7L1354.6,-117.1L1354.4,-117.4L1354.1,-117.7L1353.9,-118.1L1353.6,-118.3L1353.3,-118.6L1353,-118.8L1352.7,-119L1202,-206L1201.8,-206.1L1201.5,-206.3L1201.2,-206.3L1200.9,-206.4L1200.7,-206.3L1200.4,-206.3L1200.2,-206.2L1200,-206L1199.8,-205.9L1199.7,-205.7L1199.6,-205.4L1199.5,-205.1L1199.5,-204.8L1199.4,-204.5L1199.4,289.5L1199.5,289.8L1199.5,290.2L1199.6,290.6L1199.7,291L1199.8,291.3L1200,291.7L1200.2,292.1L1200.4,292.4L1200.7,292.7L1200.9,293.1L1201.2,293.3L1201.5,293.6L1201.8,293.8L1202,294Z" fill="#ffffff" stroke="#d62828" stroke-width="3" stroke-linejoin="round"/>
+<text x="1385.6" y="880" text-anchor="middle" font-size="46" font-weight="700">Biometrico</text>
+<text x="1385.6" y="925" text-anchor="middle" font-size="34" fill="#5f6368">250 x 1000 x 250 mm</text>
+</svg>
