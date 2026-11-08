@@ -1,0 +1,75 @@
+<header class="hero"><div class="wrap">
+  <div class="kicker">Servidor e nuvem</div>
+  <h1>Onde os eventos chegam</h1>
+  <p class="lede">Um servidor em Python, sem nenhuma dependência externa, guarda o histórico e as fotos e oferece o painel de administração. No protótipo ele faz o papel da API do sistema hospitalar. Desde 08/11/2026 roda numa VM em São Paulo com HTTPS.</p>
+</div></header>
+<!-- corpo -->
+<section id="api">
+  <h2>Rotas da API</h2>
+  <p class="sub">A câmera fala com <code>/api/device/*</code>; o painel, com <code>/api/admin/*</code>.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Rota</th><th>Quem chama</th><th>Para quê</th></tr>
+    <tr><td><code>POST /api/device/events</code></td><td>câmera</td><td>entrega um evento; repetir o mesmo identificador não duplica</td></tr>
+    <tr><td><code>POST /api/device/photo</code></td><td>câmera</td><td>foto JPEG de até 256 KB, só para evento de acesso autorizado</td></tr>
+    <tr><td><code>POST /api/device/heartbeat</code></td><td>câmera</td><td>sinal de vida a cada 10 s, com fila e perdas; devolve a hora do servidor</td></tr>
+    <tr><td><code>GET /api/device/command</code></td><td>câmera</td><td>busca comando pendente (troca de senha pedida no painel)</td></tr>
+    <tr><td><code>POST /api/device/command-result</code></td><td>câmera</td><td>confirma que o Mega aplicou ou recusou o comando</td></tr>
+    <tr><td><code>GET /api/admin/overview</code></td><td>painel</td><td>últimos 200 eventos, pessoas, comandos e estado do aparelho</td></tr>
+    <tr><td><code>GET /api/admin/photo</code></td><td>painel</td><td>foto de um evento</td></tr>
+    <tr><td><code>POST /api/admin/reset</code></td><td>painel</td><td>pede nova senha de 6 dígitos para um ID; fica pendente até o Mega confirmar</td></tr>
+  </table></div>
+  <p>A troca de senha nunca é aplicada pelo servidor: ele cria um comando, a câmera leva ao Mega, o Mega confere se a senha é única e responde. O painel mostra "pendente" até essa resposta chegar. Comando sem resposta em 24 h expira e a senha guardada nele é apagada.</p>
+</section>
+
+<section id="banco">
+  <h2>Banco de dados</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Tabela</th><th>Guarda</th></tr>
+    <tr><td><code>events</code></td><td>cada evento com identificador, sessão, tipo, pessoa, método, motivo, horário do aparelho e horário de chegada</td></tr>
+    <tr><td><code>photos</code></td><td>o JPEG de cada acesso autorizado, ligado ao evento</td></tr>
+    <tr><td><code>users</code></td><td>IDs conhecidos e se estão ativos</td></tr>
+    <tr><td><code>commands</code></td><td>pedidos de troca de senha e o resultado</td></tr>
+    <tr><td><code>devices</code></td><td>último sinal de vida, fila e contadores de perda acumulados entre reinícios da câmera</td></tr>
+  </table></div>
+</section>
+
+<section id="seguranca">
+  <h2>Segurança</h2>
+  <ul class="clean">
+    <li><b>Duas chaves separadas:</b> a câmera usa a chave do aparelho; o painel usa o PIN de administrador de 10 dígitos. Comparação em tempo constante.</li>
+    <li><b>Limite de tentativas:</b> 10 erros em 60 s bloqueiam aquele IP e aquele papel por um tempo. Atrás do proxy, o IP vem do cabeçalho que o próprio Caddy acrescenta (opção <code>--trust-proxy</code>), para um atacante não conseguir bloquear a câmera.</li>
+    <li><b>Validação de tudo que chega:</b> tipos, tamanhos e formatos; corpo JSON limitado a 16 KB; JPEG conferido pelo início e fim do arquivo.</li>
+    <li><b>Cabeçalhos do navegador:</b> política de conteúdo restrita ao próprio site, sem cache, sem incorporação em outros sites.</li>
+    <li><b>Banco criado com permissão só do dono</b>, e nada de corpo ou cabeçalho nos logs.</li>
+  </ul>
+</section>
+
+<section id="nuvem">
+  <h2>Hospedagem</h2>
+  <p class="sub">Uma VM pequena, HTTPS automático e custo vigiado.</p>
+  <div class="diag"><svg viewBox="0 0 900 200" role="img" aria-label="Câmera e navegador falam HTTPS com o Caddy na porta 443; o Caddy repassa ao servidor Python no próprio computador">
+    <defs><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+    <rect x="10" y="20" width="170" height="56" rx="10"/><text x="24" y="44">ESP32-CAM</text><text class="small" x="24" y="63">chave do aparelho</text>
+    <rect x="10" y="120" width="170" height="56" rx="10"/><text x="24" y="144">Navegador</text><text class="small" x="24" y="163">senha + PIN</text>
+    <rect class="hl" x="290" y="60" width="200" height="76" rx="10"/><text x="304" y="88">Caddy (porta 443)</text><text class="small" x="304" y="108">certificado Let's Encrypt</text><text class="small" x="304" y="124">senha no painel</text>
+    <rect class="hl" x="600" y="60" width="290" height="76" rx="10"/><text x="614" y="88">server.py (127.0.0.1:8080)</text><text class="small" x="614" y="108">SQLite com eventos e fotos</text><text class="small" x="614" y="124">backup diário, 14 dias</text>
+    <path class="seta" d="M180 48 H235 V88 H288"/><path class="seta" d="M180 148 H235 V108 H288"/><path class="seta" d="M490 98 H598"/>
+    <text class="small" x="196" y="40">HTTPS</text><text class="small" x="510" y="90">só local</text>
+  </svg></div>
+  <ul class="clean">
+    <li><b>Máquina:</b> EC2 t3.micro em São Paulo, Ubuntu 24.04, disco de 8 GB, atualizações de segurança automáticas.</li>
+    <li><b>Portas:</b> 80 e 443 abertas; acesso administrativo só a partir de um IP autorizado.</li>
+    <li><b>Domínio:</b> subdomínio DuckDNS que a própria VM mantém apontado para o IP atual, no boot e a cada 5 minutos.</li>
+    <li><b>Certificado:</b> emitido e renovado sozinho pelo Caddy, fixado na Let's Encrypt porque a câmera só confia nas raízes dela. A cadeia servida termina em ISRG X1, conferida só com as raízes que a câmera tem.</li>
+    <li><b>Serviço isolado:</b> usuário próprio sem login, sistema de arquivos só de leitura fora da pasta de dados, sem acesso a dispositivos.</li>
+    <li><b>Custo:</b> coberto por crédito; um alarme de orçamento desliga a VM sozinho no primeiro centavo de gasto real.</li>
+  </ul>
+  <h3>Painel</h3>
+  <p>O painel fica atrás de duas camadas: a senha que o navegador pede (Caddy) e o PIN de 10 dígitos do sistema. Ele não é público, e este site não publica o endereço dele.</p>
+</section>
+
+<section id="testar">
+  <h2>Testar o servidor sem a placa</h2>
+  <p>O script <code>scripts/testar-servidor.py</code> confia só nas raízes gravadas na câmera, mantém a conexão aberta como ela e usa apenas pedidos que não gravam nada. Medido contra a VM: negociação TLS 1.3 em cerca de 300 ms e cada pedido seguinte entre 22 e 50 ms. Contra um site com certificado de outra autoridade, ele acusa a falha, que é exatamente o que a câmera faria.</p>
+  <pre><code>DEVICE_KEY=... python3 scripts/testar-servidor.py https://&lt;domínio&gt;</code></pre>
+</section>

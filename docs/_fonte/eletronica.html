@@ -1,0 +1,125 @@
+<header class="hero"><div class="wrap">
+  <div class="kicker">Eletrônica</div>
+  <h1>Do 12 V à lingueta da fechadura</h1>
+  <p class="lede">Os componentes, por que cada um entrou, como a energia se divide, onde cada fio liga e os esquemas da bancada remontada do zero em 05 e 06/11/2026.</p>
+</div></header>
+<!-- corpo -->
+<section id="arquitetura">
+  <h2>Duas placas, papéis separados</h2>
+  <p class="sub">O controle nunca depende da rede.</p>
+  <p>O <b>Arduino Mega 2560</b> lê o teclado e a digital, mostra as mensagens, cuida da porta, do LED, do buzzer e da fechadura, e guarda os cadastros. Ele decide sozinho quem entra. A <b>ESP32-CAM</b> é a ponte com o mundo: recebe os eventos do Mega pela serial, tira a foto do acesso autorizado, acerta o relógio pela internet e entrega tudo ao servidor.</p>
+  <p>A divisão veio de uma conta de pinos. Só o teclado ocupa 8 entradas e saídas, o LCD em 4 bits mais 6, e somando leitor, LED, buzzer, botões e relé o projeto passa de 20 pinos. A ESP32-CAM tem uns 10 livres depois da câmera. Uma placa só não daria.</p>
+  <div class="diag"><svg viewBox="0 0 900 250" role="img" aria-label="Fonte de 12 V alimenta o Mega pelo VIN, o regulador LM2596 e a fechadura pelo relé; a MB102 gera 5 V e 3,3 V para periféricos e câmera">
+    <defs><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+    <rect class="hl" x="10" y="95" width="120" height="60" rx="10"/><text x="24" y="122">Fonte 12 V</text><text class="small" x="24" y="141">3 a 6 A</text>
+    <rect x="200" y="20" width="150" height="56" rx="10"/><text x="214" y="44">Mega (VIN)</text><text class="small" x="214" y="63">regulador da placa</text>
+    <rect x="200" y="98" width="150" height="56" rx="10"/><text x="214" y="122">LM2596</text><text class="small" x="214" y="141">ajustado em 7,0 V</text>
+    <rect x="200" y="176" width="150" height="56" rx="10"/><text x="214" y="200">Relé GBK P5</text><text class="small" x="214" y="219">contato C → NA</text>
+    <rect x="420" y="98" width="150" height="56" rx="10"/><text x="434" y="122">MB102</text><text class="small" x="434" y="141">5 V e 3,3 V</text>
+    <rect x="420" y="176" width="150" height="56" rx="10"/><text x="434" y="200">Fechadura</text><text class="small" x="434" y="219">12 V, 2 A</text>
+    <rect x="640" y="60" width="250" height="56" rx="10"/><text x="654" y="84">5 V</text><text class="small" x="654" y="103">LCD, relé, buzzer, câmera</text>
+    <rect x="640" y="138" width="250" height="56" rx="10"/><text x="654" y="162">3,3 V</text><text class="small" x="654" y="181">só o leitor de digital</text>
+    <path class="seta" d="M130 115 H165 V48 H198"/><path class="seta" d="M130 125 H198"/><path class="seta" d="M130 135 H165 V204 H198"/>
+    <path class="seta" d="M350 126 H418"/><path class="seta" d="M350 204 H418"/>
+    <path class="seta" d="M570 118 H600 V88 H638"/><path class="seta" d="M570 134 H600 V166 H638"/>
+  </svg></div>
+</section>
+
+<section id="componentes">
+  <h2>Componentes e por que cada um</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Componente</th><th>Função</th><th>Por que este</th></tr>
+    <tr><td><b>Arduino Mega 2560</b> (clone CH340)</td><td>controle local</td><td>54 pinos digitais e 4 seriais em hardware: leitor e câmera ganham cada um a sua, sem serial por software.</td></tr>
+    <tr><td><b>ESP32-CAM</b> Ai-Thinker, OV2640</td><td>Wi-Fi, NTP, foto</td><td>Câmera e Wi-Fi com PSRAM na mesma placa. O ESP32 comum (sem PSRAM) não segura o quadro da câmera.</td></tr>
+    <tr><td><b>Leitor de digital</b> R307S</td><td>autenticação</td><td>Guarda os modelos dentro do próprio leitor e compara lá: o Mega só recebe o número do cadastro. Mesmo protocolo e biblioteca da família DY50.</td></tr>
+    <tr><td><b>Teclado matricial 4x4</b> rígido</td><td>senha e menus</td><td>Teclas firmes para uso frequente; # confirma, * limpa, D cancela.</td></tr>
+    <tr><td><b>LCD 1602</b> em modo 4 bits</td><td>mensagens</td><td>Ligado direto no Mega, sem módulo I2C: uma peça a menos e nada de conversor de nível.</td></tr>
+    <tr><td><b>LED RGB 5 mm</b></td><td>estado</td><td>Uma cor por estado (azul espera, verde autorizado, amarelo aberto, vermelho erro, roxo administração), um resistor de 330 Ω por canal.</td></tr>
+    <tr><td><b>Buzzer ativo 5 V</b> + BC546</td><td>alerta</td><td>O transistor acende o buzzer sem puxar corrente do pino; um 10 kΩ entre base e terra o mantém calado no reset.</td></tr>
+    <tr><td><b>2 botões de pressão</b></td><td>sensor de porta</td><td>Ficam apertados com a porta fechada. Dois em série lógica: a porta só conta como fechada com os dois pressionados.</td></tr>
+    <tr><td><b>Fechadura elétrica</b> 12 V / 2 A</td><td>trava</td><td>Corpo de armário (mesmo desenho da DFRobot FIT0620), 3 parafusos M4, bobina que só pode ficar energizada por alguns segundos.</td></tr>
+    <tr><td><b>Módulo relé GBK P5</b></td><td>chave da fechadura</td><td>Acionado por transistor e ativo em HIGH, casa com o pull-down de 10 kΩ do pino. Um módulo optoacoplado, ativo em LOW, abriria a porta a cada reset.</td></tr>
+    <tr><td><b>LM2596</b> + <b>MB102</b></td><td>energia</td><td>O LM2596 desce os 12 V para 7 V com folga de 2 a 3 A; a MB102 gera os 5 V e os 3,3 V que o leitor desta unidade exige.</td></tr>
+  </table></div>
+</section>
+
+<section id="alimentacao">
+  <h2>Alimentação</h2>
+  <p class="sub">Uma fonte de 12 V para tudo, dividida em três caminhos.</p>
+  <ul class="clean">
+    <li><b>Mega pelo VIN, em 12 V.</b> O regulador da própria placa gera a lógica dele. O pino 5V do Mega não encosta em nada: ligar ali a trilha de 5 V põe duas fontes no mesmo barramento, e na bancada isso apagou o LED do Mega na hora.</li>
+    <li><b>LM2596 em 7,0 V</b> (saiu de fábrica em 11,30 V; anti-horário baixa) soldado no jack da MB102, que gera 5 V numa trilha e 3,3 V na outra.</li>
+    <li><b>Fechadura direto dos 12 V</b>, chaveada pelo relé. O negativo dela volta direto ao terra da fonte, nunca pela protoboard: são 2 A.</li>
+  </ul>
+  <div class="nota alerta"><b>Diodo de roda-livre pendente.</b> Uma bobina desligada devolve um pico de tensão. Sem o 1N4007 em paralelo com a fechadura, o pico pode resetar o Mega, sujar o LCD ou derrubar a câmera no instante em que a fechadura solta. O diodo do módulo de relé protege só a bobina do relé, não a da fechadura. Compra prevista antes da apresentação.</div>
+</section>
+
+<section id="pinagem">
+  <h2>Pinagem do Arduino Mega</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Pino</th><th>Sinal</th><th>Liga em</th><th>Observação</th></tr>
+    <tr><td class="cod">D16 / D17</td><td>Serial 2</td><td>ESP32-CAM (GPIO13 / GPIO14)</td><td>TX passa por divisor 5 V → 3,3 V</td></tr>
+    <tr><td class="cod">D18 / D19</td><td>Serial 1</td><td>leitor de digital</td><td>TX passa por divisor; serigrafia do clone vem trocada</td></tr>
+    <tr><td class="cod">D22 a D25</td><td>linhas do teclado</td><td>R1 a R4</td><td>entradas com pull-up</td></tr>
+    <tr><td class="cod">D26 a D29</td><td>colunas do teclado</td><td>C1 a C4</td><td>saídas</td></tr>
+    <tr><td class="cod">D30 / D31</td><td>botões da porta</td><td>contato para o terra</td><td>pull-up interno</td></tr>
+    <tr><td class="cod">D32 a D34</td><td>LED vermelho, verde, azul</td><td>330 Ω por canal</td><td></td></tr>
+    <tr><td class="cod">D35</td><td>fechadura</td><td>sinal do relé</td><td>10 kΩ para o terra: relé desligado no reset</td></tr>
+    <tr><td class="cod">D36</td><td>buzzer</td><td>base do BC546 por 330 Ω</td><td>10 kΩ base-terra</td></tr>
+    <tr><td class="cod">D37 a D42</td><td>LCD RS, E, D4 a D7</td><td>pinos 4, 6, 11 a 14 do LCD</td><td>RW (pino 5) no terra</td></tr>
+    <tr><td class="cod">A0</td><td>sensor de corrente (opcional)</td><td>ACS712</td><td>firmware ainda não lê</td></tr>
+  </table></div>
+  <h3>ESP32-CAM</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Pino</th><th>Liga em</th><th>Observação</th></tr>
+    <tr><td class="cod">5V / GND</td><td>barra de 5 V da MB102</td><td>nunca alimentar pelo 3V3</td></tr>
+    <tr><td class="cod">GPIO13</td><td>meio do divisor vindo do D16</td><td>recebe do Mega em 3,3 V</td></tr>
+    <tr><td class="cod">GPIO14</td><td>D17 do Mega, direto</td><td>3,3 V é lido como alto pelo Mega</td></tr>
+    <tr><td class="cod">GPIO2 / 15 / 12</td><td>gravação do Mega pela rede</td><td>a câmera pode regravar o Mega sem cabo USB</td></tr>
+  </table></div>
+  <p>Os divisores existem porque o Mega fala em 5 V e a ESP32-CAM e o leitor só aguentam 3,3 V. Um resistor em cima e o dobro embaixo dão dois terços da tensão: 5 V viram 3,3 V. Na bancada, sem resistor de 1 kΩ sobrando, o da câmera foi feito com 3 x 330 Ω em cima e 6 x 330 Ω embaixo, mesma proporção.</p>
+</section>
+
+<section id="esquemas">
+  <h2>Os esquemas da bancada</h2>
+  <p class="sub">Desenhados bloco a bloco na remontagem de 05 e 06/11/2026. Clique para ampliar.</p>
+  <figure><a href="site/eletrica/esquema_geral.png"><img class="fig" src="site/eletrica/esquema_geral.png" alt="Folha geral: todos os pinos do Arduino Mega e o bloco de força" loading="lazy"></a><figcaption>Folha geral: cada pino do Mega, o caminho da força e as ligações fixas do LCD, LED e buzzer.</figcaption></figure>
+  <div class="grid2">
+    <figure><a href="site/eletrica/passo01_alimentacao.png"><img class="fig" src="site/eletrica/passo01_alimentacao.png" alt="Passo 1: alimentação" loading="lazy"></a><figcaption><b>1. Alimentação.</b> 12 V → LM2596 em 7 V → MB102, que entrega 5 V e 3,3 V nas trilhas.</figcaption></figure>
+    <figure><a href="site/eletrica/passo02_mega.png"><img class="fig" src="site/eletrica/passo02_mega.png" alt="Passo 2: Mega" loading="lazy"></a><figcaption><b>2. Mega.</b> VIN em 12 V, terra na trilha, USB só para gravar.</figcaption></figure>
+    <figure><a href="site/eletrica/passo03_teclado.png"><img class="fig" src="site/eletrica/passo03_teclado.png" alt="Passo 3: teclado" loading="lazy"></a><figcaption><b>3. Teclado.</b> Oito fios diretos, D22 a D29, sem resistor.</figcaption></figure>
+    <figure><a href="site/eletrica/passo04_lcd.png"><img class="fig" src="site/eletrica/passo04_lcd.png" alt="Passo 4: LCD" loading="lazy"></a><figcaption><b>4. LCD.</b> Contraste por um resistor fixo de 1,5 kΩ e RW no terra (solto, o LCD entra em modo leitura).</figcaption></figure>
+    <figure><a href="site/eletrica/passo05_porta.png"><img class="fig" src="site/eletrica/passo05_porta.png" alt="Passo 5: botões da porta" loading="lazy"></a><figcaption><b>5. Porta.</b> Dois botões para o terra, pull-up interno. Soltos, o Mega entende porta forçada.</figcaption></figure>
+    <figure><a href="site/eletrica/passo06_led.png"><img class="fig" src="site/eletrica/passo06_led.png" alt="Passo 6: LED RGB" loading="lazy"></a><figcaption><b>6. LED RGB.</b> Um resistor por cor, nunca um só na perna comum.</figcaption></figure>
+    <figure><a href="site/eletrica/passo07_buzzer.png"><img class="fig" src="site/eletrica/passo07_buzzer.png" alt="Passo 7: buzzer" loading="lazy"></a><figcaption><b>7. Buzzer.</b> Positivo na trilha de 5 V e negativo no coletor do BC546.</figcaption></figure>
+    <figure><a href="site/eletrica/passo08_dy50.png"><img class="fig" src="site/eletrica/passo08_dy50.png" alt="Passo 8: leitor de digital" loading="lazy"></a><figcaption><b>8. Leitor.</b> Em 3,3 V, com divisor no fio que vem do Mega.</figcaption></figure>
+    <figure><a href="site/eletrica/passo09_cam.png"><img class="fig" src="site/eletrica/passo09_cam.png" alt="Passo 9: ESP32-CAM" loading="lazy"></a><figcaption><b>9. Câmera.</b> 5 V da MB102 e divisor no fio de recepção.</figcaption></figure>
+    <figure><a href="site/eletrica/passo10_rele.png"><img class="fig" src="site/eletrica/passo10_rele.png" alt="Passo 10: relé" loading="lazy"></a><figcaption><b>10. Relé.</b> Sinal no D35 com 10 kΩ para o terra, testado antes de ligar os 12 V.</figcaption></figure>
+    <figure><a href="site/eletrica/passo11_fechadura.png"><img class="fig" src="site/eletrica/passo11_fechadura.png" alt="Passo 11: fechadura" loading="lazy"></a><figcaption><b>11. Fechadura.</b> +12 V no comum, normalmente aberto no positivo dela, negativo direto na fonte.</figcaption></figure>
+    <figure><a href="site/eletrica/passo12_acs712.png"><img class="fig" src="site/eletrica/passo12_acs712.png" alt="Passo 12: sensor de corrente opcional" loading="lazy"></a><figcaption><b>12. Opcional.</b> Sensor de corrente em série com a fechadura, para provar que ela puxou de verdade.</figcaption></figure>
+  </div>
+</section>
+
+<section id="achados">
+  <h2>O que a bancada ensinou</h2>
+  <ul class="clean">
+    <li><b>Serigrafia trocada.</b> No Mega clone a placa diz TX1 no pino 19. Pelo microcontrolador, TX1 é o 18. O leitor foi ligado pelo número, não pela legenda.</li>
+    <li><b>Buzzer apitando com tudo desligado.</b> O positivo estava no coletor do transistor. Positivo vai na trilha de 5 V, negativo no coletor.</li>
+    <li><b>LCD só com blocos.</b> O pino RW ficou sem fio duas vezes (04/11 e na remontagem). A biblioteca assume RW no terra.</li>
+    <li><b>Relé que abriria no boot.</b> O módulo de 2 relés optoacoplado é ativo em LOW; com o pull-down do pino, acionaria a fechadura a cada reset. Ficou o GBK, ativo em HIGH.</li>
+    <li><b>Fonte de 7 V / 500 mA sem folga</b> para câmera, relé, LCD e leitor juntos. Trocada por 12 V com regulador.</li>
+  </ul>
+</section>
+
+<section id="roteiro">
+  <h2>Roteiro de teste da bancada</h2>
+  <ol class="clean">
+    <li>Buzzer calado com o Mega desligado.</li>
+    <li>Ligar pelo VIN: LED da placa, luz do LCD, mensagem de início.</li>
+    <li>Gravar o firmware com a fechadura desabilitada (<code>LOCK_MODE = 0</code>).</li>
+    <li>Testar um bloco por vez: teclado, LCD, porta, LED (descobrir se é cátodo ou ânodo comum), buzzer e leitor.</li>
+    <li>Câmera: medir 3,3 V no meio do divisor antes de ligar; observar se reinicia quando o Wi-Fi sobe.</li>
+    <li>Relé sem 12 V: mapear comum, normalmente aberto e fechado com o multímetro; confirmar que o reset não clica.</li>
+    <li>Fechadura: medir a bobina, testar à mão por 1 s, só então habilitar no firmware.</li>
+  </ol>
+</section>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Requisitos · Dispensário Eletrônico</title>
+<meta name="description" content="Problema, requisitos funcionais e não funcionais, contrato entre hardware e software, máquina de estados e critérios de aceite.">
+<link rel="stylesheet" href="site/estilo.css">
+</head>
+<body>
+<nav class="topo" aria-label="Páginas"><div class="wrap">
+  <a class="marca" href="index.html">Dispensário Eletrônico</a>
+  <ul class="paginas"><li><a href="index.html">Visão geral</a></li><li><a href="requisitos.html" aria-current="page">Requisitos</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li></ul>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker">Requisitos</div>
+  <h1>Do problema ao critério de aceite</h1>
+  <p class="lede">O que o Instituto Mário Penna pediu, o que o protótipo precisa provar e como cada exigência vira um teste. Base: entrevista de 20/08/2026, Fase 1 (26/08) e o documento de componentes e requisitos de software (08/09).</p>
+</div></header>
+<main class="wrap">
+<nav class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#contexto">O cliente e o contexto</a></li><li><a href="#dor">As dores declaradas</a></li><li><a href="#escopo">Escopo do protótipo</a></li><li><a href="#rf">Requisitos funcionais</a></li><li><a href="#rnf">Requisitos não funcionais</a></li><li><a href="#contrato">Contrato entre hardware e software</a></li><li><a href="#estados">Máquina de estados</a></li><li><a href="#aceite">Critérios de aceite</a></li><li><a href="#decisoes">Decisões que dependem do cliente</a></li></ol></nav>
+<section id="contexto">
+  <h2>O cliente e o contexto</h2>
+  <p class="sub">Um hospital 100% SUS dentro de uma rede que atende os dois sistemas.</p>
+  <p>O Instituto Mário Penna é uma instituição de oncologia de Belo Horizonte. A maior parte do que faz é pelo SUS, que funciona para eles como um convênio na mesma prateleira dos planos privados, com um serviço praticamente igual nos dois blocos. O Hospital Luxemburgo, onde o dispensário entra, atende <b>somente pelo SUS</b>.</p>
+  <p>Eles não têm equipe própria de redes nem de segurança da informação, mas têm marcenaria, eletrônica e engenharia biomédica na casa. Isso desenha o projeto: o gabinete e a instalação podem ser feitos lá dentro, e o sistema não pode depender de um time de TI para funcionar no dia a dia.</p>
+  <div class="grid2">
+    <div class="card"><h3>Como funciona hoje</h3><ol class="clean">
+      <li>O profissional vai até a farmácia central.</li>
+      <li>Bipa o crachá e bipa o medicamento.</li>
+      <li>Leva o item e deixa na mesa de cabeceira do leito.</li>
+    </ol><p>O registro de quem pegou o quê e quando já existe. O gargalo é a fila no balcão central e o trecho entre a retirada e a administração, que fica sem controle.</p></div>
+    <div class="card"><h3>Como fica com o dispensário</h3><ol class="clean">
+      <li>A logística repõe o armário da ala duas vezes ao dia.</li>
+      <li>O profissional se identifica no próprio armário.</li>
+      <li>A porta abre, ele retira, fecha, e cada passo vira um evento.</li>
+    </ol><p>O estoque chega mais perto do paciente, a fila central diminui e cada abertura deixa evidência consultável.</p></div>
+  </div>
+</section>
+
+<section id="dor">
+  <h2>As dores declaradas</h2>
+  <ul class="clean">
+    <li>A operação de levar o medicamento da farmácia ao paciente é complexa demais.</li>
+    <li>Há controle forte de <b>custo</b> e pouco controle de <b>uso</b>.</li>
+    <li>É difícil comprovar que o medicamento chegou ao paciente.</li>
+    <li>Medicamentos com faixa de temperatura específica já ficaram fora da condição ideal.</li>
+    <li>As soluções do mercado são de poucas empresas e chegam a cerca de R$ 4 milhões.</li>
+  </ul>
+  <div class="nota">O caso que fixa a urgência: para um paciente diabético, uma hora de diferença na aplicação de insulina já muda o quadro. Velocidade de acesso é requisito, não conforto.</div>
+</section>
+
+<section id="escopo">
+  <h2>Escopo do protótipo</h2>
+  <p class="sub">A fronteira entre o equipamento e o sistema que o hospital já tem.</p>
+  <div class="tablewrap"><table>
+    <tr><th>O equipamento faz</th><th>O sistema do hospital continua fazendo</th><th>Fora do protótipo</th></tr>
+    <tr><td>Autentica o profissional (digital, senha como alternativa) · libera e trava a porta · percebe abertura e fechamento · avisa porta aberta com som discreto · registra cada evento com horário confiável · envia os eventos</td>
+        <td>Prescrição · baixa dos itens · saldo e reposição do subestoque · identificação do paciente</td>
+        <td>Climatização e itens refrigerados · trava por gaveta · reconhecimento facial · vídeo contínuo</td></tr>
+  </table></div>
+  <p>A topologia é em <b>estrela</b>: cada dispensário é isolado e fala só com a farmácia central ou com a subfarmácia responsável. Um dispensário nunca consulta nem abastece outro. Quem se autentica alcança todo o conteúdo do módulo, sem trava individual por compartimento.</p>
+  <p>Um monitor sensível ao toque mostrando a prescrição do paciente foi classificado pelo cliente como <b>desejável, não essencial</b>, e depende da API do hospital.</p>
+</section>
+
+<section id="rf">
+  <h2>Requisitos funcionais</h2>
+  <p class="sub">Linha de base da Fase 1 (26/08/2026). Marcados os que dependem de decisão externa.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Código</th><th>Requisito</th><th>Situação</th></tr>
+    <tr><td class="cod">RF01</td><td><b>Autenticação biométrica.</b> Identificar individualmente o profissional autorizado por leitor de impressão digital.</td><td><span class="tag ok">no protótipo</span></td></tr>
+    <tr><td class="cod">RF02</td><td><b>Autenticação alternativa.</b> Permitir senha quando a leitura biométrica não estiver disponível ou não for concluída.</td><td><span class="tag ok">no protótipo</span></td></tr>
+    <tr><td class="cod">RF03</td><td><b>Controle da porta.</b> Liberar a fechadura só após autenticação válida e mantê-la bloqueada quando o acesso não for autorizado.</td><td><span class="tag ok">no protótipo</span></td></tr>
+    <tr><td class="cod">RF04</td><td><b>Registro de acesso.</b> Registrar cada tentativa com dispensário, profissional, data, horário, método e resultado.</td><td><span class="tag ok">no protótipo</span></td></tr>
+    <tr><td class="cod">RF05</td><td><b>Monitoramento da porta.</b> Identificar os estados aberto e fechado e registrar cada mudança.</td><td><span class="tag ok">no protótipo</span></td></tr>
+    <tr><td class="cod">RF06</td><td><b>Alerta de porta aberta.</b> Aviso sonoro discreto quando a porta passa do tempo definido.</td><td><span class="tag ok">no protótipo</span> tempo a validar</td></tr>
+    <tr><td class="cod">RF07</td><td><b>Associação ao paciente.</b> Quando a integração permitir, ligar a abertura ao paciente e à movimentação.</td><td><span class="tag warn">depende da API</span></td></tr>
+    <tr><td class="cod">RF08</td><td><b>Envio de eventos.</b> Transmitir ao sistema institucional os eventos de acesso, abertura e fechamento.</td><td><span class="tag warn">servidor próprio no lugar da API</span></td></tr>
+    <tr><td class="cod">RF09</td><td><b>Integração de estoque.</b> Entregar o contexto da operação, deixando baixa, saldo e reposição no sistema do hospital.</td><td><span class="tag warn">fluxo a validar</span></td></tr>
+    <tr><td class="cod">RF10</td><td><b>Integração institucional.</b> Gravar os registros no banco do Instituto pela API fornecida.</td><td><span class="tag warn">depende da API</span></td></tr>
+    <tr><td class="cod">RF11</td><td><b>Correlação de evidências.</b> Registrar horário e identificadores suficientes para cruzar cada abertura com a câmera institucional.</td><td><span class="tag ok">NTP + foto por acesso</span></td></tr>
+    <tr><td class="cod">RF12</td><td><b>Acesso ao conteúdo.</b> Após autenticação, liberar todo o conteúdo, sem bloqueio por compartimento.</td><td><span class="tag ok">no protótipo</span></td></tr>
+    <tr><td class="cod">RF13</td><td><b>Consulta de prescrição.</b> Mostrar a prescrição num monitor sensível ao toque.</td><td><span class="tag mut">desejável</span></td></tr>
+  </table></div>
+</section>
+
+<section id="rnf">
+  <h2>Requisitos não funcionais</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Código</th><th>Requisito</th></tr>
+    <tr><td class="cod">RNF01</td><td><b>Segurança de acesso.</b> Só profissionais autorizados liberam a porta; senha, biometria e dado de paciente seguem as permissões do Instituto.</td></tr>
+    <tr><td class="cod">RNF02</td><td><b>Rastreabilidade.</b> Cada registro preserva dispensário, profissional, evento, data e horário.</td></tr>
+    <tr><td class="cod">RNF03</td><td><b>Interoperabilidade.</b> Comunicação pela API do Instituto, tratando o sistema hospitalar como fonte oficial.</td></tr>
+    <tr><td class="cod">RNF04</td><td><b>Confiabilidade.</b> Falha de comunicação não apaga evento já confirmado no equipamento.</td></tr>
+    <tr><td class="cod">RNF05</td><td><b>Usabilidade.</b> Instruções claras, poucas ações, autenticação rápida.</td></tr>
+    <tr><td class="cod">RNF06</td><td><b>Conforto acústico.</b> O alerta é ouvido perto do equipamento sem incomodar pacientes.</td></tr>
+    <tr><td class="cod">RNF07</td><td><b>Adequação física.</b> Adaptável à parede, aos pontos de energia e rede e à circulação; subdivisões internas configuráveis.</td></tr>
+    <tr><td class="cod">RNF08</td><td><b>Continuidade elétrica.</b> Compatível com nobreak e gerador; volta a um estado seguro depois de reiniciar.</td></tr>
+    <tr><td class="cod">RNF09</td><td><b>Manutenibilidade.</b> Arquitetura modular e componentes substituíveis pelas equipes internas.</td></tr>
+    <tr><td class="cod">RNF10</td><td><b>Viabilidade econômica.</b> Bem mais barato que as alternativas comerciais, sem perder os controles essenciais.</td></tr>
+    <tr><td class="cod">RNF11</td><td><b>Escopo.</b> As funções essenciais não dependem de câmera nem de climatização.</td></tr>
+    <tr><td class="cod">RNF12</td><td><b>Compatibilidade de rede.</b> Opera no segmento autorizado para equipamentos hospitalares, nunca na rede de pacientes.</td></tr>
+    <tr><td class="cod">RNF13</td><td><b>Integridade temporal.</b> Relógio sincronizado para cruzar abertura, eventos e imagens.</td></tr>
+    <tr><td class="cod">RNF14</td><td><b>Isolamento.</b> Cada unidade é um subestoque independente e fala só com a farmácia responsável.</td></tr>
+  </table></div>
+</section>
+
+<section id="contrato">
+  <h2>Contrato entre hardware e software</h2>
+  <p class="sub">O que o programa recebe, o que ele comanda e o que todo evento carrega.</p>
+  <div class="grid2">
+    <div class="card"><h4>Entradas</h4><ul class="clean">
+      <li><b>Biometria:</b> sucesso, não reconhecida, leitura incompleta, erro, indisponível.</li>
+      <li><b>Teclado:</b> dígito, apagar, cancelar, confirmar.</li>
+      <li><b>Porta:</b> aberta, fechada, possível falha ou desconexão.</li>
+      <li><b>Rede:</b> aceito, rejeitado, não autorizado, indisponível, tempo esgotado.</li>
+      <li><b>Relógio:</b> sincronizado, sem sincronia, horário local com deslocamento.</li>
+    </ul></div>
+    <div class="card"><h4>Saídas</h4><ul class="clean">
+      <li><b>Trava:</b> liberar e bloquear.</li>
+      <li><b>Alerta:</b> ligar, desligar, padrão configurado.</li>
+      <li><b>Tela:</b> instrução, sucesso, negação, aviso de porta, falha de comunicação.</li>
+      <li><b>Comunicação:</b> publicar evento, consultar envio, repetir pendente.</li>
+    </ul></div>
+  </div>
+  <p>Todo evento carrega um identificador único (para repetir o envio sem duplicar), o dispensário, o profissional quando conhecido, o tipo, o método de autenticação, o resultado e o horário com a origem dele. Nunca carrega senha, imagem de digital ou modelo biométrico.</p>
+</section>
+
+<section id="estados">
+  <h2>Máquina de estados</h2>
+  <p class="sub">Proposta de engenharia para que as regras não fiquem espalhadas pelo código.</p>
+  <div class="diag"><svg viewBox="0 0 960 300" role="img" aria-label="Estados: bloqueado, autenticando, autorizado, destravado, porta aberta, alerta, fechando, e falha">
+    <defs><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+    <rect class="hl" x="10" y="40" width="120" height="56" rx="10"/><text x="22" y="64">E1 Bloqueado</text><text class="small" x="22" y="83">trava fechada</text>
+    <rect x="170" y="40" width="130" height="56" rx="10"/><text x="182" y="64">E2 Autenticando</text><text class="small" x="182" y="83">digital ou senha</text>
+    <rect x="340" y="40" width="120" height="56" rx="10"/><text x="352" y="64">E3 Autorizado</text><text class="small" x="352" y="83">evento criado</text>
+    <rect x="500" y="40" width="130" height="56" rx="10"/><text x="512" y="64">E4 Destravado</text><text class="small" x="512" y="83">espera abrir (60 s)</text>
+    <rect x="670" y="40" width="130" height="56" rx="10"/><text x="682" y="64">E5 Porta aberta</text><text class="small" x="682" y="83">conta 5 min</text>
+    <rect x="830" y="40" width="120" height="56" rx="10"/><text x="842" y="64">E6 Alerta</text><text class="small" x="842" y="83">bipe + vermelho</text>
+    <rect x="590" y="190" width="150" height="56" rx="10"/><text x="602" y="214">E7 Fechando</text><text class="small" x="602" y="233">trava volta</text>
+    <rect x="170" y="190" width="300" height="56" rx="10"/><text x="182" y="214">E8 Falha</text><text class="small" x="182" y="233">sensor, trava, leitor, relógio ou rede</text>
+    <line class="seta" x1="130" y1="68" x2="168" y2="68"/><line class="seta" x1="300" y1="68" x2="338" y2="68"/>
+    <line class="seta" x1="460" y1="68" x2="498" y2="68"/><line class="seta" x1="630" y1="68" x2="668" y2="68"/>
+    <line class="seta" x1="800" y1="68" x2="828" y2="68"/>
+    <path class="seta" d="M735 96 V188"/><path class="seta" d="M890 96 V218 H742"/>
+    <path class="seta" d="M590 218 H520 V130 H70 V98"/>
+    <path class="seta" d="M235 96 V120 H90 V98"/><text class="small" x="120" y="116">negado</text>
+    <path class="seta" d="M565 96 V150 H110 V98"/><text class="small" x="370" y="146">expirou sem abrir</text>
+  </svg></div>
+  <ul class="clean">
+    <li>Acesso negado volta para <b>Bloqueado</b>.</li>
+    <li>Porta aberta sem autorização gera <b>evento crítico</b> e alarme até fechar.</li>
+    <li>Falha de rede não para nada: o evento entra na fila e é reenviado.</li>
+    <li>Depois de reiniciar, o sistema começa travado e confere os sensores antes de aceitar nova operação.</li>
+  </ul>
+</section>
+
+<section id="aceite">
+  <h2>Critérios de aceite</h2>
+  <p class="sub">Como saber que cada requisito foi cumprido.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Código</th><th>Critério</th></tr>
+    <tr><td class="cod">CA01</td><td>Digital autorizada libera a trava e gera eventos completos.</td></tr>
+    <tr><td class="cod">CA02</td><td>Digital não reconhecida não libera e gera tentativa negada.</td></tr>
+    <tr><td class="cod">CA03</td><td>Falha do leitor permite autenticar por senha.</td></tr>
+    <tr><td class="cod">CA04</td><td>Senha certa libera; senha errada não libera e respeita o limite de tentativas.</td></tr>
+    <tr><td class="cod">CA05</td><td>Cada sensor altera só o estado da sua porta.</td></tr>
+    <tr><td class="cod">CA06</td><td>Porta aberta além do tempo dispara som discreto e evento de alerta.</td></tr>
+    <tr><td class="cod">CA07</td><td>Fechar interrompe o alerta, registra o fechamento e devolve a trava ao estado seguro.</td></tr>
+    <tr><td class="cod">CA08</td><td>Abertura sem autorização gera evento crítico e não se confunde com acesso normal.</td></tr>
+    <tr><td class="cod">CA09</td><td>Servidor fora do ar não apaga eventos, e o reenvio não duplica.</td></tr>
+    <tr><td class="cod">CA10</td><td>Reiniciar volta a um estado seguro. <span class="tag warn">limite do protótipo</span> a fila fica em RAM e se perde num reinício, decisão aceita para a demonstração.</td></tr>
+    <tr><td class="cod">CA11</td><td>Nenhum registro revela senha ou conteúdo biométrico.</td></tr>
+    <tr><td class="cod">CA12</td><td>O horário registrado permite cruzar com uma fonte externa de tempo.</td></tr>
+  </table></div>
+</section>
+
+<section id="decisoes">
+  <h2>Decisões que dependem do cliente</h2>
+  <p class="sub">Ficam em aberto e não bloqueiam a demonstração, mas bloqueiam a versão real.</p>
+  <div class="grid2">
+    <div class="card"><h4>Integração</h4><ul class="clean">
+      <li>Documentação, autenticação, ambiente de teste e contato técnico da API.</li>
+      <li>Biometria validada no equipamento ou no servidor, e onde ficam os modelos.</li>
+      <li>Cadastro e revogação de profissionais.</li>
+    </ul></div>
+    <div class="card"><h4>Operação</h4><ul class="clean">
+      <li>Como o sistema sabe o que saiu: leitura do item, declaração na tela ou detecção.</li>
+      <li>Crachá junto com a digital, por causa das luvas de procedimento.</li>
+      <li>Sem rede, o equipamento trava ou libera com sincronização posterior.</li>
+    </ul></div>
+    <div class="card"><h4>Instalação</h4><ul class="clean">
+      <li>Rede cabeada ou Wi-Fi, segmento autorizado e fonte de horário.</li>
+      <li>Tempo, volume e silenciamento do alerta.</li>
+      <li>Dimensões finais e teto de custo por unidade.</li>
+    </ul></div>
+    <div class="card"><h4>Riscos</h4><p>A API é dependência externa e é o caminho crítico. Sem equipe de redes e segurança no cliente, ninguém do lado deles vai escrever os requisitos de segurança pelo grupo: isso precisa vir do projeto.</p></div>
+  </div>
+</section>
+<div class="proxima"><a href="index.html"><small>Anterior</small>Visão geral</a><a href="eletronica.html"><small>Próxima</small>Eletrônica</a></div>
+</main>
+<footer><div class="wrap">
+  Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
+  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 08/11/2026.<br>
+  Código e arquivos: <a href="https://github.com/joshazze/dispensario-modulos">dispensario-modulos</a> ·
+  <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a> ·
+  <a href="https://github.com/marceloxreis/sistema-embarcados">sistema-embarcados</a>
+</div></footer>
+</body>
+</html>
