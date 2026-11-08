@@ -1,0 +1,89 @@
+:root{
+  --bg:#f7f3ec; --paper:#fffdf9; --ink:#1f1a14; --muted:#6b6257; --line:#e2d9cb;
+  --accent:#8a4b1f; --accent-soft:#f1e3d3; --ok:#2f6b3a; --warn:#9a5b00; --bad:#a3322a; --code:#f1ebe2;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#15120f; --paper:#1d1915; --ink:#efe8de; --muted:#a99e90; --line:#3a332b;
+    --accent:#e0a36e; --accent-soft:#3a2a1c; --ok:#7fc28c; --warn:#e5b35f; --bad:#ef8a80; --code:#2a241e; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:3px}
+code{font:0.86em ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font:13.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+pre code{background:none;padding:0}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+/* barra do site */
+.topo{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topo .wrap{display:flex;align-items:center;gap:22px}
+.marca{font-weight:700;text-decoration:none;color:var(--ink);white-space:nowrap;padding:12px 0;letter-spacing:-.01em}
+.paginas{display:flex;gap:16px;overflow-x:auto;list-style:none;margin:0;padding:12px 0;scrollbar-width:none}
+.paginas::-webkit-scrollbar{display:none}
+.paginas a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;padding-bottom:3px;border-bottom:2px solid transparent}
+.paginas a:hover{color:var(--accent)}
+.paginas a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+
+header.hero{padding:56px 0 34px;border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-size:clamp(32px,5.6vw,54px);line-height:1.06;margin:10px 0 16px;font-weight:600;letter-spacing:-.02em}
+.lede{font-size:clamp(18px,2.3vw,21px);color:var(--muted);max-width:760px;margin:0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:28px}
+.fact{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fact b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px}
+
+/* sumario da pagina */
+.toc{margin:26px 0 0;padding:14px 18px;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.toc b{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.toc ol{margin:6px 0 0;padding-left:20px;columns:2;column-gap:28px;font-size:15px}
+@media (max-width:640px){.toc ol{columns:1}}
+
+section{padding:52px 0 6px;scroll-margin-top:60px}
+h2{font-size:28px;margin:0 0 6px;font-weight:600;letter-spacing:-.01em}
+h2 + .sub{color:var(--muted);margin:0 0 22px}
+h3{font-size:19px;margin:30px 0 8px;font-weight:600}
+h4{font-size:16px;margin:20px 0 6px;font-weight:600}
+p{margin:0 0 14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin:8px 0 18px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:8px 0 18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card h3,.card h4{margin-top:0}
+a.card{display:block;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
+a.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+a.card span{display:block;color:var(--muted);font-size:15px;margin-top:4px}
+ul.clean,ol.clean{padding-left:20px;margin:0 0 14px}
+ul.clean li,ol.clean li{margin:5px 0}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin:10px 0 20px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--accent-soft)}
+tr:last-child td{border-bottom:0}
+td.cod{white-space:nowrap;font-weight:600;color:var(--accent)}
+figure{margin:18px 0 28px}
+img.fig{width:100%;height:auto;max-height:680px;object-fit:contain;border:1px solid var(--line);border-radius:12px;display:block;background:#fff}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.nota{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0 20px;font-size:15.5px}
+.nota.alerta{border-left-color:var(--warn)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:99px;border:1px solid currentColor;line-height:1.55;white-space:nowrap}
+.tag.ok{color:var(--ok)} .tag.warn{color:var(--warn)} .tag.mut{color:var(--muted)} .tag.bad{color:var(--bad)}
+ol.timeline{list-style:none;padding:0;margin:10px 0;border-left:2px solid var(--line)}
+ol.timeline li{position:relative;padding:0 0 22px 24px}
+ol.timeline li::before{content:"";position:absolute;left:-7px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--accent)}
+ol.timeline time{display:block;font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em}
+ol.timeline b.t{display:block;font-size:17px;margin:2px 0 4px}
+.diag{overflow-x:auto;margin:6px 0 18px}
+.diag svg{width:100%;min-width:760px;height:auto;display:block}
+.diag text{font:600 13px "Avenir Next",system-ui,sans-serif;fill:var(--ink)}
+.diag .small{font-weight:400;font-size:11.5px;fill:var(--muted)}
+.diag rect,.diag circle{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
+.diag .hl{stroke:var(--accent)}
+.diag path,.diag line{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag .seta{marker-end:url(#seta)}
+.diag marker path{fill:var(--muted);stroke:none}
+.proxima{display:flex;justify-content:space-between;gap:12px;margin:56px 0 0;flex-wrap:wrap}
+.proxima a{flex:1 1 220px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--paper);text-decoration:none;color:var(--ink)}
+.proxima a small{display:block;color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.proxima a:last-child{text-align:right}
+footer{margin-top:60px;padding:30px 0 50px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+@media (max-width:600px){ body{font-size:16px} header.hero{padding-top:36px} th,td{padding:8px 10px} }

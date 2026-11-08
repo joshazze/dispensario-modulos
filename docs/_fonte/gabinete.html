@@ -1,0 +1,88 @@
+<header class="hero"><div class="wrap">
+  <div class="kicker">Gabinete</div>
+  <h1>Dois módulos de MDF, nenhuma medida desenhada à mão</h1>
+  <p class="lede">O dispensário é feito de chapas de MDF de 3 mm cortadas a laser. Cada peça nasce de uma especificação em JSON, e cada medida de componente tem uma fonte registrada.</p>
+</div></header>
+<!-- corpo -->
+<section id="linguagem">
+  <h2>A linguagem construtiva</h2>
+  <p class="sub">Regras que valem para todas as peças.</p>
+  <div class="grid2">
+    <div class="card"><h4>Lâmina dupla</h4>Cada parede é um sanduíche de duas chapas de 3 mm, 6 mm no total. A externa e a interna são peças separadas, o que deixa esconder porcas, rebaixos e passagens de fio entre elas.</div>
+    <div class="card"><h4>Enforca-gato no lugar de parafuso</h4>As faces se unem por abraçadeiras de nylon de 4,8 mm que laçam os cantos por rasgos de 6,5 x 2,5 mm. Desmonta com um alicate, sem ferramenta especial, e não depende de rosca no MDF.</div>
+    <div class="card"><h4>Dedos nas arestas</h4>As seis faces se encaixam por juntas de dedos geradas pela matriz do TabbedBoxMaker, com fase escolhida para cada canto fechar dente com vão.</div>
+    <div class="card"><h4>Gota de parede</h4>Furos em forma de gota no fundo: a cabeça do parafuso entra pelo círculo e o módulo desce e trava na fenda. Pendura e tira sem ferramenta.</div>
+    <div class="card"><h4>Passa-fio com tampa</h4>Furo de 50 mm nas laterais, fechado por um disco de 90 mm que pode levar um prensa-cabo PG16 ou ficar cego.</div>
+    <div class="card"><h4>Peça cabe na mesa</h4>A cortadora tem mesa de 1150 x 1000 mm. Toda peça e toda carga de corte cabe em 1000 x 1000; foi isso que fixou a altura dos módulos em 1000 mm.</div>
+  </div>
+  <p>O vocabulário completo, com figuras cotadas, está no repositório <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a>.</p>
+</section>
+
+<section id="biometrico">
+  <h2>Módulo biométrico</h2>
+  <p class="sub">250 x 250 x 1000 mm. A frente com a interface.</p>
+  <p>A frente tem uma janela de 180 x 500 mm. Atrás dela, um sub-painel de 240 x 560 mm recebe os componentes. Só a parte que precisa aparecer atravessa a chapa; a placa de cada componente fica por trás, encostada no MDF.</p>
+  <h3>Interface pensada pela altura de quem usa</h3>
+  <p>A interface foi dividida em duas faixas: <b>ver</b> em cima e <b>agir</b> embaixo, porque quem lê a tela e quem digita a senha têm alturas e ângulos diferentes.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Faixa</th><th>Componente</th><th>Altura do piso*</th><th>Critério</th></tr>
+    <tr><td>Ver</td><td>câmera e LED, na mesma linha</td><td>~1215 mm</td><td>rosto de quem está em frente</td></tr>
+    <tr><td>Ver</td><td>LCD</td><td>~1170 mm</td><td>meio-termo do ângulo de leitura do 1602: ~20° abaixo do olho de quem tem 1,50 m, ~45° para quem tem 1,85 m</td></tr>
+    <tr><td>Agir</td><td>teclado e leitor lado a lado</td><td>~910 mm</td><td>faixa de 800 a 1000 mm da Resolução SEHAB/CPA 9/2003; teto de alcance de 1220 mm do ADA</td></tr>
+  </table></div>
+  <p style="font-size:14px;color:var(--muted)">* com o módulo pendurado a 400 mm do piso.</p>
+  <h3>A frente que foi refeita</h3>
+  <p>O leitor de digital passou por três tentativas. Em 27/10, batentes de canto não seguraram o corpo. Em 29/10, um garfo que entrava no canal lateral do leitor (o manual mostra um canal de 1,5 mm nas faces) não passou pela travinha do corpo real. Em 04/11 a decisão foi pragmática: cada componente colado com cola quente no vão justo. A frente final, de 06/11, tem o leitor num vão de 20 x 18 mm, o LED num furo de 5 mm e a câmera num furo de 12,5 mm ao lado da tela.</p>
+</section>
+
+<section id="armario">
+  <h2>Módulo armário</h2>
+  <p class="sub">750 x 1000 x 250 mm. Cabe inteiro na mesa, sem emenda.</p>
+  <figure><img class="fig" src="site/vista-modulos.svg" alt="Armário e módulo biométrico lado a lado" loading="lazy"><figcaption>O armário ao lado do biométrico, mesma altura e profundidade.</figcaption></figure>
+  <p>A primeira versão media 1260 x 1500 x 350 mm, com três portas em forma de pílula. Painel desse tamanho não entra em mesa nenhuma sem emenda, e em 07/10 o armário foi redesenhado para 750 x 1000 x 250 mm, a mesma altura e profundidade do biométrico.</p>
+  <div class="grid2">
+    <div class="card"><h4>Casca</h4>Seis faces em lâmina dupla. A frente é uma moldura com um vão grande; o fundo leva 6 gotas de parede.</div>
+    <div class="card"><h4>Nicho suspenso</h4>Uma caixa interna de 704 x 954 mm por dentro, presa por espaçadores e suspensa em cinco lados (todos menos a frente). Atrás, um xadrez de ripas a meia-madeira de 13,8 mm preenche o vão até a casca.</div>
+    <div class="card"><h4>Fechadura de pé</h4>A fechadura fica em pé na lateral direita, presa por fora com 3 parafusos M4. O batente dela entra num bolso gravado de 1,6 mm, rente à porta. O vão lateral do armário encolheu para 13,8 mm só para caber o corpo de 13,3 mm.</div>
+    <div class="card"><h4>Dobradiças e botões</h4>Seis dobradiças borboleta na borda esquerda, com bolso gravado na medida da aba. Dois botões de porta na borda direita, em furos de 10,1 mm com rebaixo de 13,05 mm, definidos por réguas de teste.</div>
+  </div>
+</section>
+
+<section id="porta">
+  <h2>A porta</h2>
+  <p class="sub">Escolhida entre 41 variações desenhadas em 30/10/2026.</p>
+  <div class="grid2">
+    <figure><img class="fig" src="site/porta-design.png" alt="Porta com o símbolo e o nome do Instituto Mário Penna em MDF sobre fundo de acrílico" loading="lazy"><figcaption>Desenho escolhido: o símbolo e o nome do Instituto, sem subtítulo.</figcaption></figure>
+    <div>
+      <p>A porta tem 738 x 1000 mm e duas lâminas de MDF coladas. A frente é uma moldura de 50 mm, e o miolo inteiro é de acrílico de 1,5 mm, com a logo do Instituto Mário Penna recortada em MDF por cima.</p>
+      <p>O acrílico entra por trás e fica rente: a lâmina de trás tem um anel de apoio gravado, dividido em 4 faixas e 4 quinas para o laser não atravessar o vão vazio a cada linha (num anel único, a gravação levaria cerca de 23 horas; em faixas, perto de uma hora e meia).</p>
+      <p>A sobra do miolo vira gabarito de colagem, e o próprio acrílico ganhou uma linha gravada com o contorno da logo para posicionar o MDF.</p>
+    </div>
+  </div>
+</section>
+
+<section id="gaveteiro">
+  <h2>O gaveteiro por letra</h2>
+  <p class="sub">Desenhado em 03/11/2026 a partir da lista oficial de medicamentos.</p>
+  <p>O nicho virou um gaveteiro de apotecário: uma grade de ripas de 220 mm de fundo, encaixadas a meia-madeira. Em cima, 3 fileiras de 5 gavetas iguais; embaixo, 15 vãos abertos para volumes maiores, como fraldas e seringas.</p>
+  <h3>Por que 15 gavetas, e quais letras</h3>
+  <p>A divisão saiu da <b>RENAME 2024</b>, a Relação Nacional de Medicamentos Essenciais do SUS: 265 princípios ativos em comprimido ou cápsula, sem sal, contados pela letra inicial. Em hospital SUS o estoque é pelo nome genérico. A letra A sozinha tem 29 ativos, e esse piso já pede 13 gavetas. A escolha final foi 15: letra frequente fica sozinha e as raras se juntam à vizinha, sem quebrar a ordem alfabética.</p>
+  <div class="grid2">
+    <figure><img class="fig" src="site/letras.svg" alt="Número de princípios ativos por letra inicial" loading="lazy"><figcaption>Ativos por letra inicial.</figcaption></figure>
+    <figure><img class="fig" src="site/gavetas-15.svg" alt="Número de princípios ativos em cada uma das 15 gavetas" loading="lazy"><figcaption>As 15 gavetas: A, B, C, D, E, F, G-I, J-L, M, N-O, P, Q-R, S, T, U-Z.</figcaption></figure>
+  </div>
+  <h3>A gaveta</h3>
+  <figure><img class="fig" src="site/gaveta-3d.png" alt="Gaveta em três vistas, com divisórias azuis encaixadas nas travas laterais" loading="lazy"><figcaption>Gaveta montada com as peças do arquivo de corte e conferida a cada 1 mm, sem uma peça ocupar o volume de outra.</figcaption></figure>
+  <ul class="clean">
+    <li><b>136,5 x 85 x 218 mm</b>, caixa com dedos e cola e uma frente falsa lisa colada por fora, para os dedos não aparecerem.</li>
+    <li>Puxador em meia-lua e contorno gravado de uma etiqueta de 50 x 25 mm. Nada é gravado em letra: as etiquetas são coladas depois, e a farmácia pode reorganizar.</li>
+    <li><b>Divisórias como índice de dicionário.</b> Cada uma tem uma orelha com etiqueta redonda que nomeia o compartimento à frente dela, em escada da esquerda para a direita.</li>
+    <li><b>Trava lateral.</b> As laterais têm 5 rasgos em U abertos por cima; a orelha de 14 mm da divisória desce neles e o peso fica no piso.</li>
+    <li>Divisórias em jogos completos (quem tem a 4 tem a 3, a 2 e a 1), proporcionais ao número de ativos de cada gaveta: 44 no total, cortadas no miolo da porta, que ia virar sobra.</li>
+  </ul>
+</section>
+
+<section id="placa">
+  <h2>A placa do projeto</h2>
+  <figure><img class="fig" src="site/placa.svg" alt="Placa A5 com nome do projeto, cliente, disciplina, professor, grupo e QR code" loading="lazy"><figcaption>A5 em MDF 3 mm, texto vetorizado da fonte Avenir Next e QR desenhado módulo a módulo. O QR foi lido por um leitor real na imagem gerada antes de ir para o corte.</figcaption></figure>
+</section>

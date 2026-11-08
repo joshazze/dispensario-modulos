@@ -4,313 +4,91 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dispensário Eletrônico</title>
-<meta name="description" content="Protótipo de farmácia satélite com acesso por digital ou senha e registro de cada abertura. Projeto de Sistemas Embarcados, Ibmec, 2026.2, para o Instituto Mário Penna.">
-<style>
-:root{
-  --bg:#f7f3ec; --paper:#fffdf9; --ink:#1f1a14; --muted:#6b6257; --line:#e2d9cb;
-  --accent:#8a4b1f; --accent-soft:#f1e3d3; --ok:#2f6b3a; --warn:#9a5b00; --code:#f1ebe2;
-}
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#15120f; --paper:#1d1915; --ink:#efe8de; --muted:#a99e90; --line:#3a332b;
-    --accent:#e0a36e; --accent-soft:#3a2a1c; --ok:#7fc28c; --warn:#e5b35f; --code:#2a241e; }
-  img.fig{ background:#fff; }
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:var(--accent);text-underline-offset:3px}
-code{font:0.88em ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);padding:1px 5px;border-radius:4px}
-.wrap{max-width:980px;margin:0 auto;padding:0 20px}
-header.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
-.kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
-h1{font-size:clamp(34px,6vw,56px);line-height:1.05;margin:10px 0 16px;font-weight:600;letter-spacing:-.02em}
-.lede{font-size:clamp(18px,2.4vw,21px);color:var(--muted);max-width:720px;margin:0}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:30px}
-.fact{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.fact b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px}
-nav.toc{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav.toc ul{display:flex;gap:18px;overflow-x:auto;list-style:none;margin:0;padding:12px 0;scrollbar-width:none}
-nav.toc a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500}
-nav.toc a:hover{color:var(--accent)}
-section{padding:56px 0 8px;scroll-margin-top:50px}
-h2{font-size:28px;margin:0 0 6px;font-weight:600;letter-spacing:-.01em}
-h2 + .sub{color:var(--muted);margin:0 0 22px}
-h3{font-size:19px;margin:28px 0 8px;font-weight:600}
-p{margin:0 0 14px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
-.card h3{margin-top:0}
-ul.clean{padding-left:20px;margin:0 0 14px}
-ul.clean li{margin:4px 0}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin:10px 0 18px}
-table{border-collapse:collapse;width:100%;font-size:15px}
-th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--accent-soft)}
-tr:last-child td{border-bottom:0}
-figure{margin:18px 0 26px}
-img.fig{width:100%;height:auto;max-height:620px;object-fit:contain;border:1px solid var(--line);border-radius:12px;display:block;background:#fff}
-figcaption{font-size:14px;color:var(--muted);margin-top:8px}
-.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid currentColor;line-height:1.5}
-.tag.ok{color:var(--ok)} .tag.warn{color:var(--warn)} .tag.mut{color:var(--muted)}
-ol.timeline{list-style:none;padding:0;margin:10px 0;border-left:2px solid var(--line)}
-ol.timeline li{position:relative;padding:0 0 18px 22px}
-ol.timeline li::before{content:"";position:absolute;left:-7px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--accent)}
-ol.timeline time{display:block;font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.04em}
-.archwrap{overflow-x:auto;margin:0 0 18px}
-.arch{width:100%;min-width:760px;height:auto;display:block}
-.arch text{font:600 13px "Avenir Next",system-ui,sans-serif;fill:var(--ink)}
-.arch .small{font-weight:400;font-size:11.5px;fill:var(--muted)}
-.arch rect{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
-.arch rect.hl{stroke:var(--accent)}
-.arch path{stroke:var(--muted);stroke-width:1.5;fill:none}
-footer{margin-top:60px;padding:30px 0 50px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-@media (max-width:600px){ body{font-size:16px} header.hero{padding-top:40px} th,td{padding:8px 10px} }
-</style>
+<meta name="description" content="Protótipo de farmácia satélite com acesso por digital ou senha e registro de cada abertura, para o Instituto Mário Penna.">
+<link rel="stylesheet" href="site/estilo.css">
 </head>
 <body>
-
-<header class="hero">
-  <div class="wrap">
-    <div class="kicker">Projeto de Sistemas Embarcados · Ibmec · 2026.2</div>
-    <h1>Dispensário Eletrônico</h1>
-    <p class="lede">Farmácia satélite perto do leito: o profissional abre com a digital ou, se o leitor falhar, com senha, e cada abertura fica registrada com quem, quando e qual dispensário. Protótipo acadêmico para o Instituto Mário Penna.</p>
-    <div class="facts">
-      <div class="fact"><b>Cliente</b>Instituto Mário Penna · Hospital Luxemburgo (100% SUS)</div>
-      <div class="fact"><b>Disciplina</b>PSE, prof. Osmar Ventura Gomes</div>
-      <div class="fact"><b>Grupo</b>Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis</div>
-      <div class="fact"><b>Situação</b>protótipo em montagem para a apresentação final (AP2)</div>
-    </div>
+<nav class="topo" aria-label="Páginas"><div class="wrap">
+  <a class="marca" href="index.html">Dispensário Eletrônico</a>
+  <ul class="paginas"><li><a href="index.html" aria-current="page">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li></ul>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker">Projeto de Sistemas Embarcados · Ibmec · 2026.2</div>
+  <h1>Dispensário Eletrônico</h1>
+  <p class="lede">Uma farmácia satélite ao lado dos leitos. O profissional abre com a digital, ou com senha quando o leitor falha, e cada abertura fica registrada com quem abriu, quando e em qual dispensário. Protótipo acadêmico feito para o Instituto Mário Penna, em Belo Horizonte.</p>
+  <div class="facts">
+    <div class="fact"><b>Cliente</b>Instituto Mário Penna · Hospital Luxemburgo, 100% SUS</div>
+    <div class="fact"><b>Disciplina</b>Projeto de Sistemas Embarcados, prof. Osmar Ventura Gomes</div>
+    <div class="fact"><b>Grupo</b>Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis</div>
+    <div class="fact"><b>Situação</b>protótipo em montagem para a apresentação final</div>
   </div>
-</header>
-
-<nav class="toc" aria-label="Seções">
-  <div class="wrap"><ul>
-    <li><a href="#problema">Problema</a></li>
-    <li><a href="#solucao">Solução</a></li>
-    <li><a href="#arquitetura">Arquitetura</a></li>
-    <li><a href="#componentes">Componentes</a></li>
-    <li><a href="#gabinete">Gabinete</a></li>
-    <li><a href="#fabricacao">Fabricação</a></li>
-    <li><a href="#software">Software</a></li>
-    <li><a href="#linha">Linha do tempo</a></li>
-    <li><a href="#repos">Repositórios</a></li>
-    <li><a href="#pendencias">Pendências</a></li>
-    <li><a href="#fontes">Fontes</a></li>
-  </ul></div>
-</nav>
-
+</div></header>
 <main class="wrap">
-
-<section id="problema">
-  <h2>O problema</h2>
-  <p class="sub">Levantamento feito com o Instituto Mário Penna em 20 de agosto de 2026.</p>
-  <p>No Hospital Luxemburgo, que atende só pelo SUS, a medicação sai de farmácias centrais. O profissional vai até lá, bipa o crachá, bipa o item e leva até o leito. O registro de quem pegou existe, mas a fila na farmácia central atrasa a separação, e o caminho entre a retirada e a administração fica sem controle.</p>
-  <div class="grid2">
-    <div class="card"><h3>O que dói</h3><ul class="clean">
-      <li>Controle forte de custo e fraco de <em>uso</em>.</li>
-      <li>Dificuldade de provar que o item chegou ao paciente.</li>
-      <li>Atraso pesa: no paciente diabético, uma hora de diferença na insulina já importa.</li>
-    </ul></div>
-    <div class="card"><h3>Por que não comprar pronto</h3><p>As soluções comerciais citadas na visita são de poucas empresas e chegam a cerca de <b>R$ 4 milhões</b>, fora da realidade de um hospital 100% SUS. O protótipo precisa ser barato, auditável e montável com a marcenaria e a eletrônica que o próprio Instituto tem.</p></div>
+<nav class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#resumo">O projeto em uma página</a></li><li><a href="#numeros">Em números</a></li><li><a href="#explorar">Explore a documentação</a></li><li><a href="#situacao">Onde o projeto está</a></li><li><a href="#figura">Os dois módulos</a></li></ol></nav>
+<section id="resumo">
+  <h2>O projeto em uma página</h2>
+  <p class="sub">O que é, por que existe e o que já está de pé.</p>
+  <p>No Hospital Luxemburgo o medicamento sai de farmácias centrais. Cada profissional vai até lá, bipa o crachá, bipa o item e leva até o leito. Funciona, mas concentra todo mundo nos mesmos balcões: fila, deslocamento e atraso, num hospital em que uma hora de diferença na insulina de um paciente diabético já importa. Os equipamentos comerciais que resolvem isso são de poucas empresas e chegam perto de <b>R$ 4 milhões</b>, valor fora do alcance de um hospital que atende só pelo SUS.</p>
+  <p>A proposta é um armário pequeno e auditável, perto do paciente, que guarda parte do estoque e se abre só para quem está autorizado. Cada unidade atende cerca de <b>20 leitos</b> e é reposta pela logística <b>duas vezes ao dia</b>. Quem abre alcança tudo lá dentro; o controle vem do registro de cada abertura, que o hospital cruza com as câmeras que já tem.</p>
+  <div class="grid3">
+    <div class="card"><h4>Gabinete</h4>Dois módulos de MDF cortados a laser: o biométrico, com tela, teclado, leitor de digital e câmera, e o armário, com porta de acrílico, fechadura elétrica e um gaveteiro organizado por letra.</div>
+    <div class="card"><h4>Eletrônica</h4>Um Arduino Mega decide tudo localmente e continua funcionando sem rede. Uma ESP32-CAM leva cada evento, com foto do acesso autorizado, até o servidor.</div>
+    <div class="card"><h4>Servidor</h4>Python com SQLite e painel web, hospedado numa VM em São Paulo com HTTPS, senha no navegador e PIN, limite de tentativas e backup diário.</div>
   </div>
 </section>
 
-<section id="solucao">
-  <h2>A solução e o escopo</h2>
-  <p class="sub">Uma unidade por cerca de 20 leitos, reposta pela logística duas vezes ao dia.</p>
-  <div class="tablewrap"><table>
-    <tr><th>Faz parte do protótipo</th><th>Fica fora</th><th>Desejável</th></tr>
-    <tr>
-      <td>Digital individual, senha só como alternativa · fechadura liberada após autenticação · estado da porta e alerta sonoro discreto · registro de dispensário, profissional, data, hora e método · envio dos eventos ao servidor</td>
-      <td>Prescrição, baixa e saldo (continuam no sistema do hospital) · climatização e itens refrigerados · trava por compartimento</td>
-      <td>Monitor touch com a prescrição do paciente</td>
-    </tr>
-  </table></div>
-  <p>A topologia é em estrela: cada dispensário fala só com a farmácia central ou com a subfarmácia, nunca com outro dispensário. Quem abre alcança todo o conteúdo; a rastreabilidade vem do registro de cada abertura, que o hospital cruza com as câmeras que já tem.</p>
-  <p>Entregáveis escritos: <b>Fase 1</b> (26/08/2026, problema, proposta e 13 requisitos funcionais e 14 não funcionais) e o documento de <b>componentes e requisitos de software</b> (08/09/2026: máquina de estados, contrato hardware e software, 12 critérios de aceite).</p>
-</section>
-
-<section id="arquitetura">
-  <h2>Arquitetura</h2>
-  <p class="sub">Estado da bancada em 06/11/2026 e do servidor em 08/11/2026.</p>
-  <div class="archwrap"><svg class="arch" viewBox="0 0 900 330" role="img" aria-label="Diagrama: periféricos ligados ao Arduino Mega, que fala por UART com a ESP32-CAM, que envia por HTTPS ao servidor na nuvem, acessado pelo painel no navegador">
-    <rect x="10" y="20" width="200" height="290" rx="12"/>
-    <text x="24" y="46">Periféricos</text>
-    <text class="small" x="24" y="72">Leitor de digital R307S</text>
-    <text class="small" x="24" y="94">Teclado 4x4</text>
-    <text class="small" x="24" y="116">LCD 1602 (4 bits)</text>
-    <text class="small" x="24" y="138">LED RGB · buzzer (BC546)</text>
-    <text class="small" x="24" y="160">2 botões de porta</text>
-    <text class="small" x="24" y="182">Relé GBK P5</text>
-    <text class="small" x="24" y="204">Fechadura 12 V / 2 A</text>
-    <text class="small" x="24" y="244">Fonte 12 V → LM2596 7 V</text>
-    <text class="small" x="24" y="266">→ MB102 (5 V e 3,3 V)</text>
-    <path d="M210 165 H262"/>
-    <rect class="hl" x="262" y="105" width="170" height="120" rx="12"/>
-    <text x="278" y="134">Arduino Mega 2560</text>
-    <text class="small" x="278" y="158">controle local,</text>
-    <text class="small" x="278" y="178">cadastros na EEPROM,</text>
-    <text class="small" x="278" y="198">máquina de estados</text>
-    <path d="M432 165 H486"/><text class="small" x="438" y="156">UART</text>
-    <rect class="hl" x="486" y="105" width="170" height="120" rx="12"/>
-    <text x="502" y="134">ESP32-CAM</text>
-    <text class="small" x="502" y="158">Wi-Fi, NTP, fila,</text>
-    <text class="small" x="502" y="178">foto por acesso,</text>
-    <text class="small" x="502" y="198">TLS (Let's Encrypt)</text>
-    <path d="M656 165 H708"/><text class="small" x="659" y="156">HTTPS</text>
-    <rect class="hl" x="708" y="70" width="182" height="190" rx="12"/>
-    <text x="722" y="98">Servidor</text>
-    <text class="small" x="722" y="122">VM na AWS (São Paulo)</text>
-    <text class="small" x="722" y="144">Caddy + Python</text>
-    <text class="small" x="722" y="166">SQLite: eventos e fotos</text>
-    <text class="small" x="722" y="188">painel com senha + PIN</text>
-    <text class="small" x="722" y="210">backup diário</text>
-  </svg></div>
-  <p>O Mega decide tudo localmente e continua funcionando sem rede. A ESP32-CAM recebe cada evento pela serial, tira uma foto quando o acesso é autorizado e entrega evento e foto ao servidor, guardando numa fila enquanto a rede estiver fora. O servidor na nuvem substitui, no protótipo, a API do sistema hospitalar, que é a integração prevista para a versão real.</p>
-</section>
-
-<section id="componentes">
-  <h2>Componentes</h2>
-  <p class="sub">Lista fechada em 22/10/2026, com a fonte de cada medida usada no desenho.</p>
-  <div class="tablewrap"><table>
-    <tr><th>Componente</th><th>Uso</th><th>Medida que entrou no gabinete e fonte</th></tr>
-    <tr><td>LCD 1602A Ver5.5</td><td>mensagens ao usuário</td><td>furos 75 x 31 (4 datasheets concordam); moldura pela foto da peça, porque os datasheets dão ~71 x 24 e a peça tem ~76 x 25</td></tr>
-    <tr><td>Teclado matricial 4x4 rígido</td><td>senha e menu</td><td>recorte 60 x 57 R4 e furos 60 x 59 do Multicomp MCAK1604NBWB e do Accord AK-1604 (mesmo corpo)</td></tr>
-    <tr><td>Leitor de digital R307S</td><td>autenticação</td><td>corpo do manual da Grow; colado na frente, vão final de 20 x 18 mm (06/11). O firmware usa a biblioteca da Adafruit, compatível</td></tr>
-    <tr><td>LED RGB 5 mm</td><td>estado (verde, vermelho, espera)</td><td>furo de 5,0 mm; 330 Ω por canal</td></tr>
-    <tr><td>Fechadura elétrica 12 V / 2 A</td><td>trava da porta</td><td>corpo da DFRobot FIT0620 (73 x 58 x 13,3, 3 M4), conferido com régua em 28/10; batente 34,65 x 20 x 1,6</td></tr>
-    <tr><td>2 botões de pressão</td><td>porta aberta ou forçada</td><td>furo de 10,1 e rebaixo de 13,05, saídos de réguas de teste cortadas</td></tr>
-    <tr><td>Arduino Mega 2560</td><td>controle</td><td>alimentado pelo VIN em 12 V</td></tr>
-    <tr><td>ESP32-CAM (OV2640)</td><td>rede e foto</td><td>furo de 12,5 para a lente, ao lado da tela</td></tr>
-    <tr><td>Relé GBK P5 (1 canal)</td><td>aciona a fechadura</td><td>ativo em HIGH, casa com o pull-down do pino; diodo 1N4007 na bobina pendente</td></tr>
-    <tr><td>LM2596 + MB102</td><td>alimentação</td><td>12 V para 7,0 V (medido), depois 5 V e 3,3 V</td></tr>
-  </table></div>
-  <p>A ponte de MDF entre os furos do teclado e o vão ficou em 0,95 mm, abaixo do piso de 1,5 mm do projeto. É uma exceção aceita em 01/10/2026, declarada na especificação e impressa a cada geração. Detalhe em <a href="https://github.com/joshazze/dispensario-modulos/blob/main/docs/componentes.md">docs/componentes.md</a>.</p>
-</section>
-
-<section id="gabinete">
-  <h2>Gabinete</h2>
-  <p class="sub">Dois módulos de MDF 3 mm, em lâmina dupla nas paredes, unidos por abraçadeiras de nylon em rasgos, sem parafuso estrutural.</p>
-  <div class="grid2">
-    <div class="card"><h3>Módulo biométrico</h3><p>250 x 250 x 1000 mm. Na frente fica o sub-painel com a interface organizada pelo uso: em cima a parte de <em>ver</em> (tela, LED e câmera) e embaixo a de <em>agir</em> (teclado e leitor), na faixa de 800 a 1000 mm do piso recomendada pelas normas de acessibilidade consultadas.</p></div>
-    <div class="card"><h3>Módulo armário</h3><p>750 x 1000 x 250 mm, com nicho interno suspenso em cinco lados, porta de MDF com miolo de acrílico de 1,5 mm e logo do Instituto, 6 dobradiças, fechadura de pé na lateral e 2 botões de porta na moldura.</p></div>
-  </div>
-  <figure><img class="fig" src="site/vista-modulos.svg" alt="Vista dos dois módulos lado a lado" loading="lazy"><figcaption>Os dois módulos em vista axonométrica.</figcaption></figure>
-  
-  <h3>Gaveteiro por letra</h3>
-  <p>O nicho virou um gaveteiro de apotecário: grade de ripas a meia-madeira, 15 gavetas iguais (136,5 x 85 x 218 mm) em cima e 15 vãos abertos embaixo. A divisão das gavetas saiu da RENAME 2024: 265 princípios ativos em comprimido ou cápsula, agrupados por letra inicial. Letra frequente fica sozinha e as raras se juntam à vizinha, sem quebrar a ordem alfabética. Divisórias com trava lateral funcionam como índice de dicionário, em jogos completos proporcionais ao número de ativos.</p>
-  <figure><img class="fig" src="site/gaveta-3d.png" alt="Gaveta do gaveteiro em três vistas 3D, com as divisórias azuis encaixadas na trava lateral" loading="lazy"><figcaption>Gaveta montada com as peças do arquivo de corte e conferida a cada 1 mm, sem peça ocupando o volume de outra (03/11/2026).</figcaption></figure>
-  <figure><img class="fig" src="site/gavetas-15.svg" alt="Gráfico de barras com o número de princípios ativos por faixa de letras nas 15 gavetas" loading="lazy"><figcaption>Princípios ativos da RENAME 2024 por gaveta. Em hospital SUS o estoque é pelo nome genérico.</figcaption></figure>
-  <h3>Placa do projeto</h3>
-  <figure><img class="fig" src="site/placa.svg" alt="Placa A5 em MDF com nome do projeto, cliente, disciplina, professor, grupo e um QR code" loading="lazy"><figcaption>Placa A5 em MDF 3 mm, texto e QR gravados. O QR leva a esta página.</figcaption></figure>
-</section>
-
-<section id="fabricacao">
-  <h2>Fabricação</h2>
-  <p class="sub">Laser CO2 eCNC L-1210 do laboratório do Ibmec, mesa de 1150 x 1000, arquivos enviados pelo LightBurn.</p>
-  <ul class="clean">
-    <li><b>Gerador paramétrico.</b> Cada peça nasce de uma especificação em JSON; corrigir uma cota é trocar um número e gerar de novo. Juntas de dedos pela matriz do TabbedBoxMaker.</li>
-    <li><b>Parâmetros medidos, não chutados.</b> As matrizes de velocidade e potência cortadas na própria máquina mostraram que ela rende abaixo da tabela do fabricante: o MDF 3 mm corta a 10 mm/s e 74,5% (tabela: 26/65).</li>
-    <li><b>Teste antes da peça.</b> Fechadura, botões, dobradiça e interface passaram por cupons de teste antes do corte final.</li>
-    <li><b>Rota calculada.</b> Desde 04/11/2026 a ordem das peças e o ponto de entrada de cada contorno são calculados para reduzir o deslocamento com o laser desligado (de 21,5 m para 7,7 m numa das mesas), e o otimizador do LightBurn fica desligado para obedecer o arquivo.</li>
-  </ul>
-</section>
-
-<section id="software">
-  <h2>Software</h2>
-  <p class="sub">Firmware e servidor por Marcelo; publicação na nuvem com HTTPS em 07 e 08/11/2026.</p>
-  <div class="grid2">
-    <div class="card"><h3>Firmware</h3><ul class="clean">
-      <li>Mega: digital, senha e cartão, teclado, LCD, LED, buzzer, porta e fechadura, com <code>LOCK_MODE = 0</code> até a bancada liberar.</li>
-      <li>ESP32-CAM: fila de eventos, foto com prova de frescor pedida ao Mega, NTP e atualização pelo Wi-Fi.</li>
-      <li>Testes com dublês e simulação no Wokwi.</li>
-    </ul></div>
-    <div class="card"><h3>Servidor</h3><ul class="clean">
-      <li>Python só com biblioteca padrão, SQLite, painel web.</li>
-      <li>Na nuvem atrás do Caddy, certificado Let's Encrypt, senha do navegador antes do PIN, limite de tentativas por IP.</li>
-      <li>A CAM confere o certificado pelas raízes ISRG embutidas no firmware.</li>
-    </ul></div>
+<section id="numeros">
+  <h2>Em números</h2>
+  <div class="grid3">
+    <div class="card"><h3 style="margin:0">20 leitos</h3><span class="tag mut">por dispensário</span><p style="margin-top:8px">Uma unidade por ala, reposta duas vezes ao dia conforme ocupação e consumo.</p></div>
+    <div class="card"><h3 style="margin:0">13 + 14</h3><span class="tag mut">requisitos</span><p style="margin-top:8px">Funcionais e não funcionais da Fase 1, rastreados até os critérios de aceite.</p></div>
+    <div class="card"><h3 style="margin:0">100 pessoas</h3><span class="tag mut">cadastros</span><p style="margin-top:8px">IDs de 001 a 100, digital e senha próprias, desativação sem apagar histórico.</p></div>
+    <div class="card"><h3 style="margin:0">265 ativos</h3><span class="tag mut">RENAME 2024</span><p style="margin-top:8px">Princípios ativos em comprimido ou cápsula que definiram as 15 gavetas por letra.</p></div>
+    <div class="card"><h3 style="margin:0">750 x 1000 x 250</h3><span class="tag mut">mm, armário</span><p style="margin-top:8px">Cabe inteiro na mesa de 1 m da cortadora, sem emenda.</p></div>
+    <div class="card"><h3 style="margin:0">~300 ms</h3><span class="tag mut">TLS</span><p style="margin-top:8px">Negociação HTTPS medida contra o servidor; cada pedido seguinte leva de 22 a 50 ms.</p></div>
   </div>
 </section>
 
-<section id="linha">
-  <h2>Linha do tempo</h2>
-  <p class="sub">O que aconteceu e quando.</p>
-  <ol class="timeline">
-    <li><time>20/08/2026</time>Visita técnica e entrevista com o Instituto Mário Penna em aula.</li>
-    <li><time>26/08/2026</time>Fase 1 entregue: problema, proposta e requisitos.</li>
-    <li><time>02 e 03/09/2026</time>Chassi modular em MDF; primeiras peças do biométrico cortadas.</li>
-    <li><time>08/09/2026</time>Documento de componentes e requisitos de software.</li>
-    <li><time>16/09/2026</time>Repositórios públicos do chassi e do design system.</li>
-    <li><time>01/10/2026</time>Vãos do LCD e do teclado na frente do biométrico.</li>
-    <li><time>07/10/2026</time>Módulo armário de 750 x 1000 x 250 que cabe inteiro na mesa.</li>
-    <li><time>21/10/2026</time>Simulação 3D do armário aprovada.</li>
-    <li><time>22/10/2026</time>Lista de componentes fechada; firmware e servidor publicados pelo Marcelo.</li>
-    <li><time>27 e 28/10/2026</time>Interface organizada por altura de uso; matrizes de corte; fechadura, botões e dobradiça testados e aprovados.</li>
-    <li><time>29 e 30/10/2026</time>Nicho suspenso cortado; desenho da porta escolhido entre 41 variações.</li>
-    <li><time>03 e 04/11/2026</time>Gaveteiro por letra; dia inteiro de máquina com gavetas, porta e rota de corte calculada.</li>
-    <li><time>06/11/2026</time>Bancada remontada com 12 V, regulador e relé; frente do biométrico refeita com componentes colados.</li>
-    <li><time>07 e 08/11/2026</time>Servidor na nuvem com HTTPS, backup e domínio próprio; placa do projeto.</li>
-    <li><time>09/11/2026</time><span class="tag warn">planejado</span> Primeira gravação da CAM em HTTPS e teste ponta a ponta.</li>
-  </ol>
-</section>
-
-<section id="repos">
-  <h2>Repositórios</h2>
-  <div class="tablewrap"><table>
-    <tr><th>Repositório</th><th>Conteúdo</th><th>Licença</th></tr>
-    <tr><td><a href="https://github.com/joshazze/dispensario-modulos">joshazze/dispensario-modulos</a></td><td>Gerador do chassi, especificação, arquivos de corte, testes e esta página</td><td>GPL v2</td></tr>
-    <tr><td><a href="https://github.com/joshazze/dispensario-design-system">joshazze/dispensario-design-system</a></td><td>Vocabulário construtivo: medidas, componentes de chapa e figuras cotadas</td><td>MIT</td></tr>
-    <tr><td><a href="https://github.com/marceloxreis/sistema-embarcados">marceloxreis/sistema-embarcados</a></td><td>Firmware do Mega e da ESP32-CAM, servidor, testes, montagem e validação</td><td>do autor</td></tr>
-    <tr><td><a href="https://github.com/marceloxreis/sistema-embarcados/pull/1">Pull request #1</a></td><td>Servidor na nuvem com HTTPS, TLS na CAM, backup e teste do servidor sem placa</td><td></td></tr>
-  </table></div>
-  <p>Parte do trabalho do armário (porta, gaveteiro e placa) ainda está numa branch local e entra no repositório público depois de revisada.</p>
-</section>
-
-<section id="pendencias">
-  <h2>Pendências e riscos</h2>
+<section id="explorar">
+  <h2>Explore a documentação</h2>
+  <p class="sub">Cada página aprofunda uma parte do projeto.</p>
   <div class="grid2">
-    <div class="card"><h3>Para a apresentação</h3><ul class="clean">
-      <li>Teste da bancada bloco a bloco com o firmware rodando.</li>
-      <li>Diodo 1N4007 na bobina da fechadura.</li>
-      <li>CAM em HTTPS com a câmera ligada.</li>
-      <li>Últimas mesas de corte: fundo da porta com as divisórias e as 6 caixas de gaveta restantes.</li>
-      <li>Cupom de calibração: kerf e espessura do MDF ainda são estimados.</li>
-    </ul></div>
-    <div class="card"><h3>Para a versão real</h3><ul class="clean">
-      <li>API do sistema hospitalar: documentação e contato técnico.</li>
-      <li>Como o sistema sabe o que saiu, já que quem abre alcança tudo.</li>
-      <li>Crachá contra digital, por causa da luva de procedimento.</li>
-      <li>Comportamento sem rede: travar ou liberar com sincronização posterior.</li>
-      <li>Teto de custo por unidade.</li>
-    </ul></div>
+    <a class="card" href="requisitos.html"><b>Requisitos</b><span>Problema detalhado, os 13 requisitos funcionais e 14 não funcionais, o contrato entre hardware e software, a máquina de estados e os 12 critérios de aceite.</span></a>
+    <a class="card" href="eletronica.html"><b>Eletrônica</b><span>Cada componente e por que foi escolhido, alimentação em 12 V, pinagem completa e os 13 esquemas da bancada remontada em 06/11.</span></a>
+    <a class="card" href="firmware.html"><b>Firmware</b><span>Cadastro, credenciais, tempos da porta, cores do LED, protocolo serial entre Mega e câmera, filas e testes.</span></a>
+    <a class="card" href="servidor.html"><b>Servidor e nuvem</b><span>Rotas da API, banco de dados, autenticação, e a hospedagem com HTTPS, backup e parada automática de custo.</span></a>
+    <a class="card" href="gabinete.html"><b>Gabinete</b><span>Chassi em lâmina dupla, interface pensada por altura de uso, armário com nicho suspenso, porta com acrílico e o gaveteiro por letra.</span></a>
   </div>
 </section>
 
-<section id="fontes">
-  <h2>Fontes</h2>
+<section id="situacao">
+  <h2>Onde o projeto está</h2>
+  <p class="sub">Estado em 08/11/2026.</p>
   <div class="tablewrap"><table>
-    <tr><th>Fonte</th><th>O que deu</th></tr>
-    <tr><td>Entrevista com o Instituto Mário Penna, 20/08/2026, e quatro transcrições das gravações</td><td>problema, escopo, requisitos, fluxo atual</td></tr>
-    <tr><td><a href="https://cdn-shop.adafruit.com/datasheets/TC1602A-01T.pdf">Tinsharp TC1602A-01T</a>, <a href="https://www.elecrow.com/download/LCD1602.pdf">EONE 1602A-1</a>, <a href="https://hades.mech.northwestern.edu/images/f/f7/LCD16x2_HJ1602A.pdf">HJ1602A</a>, <a href="https://www.waveshare.com/datasheet/LCD_en_PDF/LCD1602.pdf">Waveshare LCD1602</a></td><td>furação e placa do LCD</td></tr>
-    <tr><td><a href="https://www.farnell.com/datasheets/1662717.pdf">Multicomp MCAK1604NBWB</a>, <a href="https://www.tme.eu/en/details/kb1604-pnb/plastic-keypads/accord/ak-1604-n-bbw/">Accord AK-1604</a></td><td>recorte e furação do teclado</td></tr>
-    <tr><td>Manual do leitor R307S (Grow), p. 2</td><td>corpo e canal lateral do leitor</td></tr>
-    <tr><td><a href="https://wiki.dfrobot.com/fit0620">DFRobot FIT0620</a></td><td>corpo, furos e batente da fechadura, conferidos na peça</td></tr>
-    <tr><td>RENAME 2024, Ministério da Saúde</td><td>265 princípios ativos sólidos orais para dividir as gavetas</td></tr>
-    <tr><td>Resolução SEHAB/CPA 9/2003 (SP) e ADA Standards</td><td>faixa de altura do teclado e do leitor, teto de alcance</td></tr>
-    <tr><td><a href="https://ecnc.com.br/corte-e-gravacao-a-laser-l-1210/">eCNC L-1210</a></td><td>tabela de parâmetros de partida da máquina</td></tr>
-    <tr><td><a href="https://github.com/paulh-rnd/TabbedBoxMaker">TabbedBoxMaker</a></td><td>matriz de juntas de dedos</td></tr>
-    <tr><td><a href="https://letsencrypt.org/certificates/">Let's Encrypt, cadeia de certificados</a></td><td>raízes ISRG X1 e X2 embutidas na CAM</td></tr>
+    <tr><th>Parte</th><th>Situação</th><th>Falta</th></tr>
+    <tr><td>Requisitos e escopo</td><td><span class="tag ok">fechado</span></td><td>respostas do cliente sobre API, crachá e operação sem rede (fora do protótipo)</td></tr>
+    <tr><td>Módulo biométrico</td><td><span class="tag ok">cortado</span></td><td>conferir o encaixe do leitor na frente refeita em 06/11</td></tr>
+    <tr><td>Módulo armário</td><td><span class="tag warn">em corte</span></td><td>fundo da porta com as divisórias e as 6 últimas caixas de gaveta</td></tr>
+    <tr><td>Bancada eletrônica</td><td><span class="tag warn">montada</span></td><td>teste bloco a bloco com firmware e o diodo da fechadura</td></tr>
+    <tr><td>Firmware</td><td><span class="tag ok">compila e passa nos testes</span></td><td>validação em hardware</td></tr>
+    <tr><td>Servidor na nuvem</td><td><span class="tag ok">no ar, com HTTPS</span></td><td>primeira conexão da câmera real (09/11)</td></tr>
+    <tr><td>Documentação</td><td><span class="tag ok">esta página</span></td><td>atualizar com os resultados da bancada</td></tr>
   </table></div>
 </section>
 
+<section id="figura">
+  <h2>Os dois módulos</h2>
+  <figure><img class="fig" src="site/vista-modulos.svg" alt="Vista axonométrica do armário de 750 x 1000 x 250 mm ao lado do módulo biométrico de 250 x 250 x 1000 mm" loading="lazy"><figcaption>O armário e o módulo biométrico lado a lado. A janela vermelha é onde fica a interface.</figcaption></figure>
+  <figure><img class="fig" src="site/placa.svg" alt="Placa A5 em MDF com nome do projeto, cliente, disciplina, professor, grupo e um QR code" loading="lazy"><figcaption>Placa do projeto, gravada em MDF 3 mm. O QR leva a este site.</figcaption></figure>
+</section>
+<div class="proxima"><span></span><a href="requisitos.html"><small>Próxima</small>Requisitos</a></div>
 </main>
-
-<footer>
-  <div class="wrap">
-    Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
-    Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 08/11/2026.
-  </div>
-</footer>
+<footer><div class="wrap">
+  Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
+  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 08/11/2026.<br>
+  Código e arquivos: <a href="https://github.com/joshazze/dispensario-modulos">dispensario-modulos</a> ·
+  <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a> ·
+  <a href="https://github.com/marceloxreis/sistema-embarcados">sistema-embarcados</a>
+</div></footer>
 </body>
 </html>

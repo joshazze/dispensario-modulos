@@ -1,0 +1,68 @@
+<header class="hero"><div class="wrap">
+  <div class="kicker">Projeto de Sistemas Embarcados · Ibmec · 2026.2</div>
+  <h1>Dispensário Eletrônico</h1>
+  <p class="lede">Uma farmácia satélite ao lado dos leitos. O profissional abre com a digital, ou com senha quando o leitor falha, e cada abertura fica registrada com quem abriu, quando e em qual dispensário. Protótipo acadêmico feito para o Instituto Mário Penna, em Belo Horizonte.</p>
+  <div class="facts">
+    <div class="fact"><b>Cliente</b>Instituto Mário Penna · Hospital Luxemburgo, 100% SUS</div>
+    <div class="fact"><b>Disciplina</b>Projeto de Sistemas Embarcados, prof. Osmar Ventura Gomes</div>
+    <div class="fact"><b>Grupo</b>Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis</div>
+    <div class="fact"><b>Situação</b>protótipo em montagem para a apresentação final</div>
+  </div>
+</div></header>
+<!-- corpo -->
+<section id="resumo">
+  <h2>O projeto em uma página</h2>
+  <p class="sub">O que é, por que existe e o que já está de pé.</p>
+  <p>No Hospital Luxemburgo o medicamento sai de farmácias centrais. Cada profissional vai até lá, bipa o crachá, bipa o item e leva até o leito. Funciona, mas concentra todo mundo nos mesmos balcões: fila, deslocamento e atraso, num hospital em que uma hora de diferença na insulina de um paciente diabético já importa. Os equipamentos comerciais que resolvem isso são de poucas empresas e chegam perto de <b>R$ 4 milhões</b>, valor fora do alcance de um hospital que atende só pelo SUS.</p>
+  <p>A proposta é um armário pequeno e auditável, perto do paciente, que guarda parte do estoque e se abre só para quem está autorizado. Cada unidade atende cerca de <b>20 leitos</b> e é reposta pela logística <b>duas vezes ao dia</b>. Quem abre alcança tudo lá dentro; o controle vem do registro de cada abertura, que o hospital cruza com as câmeras que já tem.</p>
+  <div class="grid3">
+    <div class="card"><h4>Gabinete</h4>Dois módulos de MDF cortados a laser: o biométrico, com tela, teclado, leitor de digital e câmera, e o armário, com porta de acrílico, fechadura elétrica e um gaveteiro organizado por letra.</div>
+    <div class="card"><h4>Eletrônica</h4>Um Arduino Mega decide tudo localmente e continua funcionando sem rede. Uma ESP32-CAM leva cada evento, com foto do acesso autorizado, até o servidor.</div>
+    <div class="card"><h4>Servidor</h4>Python com SQLite e painel web, hospedado numa VM em São Paulo com HTTPS, senha no navegador e PIN, limite de tentativas e backup diário.</div>
+  </div>
+</section>
+
+<section id="numeros">
+  <h2>Em números</h2>
+  <div class="grid3">
+    <div class="card"><h3 style="margin:0">20 leitos</h3><span class="tag mut">por dispensário</span><p style="margin-top:8px">Uma unidade por ala, reposta duas vezes ao dia conforme ocupação e consumo.</p></div>
+    <div class="card"><h3 style="margin:0">13 + 14</h3><span class="tag mut">requisitos</span><p style="margin-top:8px">Funcionais e não funcionais da Fase 1, rastreados até os critérios de aceite.</p></div>
+    <div class="card"><h3 style="margin:0">100 pessoas</h3><span class="tag mut">cadastros</span><p style="margin-top:8px">IDs de 001 a 100, digital e senha próprias, desativação sem apagar histórico.</p></div>
+    <div class="card"><h3 style="margin:0">265 ativos</h3><span class="tag mut">RENAME 2024</span><p style="margin-top:8px">Princípios ativos em comprimido ou cápsula que definiram as 15 gavetas por letra.</p></div>
+    <div class="card"><h3 style="margin:0">750 x 1000 x 250</h3><span class="tag mut">mm, armário</span><p style="margin-top:8px">Cabe inteiro na mesa de 1 m da cortadora, sem emenda.</p></div>
+    <div class="card"><h3 style="margin:0">~300 ms</h3><span class="tag mut">TLS</span><p style="margin-top:8px">Negociação HTTPS medida contra o servidor; cada pedido seguinte leva de 22 a 50 ms.</p></div>
+  </div>
+</section>
+
+<section id="explorar">
+  <h2>Explore a documentação</h2>
+  <p class="sub">Cada página aprofunda uma parte do projeto.</p>
+  <div class="grid2">
+    <a class="card" href="requisitos.html"><b>Requisitos</b><span>Problema detalhado, os 13 requisitos funcionais e 14 não funcionais, o contrato entre hardware e software, a máquina de estados e os 12 critérios de aceite.</span></a>
+    <a class="card" href="eletronica.html"><b>Eletrônica</b><span>Cada componente e por que foi escolhido, alimentação em 12 V, pinagem completa e os 13 esquemas da bancada remontada em 06/11.</span></a>
+    <a class="card" href="firmware.html"><b>Firmware</b><span>Cadastro, credenciais, tempos da porta, cores do LED, protocolo serial entre Mega e câmera, filas e testes.</span></a>
+    <a class="card" href="servidor.html"><b>Servidor e nuvem</b><span>Rotas da API, banco de dados, autenticação, e a hospedagem com HTTPS, backup e parada automática de custo.</span></a>
+    <a class="card" href="gabinete.html"><b>Gabinete</b><span>Chassi em lâmina dupla, interface pensada por altura de uso, armário com nicho suspenso, porta com acrílico e o gaveteiro por letra.</span></a>
+  </div>
+</section>
+
+<section id="situacao">
+  <h2>Onde o projeto está</h2>
+  <p class="sub">Estado em 08/11/2026.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Parte</th><th>Situação</th><th>Falta</th></tr>
+    <tr><td>Requisitos e escopo</td><td><span class="tag ok">fechado</span></td><td>respostas do cliente sobre API, crachá e operação sem rede (fora do protótipo)</td></tr>
+    <tr><td>Módulo biométrico</td><td><span class="tag ok">cortado</span></td><td>conferir o encaixe do leitor na frente refeita em 06/11</td></tr>
+    <tr><td>Módulo armário</td><td><span class="tag warn">em corte</span></td><td>fundo da porta com as divisórias e as 6 últimas caixas de gaveta</td></tr>
+    <tr><td>Bancada eletrônica</td><td><span class="tag warn">montada</span></td><td>teste bloco a bloco com firmware e o diodo da fechadura</td></tr>
+    <tr><td>Firmware</td><td><span class="tag ok">compila e passa nos testes</span></td><td>validação em hardware</td></tr>
+    <tr><td>Servidor na nuvem</td><td><span class="tag ok">no ar, com HTTPS</span></td><td>primeira conexão da câmera real (09/11)</td></tr>
+    <tr><td>Documentação</td><td><span class="tag ok">esta página</span></td><td>atualizar com os resultados da bancada</td></tr>
+  </table></div>
+</section>
+
+<section id="figura">
+  <h2>Os dois módulos</h2>
+  <figure><img class="fig" src="site/vista-modulos.svg" alt="Vista axonométrica do armário de 750 x 1000 x 250 mm ao lado do módulo biométrico de 250 x 250 x 1000 mm" loading="lazy"><figcaption>O armário e o módulo biométrico lado a lado. A janela vermelha é onde fica a interface.</figcaption></figure>
+  <figure><img class="fig" src="site/placa.svg" alt="Placa A5 em MDF com nome do projeto, cliente, disciplina, professor, grupo e um QR code" loading="lazy"><figcaption>Placa do projeto, gravada em MDF 3 mm. O QR leva a este site.</figcaption></figure>
+</section>
