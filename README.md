@@ -1,5 +1,7 @@
 # Dispensário eletrônico · módulos em MDF
 
+**Página do projeto, com problema, arquitetura, componentes, linha do tempo e fontes: [joshazze.github.io/dispensario-modulos](https://joshazze.github.io/dispensario-modulos/)**
+
 Chassi do protótipo do dispensário eletrônico da disciplina de Projeto de Sistemas Embarcados. São dois módulos de MDF cortado a laser, e cada painel é um sanduíche de duas lâminas de 3 mm. Nada aqui foi desenhado à mão: as medidas moram em [`specs/modulos.json`](specs/modulos.json), o [`gerador.py`](gerador.py) desenha, confere e exporta.
 
 A linguagem construtiva (enforca-gato, dedos, camada dupla, gota de parede, pílula) está documentada no repositório irmão, **[dispensario-design-system](https://github.com/joshazze/dispensario-design-system)**.
