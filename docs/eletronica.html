@@ -47,7 +47,8 @@
     <tr><td><b>Arduino Mega 2560</b> (clone CH340)</td><td>controle local</td><td>54 pinos digitais e 4 seriais em hardware: leitor e câmera ganham cada um a sua, sem serial por software.</td></tr>
     <tr><td><b>ESP32-CAM</b> Ai-Thinker, OV2640</td><td>Wi-Fi, NTP, foto</td><td>Câmera e Wi-Fi com PSRAM na mesma placa. O ESP32 comum (sem PSRAM) não segura o quadro da câmera.</td></tr>
     <tr><td><b>Leitor de digital</b> R307S</td><td>autenticação</td><td>Guarda os modelos dentro do próprio leitor e compara lá: o Mega só recebe o número do cadastro. Mesmo protocolo e biblioteca da família DY50.</td></tr>
-    <tr><td><b>Teclado matricial 4x4</b> rígido</td><td>senha e menus</td><td>Teclas firmes para uso frequente; # confirma, * limpa, D cancela.</td></tr>
+    <tr><td><b>Leitor RFID RC522</b></td><td>cartão (terceiro método)</td><td>Lê cartão MIFARE pelo SPI do Mega. O crachá já é o que o hospital usa hoje, então o cartão aproxima o protótipo da rotina real.</td></tr>
+    <tr><td><b>Teclado matricial 4x4</b></td><td>ID, senha e menus</td><td>O teclado rígido quebrou por dentro em 06/11 e foi trocado por um de membrana com a mesma matriz de 8 fios; # confirma, * limpa, D cancela.</td></tr>
     <tr><td><b>LCD 1602</b> em modo 4 bits</td><td>mensagens</td><td>Ligado direto no Mega, sem módulo I2C: uma peça a menos e nada de conversor de nível.</td></tr>
     <tr><td><b>LED RGB 5 mm</b></td><td>estado</td><td>Uma cor por estado (azul espera, verde autorizado, amarelo aberto, vermelho erro, roxo administração), um resistor de 330 Ω por canal.</td></tr>
     <tr><td><b>Buzzer ativo 5 V</b> + BC546</td><td>alerta</td><td>O transistor acende o buzzer sem puxar corrente do pino; um 10 kΩ entre base e terra o mantém calado no reset.</td></tr>
@@ -66,7 +67,7 @@
     <li><b>LM2596 em 7,0 V</b> (saiu de fábrica em 11,30 V; anti-horário baixa) soldado no jack da MB102, que gera 5 V numa trilha e 3,3 V na outra.</li>
     <li><b>Fechadura direto dos 12 V</b>, chaveada pelo relé. O negativo dela volta direto ao terra da fonte, nunca pela protoboard: são 2 A.</li>
   </ul>
-  <div class="nota"><b>Diodo de roda-livre instalado (08/11/2026).</b> Uma bobina desligada devolve um pico de tensão. O 1N4007 em paralelo com a fechadura, com a faixa no +12 V, dá caminho a esse pico; sem ele, o pico pode resetar o Mega, sujar o LCD ou derrubar a câmera no instante em que a fechadura solta. O diodo do módulo de relé protege só a bobina do relé, não a da fechadura.</div>
+  <div class="nota"><b>Diodo de roda-livre.</b> Uma bobina desligada devolve um pico de tensão. Sem diodo, a fechadura abriu mas o Mega reiniciava toda vez que ela soltava, porque o pico chega pelo mesmo 12 V que alimenta o VIN. O 1N4007 foi instalado na noite de 06/11 em paralelo com a fechadura. Na primeira montagem ficou invertido e o Mega reiniciava em ciclo; corrigido com a <b>faixa no fio que vai ao NA do relé</b> (o + da fechadura), o Mega passou a iniciar e a fechadura a funcionar sem reset. O diodo do módulo de relé protege só a bobina do relé.</div>
 </section>
 
 <section id="pinagem">
@@ -82,6 +83,7 @@
     <tr><td class="cod">D35</td><td>fechadura</td><td>sinal do relé</td><td>10 kΩ para o terra: relé desligado no reset</td></tr>
     <tr><td class="cod">D36</td><td>buzzer</td><td>base do BC546 por 330 Ω</td><td>10 kΩ base-terra</td></tr>
     <tr><td class="cod">D37 a D42</td><td>LCD RS, E, D4 a D7</td><td>pinos 4, 6, 11 a 14 do LCD</td><td>RW (pino 5) no terra</td></tr>
+    <tr><td class="cod">D49 a D53</td><td>RC522 (RST, MISO, MOSI, SCK, SDA)</td><td>barramento SPI</td><td>alimentado no 3,3 V do Mega, ligado direto (risco aceito)</td></tr>
     <tr><td class="cod">A0</td><td>sensor de corrente (opcional)</td><td>ACS712</td><td>firmware ainda não lê</td></tr>
   </table></div>
   <h3>ESP32-CAM</h3>
@@ -122,6 +124,7 @@
     <li><b>Buzzer apitando com tudo desligado.</b> O positivo estava no coletor do transistor. Positivo vai na trilha de 5 V, negativo no coletor.</li>
     <li><b>LCD só com blocos.</b> O pino RW ficou sem fio duas vezes (04/11 e na remontagem). A biblioteca assume RW no terra.</li>
     <li><b>Relé que abriria no boot.</b> O módulo de 2 relés optoacoplado é ativo em LOW; com o pull-down do pino, acionaria a fechadura a cada reset. Ficou o GBK, ativo em HIGH.</li>
+    <li><b>Leitores mudos depois do pulso.</b> Após cada abertura, o RC522 e o leitor de digital paravam de ler até reiniciar o Mega, e os sensores de porta registravam abrir e fechar falsos em 1 s. Correção no firmware: os dois leitores são reiniciados 1 s e 4 s depois que a fechadura desliga, e o filtro dos sensores subiu de 50 para 200 ms.</li>
     <li><b>Fonte de 7 V / 500 mA sem folga</b> para câmera, relé, LCD e leitor juntos. Trocada por 12 V com regulador.</li>
   </ul>
 </section>

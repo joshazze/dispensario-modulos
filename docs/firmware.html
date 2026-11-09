@@ -31,19 +31,21 @@
     <div class="card"><h4>Pessoas</h4><ul class="clean">
       <li>Até <b>100 cadastros</b> na vida da instalação, IDs 001 a 100, automáticos.</li>
       <li>Um ID nunca é reutilizado, nem de pessoa desativada.</li>
-      <li>Cada pessoa tem <b>uma digital e uma senha de 6 dígitos</b>, as duas exclusivas.</li>
+      <li>Cada pessoa tem uma digital, uma senha de 6 dígitos e, se quiser, um <b>cartão RFID</b>.</li>
+      <li>No teclado o login é <b>ID + senha</b>: o ID (1 a 3 dígitos) e #, depois a senha e #.</li>
       <li>Desativar não apaga: reativar devolve o mesmo ID, senha e digital.</li>
     </ul></div>
     <div class="card"><h4>Administrador</h4><ul class="clean">
       <li>Senha de 10 dígitos definida no <code>Config.h</code> local, fora do repositório.</li>
-      <li>Menu: cadastrar, desativar, reativar e sair.</li>
+      <li>Menu: cadastrar, desativar, reativar, vincular cartão e remover cartão.</li>
       <li>Cadastro lê a digital duas vezes (tirando o dedo entre as leituras) e pede a senha duas vezes; só grava se as duas credenciais forem válidas.</li>
-      <li>Digital ou senha repetida é recusada, mesmo de pessoa inativa.</li>
+      <li>Digital repetida é recusada, mesmo de pessoa inativa. Senhas podem se repetir entre IDs, porque o ID vem antes.</li>
     </ul></div>
   </div>
   <h3>Como as senhas ficam guardadas</h3>
   <p>Os cadastros ficam na EEPROM do Mega, 100 registros de 31 bytes com uma área de diário para gravação segura. A senha não é guardada: guarda-se o SHA-256 dela, truncado em 16 bytes, com um sal de 4 bytes por registro. As digitais ficam dentro do leitor. Nenhum evento enviado carrega senha ou modelo de digital.</p>
-  <p>Teclas: <b>#</b> confirma, <b>*</b> limpa, <b>D</b> cancela e volta. Uma senha pela metade não impede de usar a digital.</p>
+  <p>Teclas: <b>#</b> confirma, <b>*</b> limpa, <b>D</b> cancela e volta. Uma senha pela metade não impede de usar a digital. Na 5ª falha seguida o teclado trava por 60 s.</p>
+  <p>Os cartões (MIFARE, lidos pelo RC522) ficam numa área própria da EEPROM: o UID do cartão e uma soma de conferência por cadastro.</p>
 </section>
 
 <section id="porta">
@@ -60,12 +62,15 @@
   <h3>Cores do LED</h3>
   <div class="tablewrap"><table>
     <tr><th>Cor</th><th>Significa</th></tr>
-    <tr><td>Azul, uma piscada por minuto</td><td>em espera</td></tr>
-    <tr><td>Verde</td><td>autorizado, aguardando abrir</td></tr>
-    <tr><td>Amarelo piscando</td><td>aberta com autorização</td></tr>
-    <tr><td>Vermelho por 2 s</td><td>credencial recusada</td></tr>
-    <tr><td>Vermelho piscando</td><td>alarme: aberta tempo demais ou sem autorização</td></tr>
-    <tr><td>Roxo</td><td>administração ou cadastro</td></tr>
+    <tr><td>Azul, 200 ms a cada 10 s</td><td>em espera</td></tr>
+    <tr><td>Ciano</td><td>digitando o ID; flash de 150 ms ao ler cartão ou digital</td></tr>
+    <tr><td>Magenta</td><td>digitando a senha</td></tr>
+    <tr><td>Verde</td><td>liberado, aguardando abrir</td></tr>
+    <tr><td>Amarelo piscando</td><td>porta aberta com autorização</td></tr>
+    <tr><td>Branco</td><td>menus e cadastro</td></tr>
+    <tr><td>Vermelho fixo</td><td>erro ou credencial recusada</td></tr>
+    <tr><td>Vermelho piscando a cada 1 s</td><td>teclado travado</td></tr>
+    <tr><td>Vermelho piscando rápido</td><td>alarme: aberta tempo demais ou sem autorização</td></tr>
   </table></div>
 </section>
 
