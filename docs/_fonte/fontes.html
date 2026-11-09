@@ -1,0 +1,87 @@
+<header class="hero"><div class="wrap">
+  <div class="kicker">Fontes e glossário</div>
+  <h1>De onde veio cada número</h1>
+  <p class="lede">Os repositórios do projeto, as fontes de cada medida e decisão, as bibliotecas usadas e o significado dos termos técnicos.</p>
+</div></header>
+<!-- corpo -->
+<section id="repos">
+  <h2>Repositórios</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Repositório</th><th>Conteúdo</th><th>Licença</th></tr>
+    <tr><td><a href="https://github.com/joshazze/dispensario-modulos">joshazze/dispensario-modulos</a></td><td>gerador do chassi, especificação, arquivos de corte, testes e este site</td><td>GPL v2</td></tr>
+    <tr><td><a href="https://github.com/joshazze/dispensario-design-system">joshazze/dispensario-design-system</a></td><td>medidas, componentes de chapa e figuras cotadas</td><td>MIT</td></tr>
+    <tr><td><a href="https://github.com/marceloxreis/sistema-embarcados">marceloxreis/sistema-embarcados</a></td><td>firmware do Mega e da ESP32-CAM, servidor, testes, montagem e validação</td><td>do autor</td></tr>
+  </table></div>
+  <p>Parte do armário (porta, gaveteiro e placa) ainda está numa branch local e entra no repositório público depois de revisada.</p>
+</section>
+
+<section id="cliente">
+  <h2>Cliente e normas</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Fonte</th><th>O que deu</th></tr>
+    <tr><td>Entrevista com o Instituto Mário Penna, 20/08/2026, e quatro transcrições das gravações</td><td>problema, escopo, requisitos, fluxo atual</td></tr>
+    <tr><td>RENAME 2024, Relação Nacional de Medicamentos Essenciais, Ministério da Saúde</td><td>265 princípios ativos sólidos orais para dividir as gavetas</td></tr>
+    <tr><td>Resolução SEHAB/CPA 9/2003 (São Paulo)</td><td>faixa de 800 a 1000 mm para teclado e leitor</td></tr>
+    <tr><td>ADA Standards for Accessible Design</td><td>teto de alcance de 1220 mm</td></tr>
+  </table></div>
+</section>
+
+<section id="componentes">
+  <h2>Componentes</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Fonte</th><th>O que deu</th></tr>
+    <tr><td><a href="https://cdn-shop.adafruit.com/datasheets/TC1602A-01T.pdf">Tinsharp TC1602A-01T</a>, p. 4</td><td>furos do LCD em 75 x 31, moldura 71,3 x 26,8</td></tr>
+    <tr><td><a href="https://www.elecrow.com/download/LCD1602.pdf">EONE 1602A-1</a>, p. 12</td><td>furos 75,4 x 31,4, moldura 70,7 x 23,8</td></tr>
+    <tr><td><a href="https://hades.mech.northwestern.edu/images/f/f7/LCD16x2_HJ1602A.pdf">HJ1602A</a>, p. 2</td><td>furos 75 x 31</td></tr>
+    <tr><td><a href="https://www.waveshare.com/datasheet/LCD_en_PDF/LCD1602.pdf">Waveshare LCD1602</a>, p. 18</td><td>placa 80 x 36</td></tr>
+    <tr><td><a href="https://www.farnell.com/datasheets/1662717.pdf">Multicomp MCAK1604NBWB</a>, p. 2</td><td>recorte do teclado 60 x 57 R4, furos em 60 x 59</td></tr>
+    <tr><td><a href="https://www.tme.eu/en/details/kb1604-pnb/plastic-keypads/accord/ak-1604-n-bbw/">Accord AK-1604</a></td><td>recorte de painel 60 x 57</td></tr>
+    <tr><td>Manual do leitor R307S (Grow), p. 2</td><td>corpo e canal lateral do leitor</td></tr>
+    <tr><td><a href="https://wiki.dfrobot.com/fit0620">DFRobot FIT0620</a></td><td>corpo, furos e batente da fechadura</td></tr>
+    <tr><td>Fotos das peças do grupo com régua</td><td>moldura do LCD, batente da fechadura, dobradiça</td></tr>
+  </table></div>
+</section>
+
+<section id="ferramentas">
+  <h2>Ferramentas e bibliotecas</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Item</th><th>Uso</th></tr>
+    <tr><td><a href="https://github.com/paulh-rnd/TabbedBoxMaker">TabbedBoxMaker</a></td><td>matriz de juntas de dedos das seis faces</td></tr>
+    <tr><td><a href="https://ecnc.com.br/corte-e-gravacao-a-laser-l-1210/">eCNC L-1210</a> e LightBurn</td><td>corte a laser e envio dos arquivos</td></tr>
+    <tr><td>Adafruit Fingerprint 2.1.4 · Keypad 3.1.1 · LiquidCrystal 1.0.7 · Crypto 0.4.0</td><td>leitor, teclado, LCD e SHA-256 no Mega</td></tr>
+    <tr><td>ArduinoJson 7.4.3 · core ESP32 3.3.12 · core AVR 1.8.8</td><td>ESP32-CAM e compilação</td></tr>
+    <tr><td>Python (biblioteca padrão) e SQLite</td><td>servidor e banco</td></tr>
+    <tr><td><a href="https://caddyserver.com/">Caddy</a> e <a href="https://letsencrypt.org/certificates/">Let's Encrypt</a></td><td>HTTPS na nuvem e raízes ISRG X1 e X2 gravadas na câmera</td></tr>
+    <tr><td>Wokwi</td><td>simulação do Mega com teclado, LED e fechadura</td></tr>
+    <tr><td>three.js · potrace · segno</td><td>vistas 3D, vetorização da logo e do texto, QR da placa</td></tr>
+  </table></div>
+</section>
+
+<section id="glossario">
+  <h2>Glossário</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Termo</th><th>Significado</th></tr>
+    <tr><td><b>Dispensário</b></td><td>armário que guarda parte do estoque de medicamentos perto do paciente e controla quem o abre</td></tr>
+    <tr><td><b>Farmácia satélite</b></td><td>ponto de estoque descentralizado, abastecido pela farmácia central</td></tr>
+    <tr><td><b>Topologia em estrela</b></td><td>cada dispensário fala só com a farmácia responsável, nunca com outro dispensário</td></tr>
+    <tr><td><b>RENAME</b></td><td>lista oficial de medicamentos essenciais do SUS</td></tr>
+    <tr><td><b>Kerf</b></td><td>largura do material que o laser queima no corte; neste projeto ainda é estimada, sem cupom de calibração</td></tr>
+    <tr><td><b>Fill</b></td><td>gravação por preenchimento, varrendo a área linha a linha; usada para rebaixos</td></tr>
+    <tr><td><b>Lâmina dupla</b></td><td>parede feita de duas chapas de 3 mm sobrepostas</td></tr>
+    <tr><td><b>Meia-madeira</b></td><td>encaixe em que duas ripas se cruzam com um rasgo de metade da altura em cada uma</td></tr>
+    <tr><td><b>Enforca-gato</b></td><td>abraçadeira de nylon; aqui, o que une as faces do gabinete</td></tr>
+    <tr><td><b>Gota de parede</b></td><td>furo em forma de gota para pendurar o módulo num parafuso</td></tr>
+    <tr><td><b>Pull-up / pull-down</b></td><td>resistor que mantém um pino em nível alto ou baixo quando nada o aciona</td></tr>
+    <tr><td><b>Divisor de tensão</b></td><td>par de resistores que reduz 5 V para 3,3 V</td></tr>
+    <tr><td><b>Diodo de roda-livre</b></td><td>diodo em paralelo com uma bobina que absorve o pico de tensão quando ela desliga</td></tr>
+    <tr><td><b>Relé ativo em HIGH</b></td><td>aciona quando o pino vai a 5 V; com pull-down, fica desligado durante o reset</td></tr>
+    <tr><td><b>EEPROM</b></td><td>memória do Mega que guarda os cadastros mesmo sem energia</td></tr>
+    <tr><td><b>PSRAM</b></td><td>memória extra da ESP32-CAM que comporta o quadro da câmera</td></tr>
+    <tr><td><b>CRC</b></td><td>soma de conferência que detecta quadro serial corrompido</td></tr>
+    <tr><td><b>NTP</b></td><td>protocolo que acerta o relógio pela internet</td></tr>
+    <tr><td><b>TLS / HTTPS</b></td><td>conexão cifrada em que o cliente confere o certificado do servidor</td></tr>
+    <tr><td><b>Raiz ISRG</b></td><td>certificado da Let's Encrypt em que a câmera confia</td></tr>
+    <tr><td><b>Proxy reverso</b></td><td>servidor na frente da aplicação (aqui o Caddy) que recebe o HTTPS e repassa localmente</td></tr>
+    <tr><td><b>OTA</b></td><td>atualização de firmware pelo Wi-Fi, sem cabo</td></tr>
+  </table></div>
+</section>
