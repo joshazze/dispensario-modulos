@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fabricação · Dispensário Eletrônico</title>
+<meta name="description" content="Corte a laser na eCNC L-1210: gerador paramétrico, parâmetros medidos, cupons de teste e rota de corte.">
+<link rel="stylesheet" href="site/estilo.css">
+</head>
+<body>
+<nav class="topo" aria-label="Páginas"><div class="wrap">
+  <a class="marca" href="index.html">Dispensário Eletrônico</a>
+  <ul class="paginas"><li><a href="index.html">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li><li><a href="fabricacao.html" aria-current="page">Fabricação</a></li><li><a href="linha-do-tempo.html">Linha do tempo</a></li><li><a href="fontes.html">Fontes e glossário</a></li></ul>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker">Fabricação</div>
+  <h1>Do JSON à chapa cortada</h1>
+  <p class="lede">Todas as peças saíram da cortadora a laser do laboratório do Ibmec. O caminho é sempre o mesmo: especificação, gerador, validação, prévia, teste em retalho, corte.</p>
+</div></header>
+<main class="wrap">
+<nav class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#maquina">A máquina</a></li><li><a href="#gerador">O gerador paramétrico</a></li><li><a href="#parametros">Parâmetros medidos, não chutados</a></li><li><a href="#cupons">Teste antes da peça</a></li><li><a href="#rota">Rota de corte</a></li><li><a href="#erros">O que custou chapa</a></li></ol></nav>
+<section id="maquina">
+  <h2>A máquina</h2>
+  <div class="grid2">
+    <div class="card"><h4>eCNC L-1210</h4>Laser CO2 de fabricação nacional (Garça, SP), controladora Trocen, mesa de 1150 x 1000 mm. Os arquivos saem do LightBurn pelo Mac: <b>Enviar</b> no computador, <b>Start</b> no painel da máquina.</div>
+    <div class="card"><h4>Material</h4>MDF de 3 mm em quase tudo, montado em lâmina dupla nas paredes. Acrílico de 1,5 mm no miolo da porta.</div>
+  </div>
+</section>
+
+<section id="gerador">
+  <h2>O gerador paramétrico</h2>
+  <p class="sub">Nenhuma coordenada é desenhada à mão.</p>
+  <ol class="clean">
+    <li><b>Especificação.</b> Cada módulo e cada peça mora em <code>specs/modulos.json</code>: dimensões externas, espessura, juntas, aberturas, e para cada vão de componente o nome e a fonte da medida.</li>
+    <li><b>Geração.</b> O <code>gerador.py</code> monta as seis faces de cada caixa com a matriz de dedos do TabbedBoxMaker, recorta as aberturas e empacota as peças em cargas de no máximo 1000 x 1000 mm.</li>
+    <li><b>Validação.</b> Antes de exportar, confere ponte mínima entre furos e bordas (piso de 1,5 mm, exceções declaradas), peças sobrepostas e peça maior que a mesa. Arquivo que não passa é rascunho.</li>
+    <li><b>Prévia.</b> Para cada carga sai um PDF em escala 1:1. Imprimir em 100% e pôr o componente em cima confere o vão sem paquímetro.</li>
+    <li><b>Entrega.</b> DXF com a camada de corte e a de marcação separadas, em UTF-8, com o canto inferior esquerdo em (0, 0) e sem moldura, e o projeto do LightBurn já configurado com as camadas e os parâmetros.</li>
+  </ol>
+  <p>Corrigir uma cota é trocar um número no JSON e rodar de novo. O repositório tem testes que regeram tudo e conferem as peças críticas.</p>
+</section>
+
+<section id="parametros">
+  <h2>Parâmetros medidos, não chutados</h2>
+  <p class="sub">A tabela colada na máquina foi o ponto de partida. A máquina rendeu abaixo dela em tudo.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Uso</th><th>Tabela do fabricante</th><th>Usado e por quê</th></tr>
+    <tr><td>Corte, MDF 3 mm</td><td>26 mm/s, 65%</td><td><b>10 mm/s, 74,5%</b>. Matrizes cortadas em 27 e 28/10 levaram a 12/57; peças grandes não atravessaram e passaram a 10/67, depois 10/72, e o Josh fixou 10/74,5 em 03/11.</td></tr>
+    <tr><td>Linha gravada (rótulos, contornos)</td><td>100 mm/s, 18%</td><td>100/18, confirmado.</td></tr>
+    <tr><td>Rebaixo (bolso de dobradiça, berços)</td><td>sem valor</td><td><b>Fill a 150 mm/s, 80%</b>, o quadrado da matriz de gravação que deu a profundidade certa.</td></tr>
+    <tr><td>Corte, acrílico 1,5 mm</td><td>30/50 (para 2 mm)</td><td>30/50 não atravessou; reaberto a 15/60.</td></tr>
+    <tr><td>Gravação de superfície (placa)</td><td>320/26</td><td>número da tabela, ainda não medido nesta máquina.</td></tr>
+  </table></div>
+  <p>As matrizes de calibração são uma chapa com quadrados de corte e de gravação lado a lado, cada um rotulado com velocidade e potência. A de 27/10 (4 a 12 mm/s, 75 a 95%) cortou todos os quadrados; a de 28/10 (10 a 30 mm/s, 45 a 75%), nenhum.</p>
+</section>
+
+<section id="cupons">
+  <h2>Teste antes da peça</h2>
+  <p class="sub">Toda feição que encosta num componente real passa por um cupom num retalho.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Cupom</th><th>O que variou</th><th>Resultado</th></tr>
+    <tr><td>Fechadura</td><td>corpo e batente contra a peça real</td><td>medidas da DFRobot FIT0620 batem; batente real tem 1,6 mm de espessura e furos de 4,4. Encaixou na primeira.</td></tr>
+    <tr><td>Botão da porta</td><td>régua de furos de 9,7 a 11,4 e de rebaixos de 10,5 a 13,10</td><td>furo de 10,1 e rebaixo de 13,05 em duas passadas.</td></tr>
+    <tr><td>Dobradiça borboleta</td><td>régua de folgas</td><td>folga de 0,20 mm venceu.</td></tr>
+    <tr><td>Interface do biométrico</td><td>um retalho por componente, com o nome gravado</td><td>teclado, LCD e LED aprovados; o leitor de digital exigiu três tentativas e terminou colado.</td></tr>
+  </table></div>
+</section>
+
+<section id="rota">
+  <h2>Rota de corte</h2>
+  <p class="sub">Menos tempo com o laser desligado andando pela mesa.</p>
+  <p>Desde 04/11/2026 a ordem das peças é calculada: vizinho mais próximo, depois trocas 2-opt e Or-opt sobre a distância real entre o fim de um contorno e o início do próximo. Cada contorno começa no vértice mais perto de onde o anterior terminou. Dentro de uma peça, primeiro a marcação, depois os furos, e o contorno por último, porque é ele que solta a peça. O otimizador do LightBurn fica desligado no arquivo para não desfazer a ordem.</p>
+  <div class="grid2">
+    <div class="card"><h4>Antes e depois</h4>Mesa das gavetas: de 21,5 m para 7,7 m de deslocamento desligado. Mesa da porta com divisórias: de 12,9 m para 8,8 m.</div>
+    <div class="card"><h4>Tempo real</h4>Uma mesa de 37,5 m de corte a 10 mm/s dava 62,8 min no papel e levou 70 min na máquina. Desde então, tempo real = teórico x 1,115.</div>
+  </div>
+  <figure><img class="fig" src="site/mesa-final-1.png" alt="Mesa com o fundo da porta e 44 divisórias no miolo, com a rota de deslocamento em laranja" loading="lazy"><figcaption>Fundo da porta com 44 divisórias aproveitando o miolo que viraria sobra. Laranja: deslocamento com o laser desligado; bolinhas: ponto de entrada de cada contorno.</figcaption></figure>
+  <div class="nota">O preenchimento (Fill) varre linha por linha toda a largura da camada, inclusive o vazio. O anel de apoio do acrílico da porta, feito como uma forma só, levaria cerca de 23 horas por passada. Dividido em 4 faixas e 4 quinas, cada uma preenchida sozinha, ficou perto de uma hora e meia.</div>
+</section>
+
+<section id="erros">
+  <h2>O que custou chapa</h2>
+  <ul class="clean">
+    <li>Leitor de digital em vão calculado pelo manual: batentes e garfo não seguraram o corpo real. Solução final por cola quente.</li>
+    <li>Corte do acrílico pela tabela de 2 mm: não atravessou.</li>
+    <li>Peças grandes do armário a 12/57: não atravessaram, subiu para 10/67.</li>
+    <li>Peça de 1000 mm empacotada junto de outras numa mesa de 1000: estourou a mesa. Desde então, peça de 1000 vai sozinha.</li>
+    <li>DXF com acentos em codificação errada: a camada de marcação chegou corrompida no LightBurn. O escritor passou a gravar em UTF-8.</li>
+  </ul>
+  <p>Cada um desses erros virou regra no gerador ou um teste automático, para não se repetir.</p>
+</section>
+<div class="proxima"><a href="gabinete.html"><small>Anterior</small>Gabinete</a><a href="linha-do-tempo.html"><small>Próxima</small>Linha do tempo</a></div>
+</main>
+<footer><div class="wrap">
+  Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
+  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 08/11/2026.<br>
+  Código e arquivos: <a href="https://github.com/joshazze/dispensario-modulos">dispensario-modulos</a> ·
+  <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a> ·
+  <a href="https://github.com/marceloxreis/sistema-embarcados">sistema-embarcados</a>
+</div></footer>
+</body>
+</html>

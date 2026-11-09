@@ -29,6 +29,12 @@ PAGINAS = [
      "API do servidor, banco, segurança e a hospedagem com HTTPS na AWS."),
     ("gabinete", "Gabinete", "Gabinete · Dispensário Eletrônico",
      "Chassi modular em MDF, módulo biométrico, armário, porta, gaveteiro por letra e placa do projeto."),
+    ("fabricacao", "Fabricação", "Fabricação · Dispensário Eletrônico",
+     "Corte a laser na eCNC L-1210: gerador paramétrico, parâmetros medidos, cupons de teste e rota de corte."),
+    ("linha-do-tempo", "Linha do tempo", "Linha do tempo · Dispensário Eletrônico",
+     "O projeto dia a dia, de 20 de agosto a 9 de novembro de 2026."),
+    ("fontes", "Fontes e glossário", "Fontes e glossário · Dispensário Eletrônico",
+     "Repositórios, fontes de cada medida e decisão e glossário dos termos usados."),
 ]
 
 MODELO = """<!doctype html>
