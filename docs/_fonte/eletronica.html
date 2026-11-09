@@ -51,7 +51,7 @@
     <li><b>LM2596 em 7,0 V</b> (saiu de fábrica em 11,30 V; anti-horário baixa) soldado no jack da MB102, que gera 5 V numa trilha e 3,3 V na outra.</li>
     <li><b>Fechadura direto dos 12 V</b>, chaveada pelo relé. O negativo dela volta direto ao terra da fonte, nunca pela protoboard: são 2 A.</li>
   </ul>
-  <div class="nota alerta"><b>Diodo de roda-livre pendente.</b> Uma bobina desligada devolve um pico de tensão. Sem o 1N4007 em paralelo com a fechadura, o pico pode resetar o Mega, sujar o LCD ou derrubar a câmera no instante em que a fechadura solta. O diodo do módulo de relé protege só a bobina do relé, não a da fechadura. Compra prevista antes da apresentação.</div>
+  <div class="nota"><b>Diodo de roda-livre instalado (08/11/2026).</b> Uma bobina desligada devolve um pico de tensão. O 1N4007 em paralelo com a fechadura, com a faixa no +12 V, dá caminho a esse pico; sem ele, o pico pode resetar o Mega, sujar o LCD ou derrubar a câmera no instante em que a fechadura solta. O diodo do módulo de relé protege só a bobina do relé, não a da fechadura.</div>
 </section>
 
 <section id="pinagem">
