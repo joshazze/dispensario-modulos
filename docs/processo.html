@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engenharia de software · Dispensário Eletrônico</title>
+<meta name="description" content="Ciclo de vida, elicitação, classificação e rastreabilidade dos requisitos, casos de uso, classes, sequência, estados, horas e custos.">
+<link rel="stylesheet" href="site/estilo.css">
+</head>
+<body>
+<nav class="topo" aria-label="Páginas"><div class="wrap">
+  <a class="marca" href="index.html">Dispensário Eletrônico</a>
+  <ul class="paginas"><li><a href="index.html">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="processo.html" aria-current="page">Engenharia de software</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li><li><a href="modular.html">Modularidade</a></li><li><a href="fabricacao.html">Fabricação</a></li><li><a href="linha-do-tempo.html">Linha do tempo</a></li><li><a href="fontes.html">Fontes e glossário</a></li></ul>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <div class="kicker">Engenharia de software</div>
+  <h1>Do levantamento ao gabarito</h1>
+  <p class="lede">Como o grupo levantou, classificou, modelou e rastreou cada requisito, do primeiro encontro com o cliente em 20/08 ao protótipo de 18/11. Treze semanas, cerca de 530 horas de trabalho e um mesmo princípio do começo ao fim: entregar em blocos que se encaixam.</p>
+  <div class="facts">
+    <div class="fact"><b>Modelo de ciclo de vida</b>incremental e iterativo, em blocos</div>
+    <div class="fact"><b>Requisitos</b>13 funcionais, 14 não funcionais, 12 critérios de aceite</div>
+    <div class="fact"><b>Rastreabilidade</b>7 atendidos, 2 de outro jeito, 3 não feitos, 1 além, mais 6 entregas extras</div>
+    <div class="fact"><b>Horas estimadas</b>~533 h no total</div>
+  </div>
+</div></header>
+<main class="wrap">
+<nav class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#ciclo">O modelo de ciclo de vida</a></li><li><a href="#stakeholders">Partes interessadas</a></li><li><a href="#elicitacao">Elicitação</a></li><li><a href="#classificacao">Classificação dos requisitos</a></li><li><a href="#matriz">Matriz de rastreabilidade</a></li><li><a href="#casos-de-uso">Casos de uso</a></li><li><a href="#classes">Diagrama de classes</a></li><li><a href="#sequencia">Diagrama de sequência</a></li><li><a href="#estados">Diagrama de estados</a></li><li><a href="#iteracoes">O que cada iteração ensinou</a></li><li><a href="#horas">Horas de trabalho</a></li><li><a href="#custos">Quanto custa</a></li><li><a href="#aberto">Rumo a um modelo aberto</a></li></ol></nav>
+<section id="ciclo">
+  <h2>O modelo de ciclo de vida</h2>
+  <p class="sub">Tijolo por tijolo, com validação a cada volta.</p>
+  <p>O dispensário seguiu o <b>modelo incremental</b>: o sistema foi dividido em partes pequenas que se juntam, como tijolos num muro. Primeiro a casca do módulo biométrico, depois a interface, depois o armário, a porta, o gaveteiro, a bancada eletrônica, o servidor e a nuvem. Cada incremento foi construído de forma independente e depois integrado ao que já existia.</p>
+  <p>Dentro de cada incremento o trabalho foi <b>iterativo</b>: construir, avaliar, ajustar e repetir, sem esperar acerto na primeira vez. O chassi passou de três lâminas para duas; a altura do módulo caiu de 1500 para 1000 mm; o leitor de digital teve três formas de fixação até a definitiva. Cada volta levou ao corte de um retalho de teste antes da peça final, que é a prototipagem e o gerenciamento de risco do modelo em espiral aplicados à fabricação.</p>
+  <p>O cascata não serviria aqui. Os requisitos não estavam 95% mapeados no início: a API do hospital nunca chegou, a câmera saiu e voltou ao escopo, e o cliente precisava ver algo funcionando antes do fim.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Fase</th><th>Foco</th><th>No projeto</th></tr>
+    <tr><td>Iniciação</td><td>escopo e visão geral</td><td>entrevista de 20/08, Fase 1 entregue em 26/08</td></tr>
+    <tr><td>Elaboração</td><td>arquitetura</td><td>componentes e contrato hardware/software (09/09), chassi modular (03/09 a 07/10)</td></tr>
+    <tr><td>Construção</td><td>implementar e testar</td><td>cortes de 03/09 a 17/11, bancada de 06/11, servidor de 07/11, mais de 200 testes automáticos</td></tr>
+    <tr><td>Transição</td><td>entregar e dar suporte</td><td>apresentação ao cliente, site, repositórios públicos e documentação</td></tr>
+  </table></div>
+</section>
+
+<section id="stakeholders">
+  <h2>Partes interessadas</h2>
+  <div class="grid3">
+    <div class="card"><h4>Cliente</h4>Instituto Mário Penna, pela Diretoria de Tecnologia, Inovação, Ensino e Pesquisa. Tem o poder de aceite.</div>
+    <div class="card"><h4>Usuários</h4>Profissionais de enfermagem que abrem o armário; farmácia e logística, que repõem duas vezes ao dia; administrador do sistema.</div>
+    <div class="card"><h4>Outros</h4>Pacientes (o alerta não pode incomodar), equipe de TI e redes do hospital, a disciplina e o professor orientador, o próprio grupo.</div>
+  </div>
+</section>
+
+<section id="elicitacao">
+  <h2>Elicitação</h2>
+  <p class="sub">Como os requisitos foram descobertos.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Técnica</th><th>O que foi feito</th></tr>
+    <tr><td>Entrevista semiestruturada</td><td>Encontro de 20/08/2026 com o cliente: roteiro de 9 blocos de perguntas, aberto a assuntos que surgiram na conversa. Gravada.</td></tr>
+    <tr><td>Gravação e transcrição</td><td>4 transcrições, 35 páginas, relidas para separar o que é do equipamento e o que é do sistema hospitalar.</td></tr>
+    <tr><td>Análise de documentos</td><td>O slide do próprio Instituto sobre o equipamento, a RENAME 2024 do SUS (265 princípios ativos) e datasheets de cada componente.</td></tr>
+    <tr><td>Especialista do domínio</td><td>Perguntas de engenharia ao professor da disciplina e conferência dos esquemas elétricos com ele.</td></tr>
+    <tr><td>Validação por protótipo</td><td>Cada peça cortada primeiro num retalho e encaixada no componente real; cada bloco da bancada testado antes do seguinte.</td></tr>
+  </table></div>
+  <p>O que a elicitação revelou, e que mudou o projeto: o hospital controla <b>custo</b> mas não <b>uso</b>; não sabe dizer se o medicamento chegou ao paciente; a operação hoje passa por farmácias centrais com fila; e as soluções comerciais chegam a <b>R$ 4 milhões</b>, fora do alcance de um hospital 100% SUS.</p>
+</section>
+
+<section id="classificacao">
+  <h2>Classificação dos requisitos</h2>
+  <p class="sub">Um exemplo real de cada tipo.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Tipo</th><th>Exemplo no dispensário</th></tr>
+    <tr><td>De usuário</td><td>"Quero abrir o armário rápido, mesmo com o leitor falhando."</td></tr>
+    <tr><td>De sistema funcional</td><td>RF02: aceitar ID + senha de 6 dígitos quando a digital não for lida; travar o teclado por 60 s na 5ª falha seguida.</td></tr>
+    <tr><td>Não funcional</td><td>RNF06: o alerta de porta aberta é ouvido perto do equipamento sem incomodar o paciente (bipe de 250 ms a cada 2 s, só depois de 5 min).</td></tr>
+    <tr><td>De domínio</td><td>Confidencialidade dos dados de saúde: nenhum evento carrega senha nem modelo de digital; a senha é guardada como SHA-256 com sal.</td></tr>
+    <tr><td>De interface</td><td>LCD a 1170 mm do piso e teclado a 910 mm, pela faixa de alcance de normas de acessibilidade; cores do LED com significado fixo.</td></tr>
+  </table></div>
+  <p>Métricas usadas nos não funcionais: negociação TLS de ~300 ms e pedidos de 22 a 50 ms (velocidade); fila de 16 eventos no Mega e 8 na câmera (tamanho); reinício sempre em estado travado (robustez); 100 cadastros com IDs nunca reutilizados (confiabilidade do registro).</p>
+</section>
+
+<section id="matriz">
+  <h2>Matriz de rastreabilidade</h2>
+  <p class="sub">Cada requisito da Fase 1 até a solução, com a situação em 18/11/2026.</p>
+  <figure><img class="fig" src="site/uml/matriz.svg" alt="Matriz: RF01 a RF06 e RF12 atendidos, RF08 e RF10 atendidos de outro jeito, RF07, RF09 e RF13 não feitos, RF11 além do pedido, e seis entregas além do pedido" loading="lazy"></figure>
+  <h3>O que foi pedido e não foi feito, e por quê</h3>
+  <ul class="clean">
+    <li><b>RF07, RF09, RF10 e RF13</b> dependem da API do sistema hospitalar, que não foi fornecida até a entrega. O servidor próprio faz o papel dela, com as mesmas regras: identificador único por evento, envio repetido sem duplicar, horário com origem.</li>
+    <li><b>Rede autorizada para equipamentos hospitalares</b>: o protótipo usa um roteador próprio, porque o segmento do hospital exige a equipe de redes de lá.</li>
+    <li><b>Fila persistente</b>: os eventos pendentes ficam em memória e se perdem num reinício. Aceito para a demonstração e declarado no critério CA10.</li>
+  </ul>
+  <h3>O que foi além</h3>
+  <ul class="clean">
+    <li>Um terceiro método de acesso, o <b>crachá RFID</b>, que conversa com o fluxo atual do hospital (hoje o profissional já bipa o crachá na farmácia).</li>
+    <li>A <b>foto do próprio acesso</b>, que a câmera tira e o servidor guarda junto do evento, com prova de que a foto é daquele acesso e não de um anterior.</li>
+    <li><b>Painel web com HTTPS</b> numa VM em São Paulo, troca de senha remota, backup diário e parada automática de custo.</li>
+    <li><b>Gaveteiro por letra</b> pela RENAME 2024 e <b>gabinete modular</b>: 1 módulo biométrico com 1 a 4 armários, 1592 montagens com as mesmas peças.</li>
+  </ul>
+</section>
+
+<section id="casos-de-uso">
+  <h2>Casos de uso</h2>
+  <p class="sub">Atores principais à direita, porque iniciam; o secundário à esquerda, porque reage. Cada caso nomeado por verbo e substantivo.</p>
+  <figure><img class="fig" src="site/uml/casos-de-uso.svg" alt="Diagrama de casos de uso com Profissional de Enfermagem, Administrador e Servidor de Auditoria" loading="lazy"></figure>
+  <div class="tablewrap"><table>
+    <tr><th colspan="2">Caso de uso: Abrir Porta</th></tr>
+    <tr><td>Ator</td><td>Profissional de Enfermagem</td></tr>
+    <tr><td>Pré-condições</td><td>profissional cadastrado e ativo; porta fechada; sistema em E1 (Bloqueado)</td></tr>
+    <tr><td>Fluxo principal</td><td>1. põe o dedo no leitor. 2. o sistema identifica o ID. 3. o sistema pulsa a fechadura e acende o verde. 4. o profissional abre a porta em até 60 s. 5. o sistema registra a abertura. 6. o profissional retira o item e fecha. 7. o sistema registra o fechamento e trava.</td></tr>
+    <tr><td>Fluxos alternativos</td><td>digital não lida: ID + senha ou crachá. Credencial negada: vermelho, evento de negação, 5ª falha trava o teclado por 60 s. Porta não aberta em 60 s: trava de novo com três bipes. Porta aberta mais de 5 min: alerta até fechar.</td></tr>
+    <tr><td>Pós-condições</td><td>porta travada; eventos de acesso, abertura e fechamento registrados com quem, quando, método e dispensário</td></tr>
+  </table></div>
+</section>
+
+<section id="classes">
+  <h2>Diagrama de classes</h2>
+  <p class="sub">O modelo conceitual: os elementos centrais e como se relacionam, antes do código.</p>
+  <figure><img class="fig" src="site/uml/classes.svg" alt="Diagrama de classes com Dispensario, Profissional, Credencial abstrata e suas especializações Digital, Senha e CartaoRFID, Evento, Foto, Administrador e Comando" loading="lazy"></figure>
+  <p>Credencial é abstrata e se especializa em Digital, Senha e CartaoRFID (generalização). Profissional é composto pelas credenciais dele: desativar a pessoa desativa as três. Um Dispensario registra de 0 a muitos eventos, e cada Evento anexa no máximo uma Foto. O Administrador não muda a senha direto: ele emite um Comando, que só vale depois que o Mega confirma.</p>
+</section>
+
+<section id="sequencia">
+  <h2>Diagrama de sequência</h2>
+  <p class="sub">Um acesso por digital, do dedo ao servidor.</p>
+  <figure><img class="fig" src="site/uml/sequencia.svg" alt="Diagrama de sequência entre Profissional, Leitor, Arduino Mega, Fechadura, ESP32 e Servidor" loading="lazy"></figure>
+  <p>A decisão de abrir acontece inteira no Mega, antes de qualquer mensagem de rede. A rede entra depois, só para auditoria: se o Wi-Fi cair no meio, a porta já abriu e o evento espera na fila.</p>
+</section>
+
+<section id="estados">
+  <h2>Diagrama de estados</h2>
+  <figure><img class="fig" src="site/uml/estados.svg" alt="Máquina de estados de E1 Bloqueado a E9 Violação" loading="lazy"></figure>
+</section>
+
+<section id="iteracoes">
+  <h2>O que cada iteração ensinou</h2>
+  <p class="sub">Íamos fazer uma coisa, aprendemos outra, mudamos.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Íamos</th><th>Aprendemos</th><th>Fizemos</th></tr>
+    <tr><td>Paredes de 3 lâminas de MDF presas com M3</td><td>36 peças e centenas de furos para um ganho de rigidez que duas lâminas já davam</td><td>2 lâminas (6 mm) presas por abraçadeira de nylon nos cantos</td></tr>
+    <tr><td>Armário de 1260 x 1500 mm</td><td>Não cabe na mesa de 1150 x 1000 da cortadora sem emenda</td><td>750 x 1000 x 250, que sai inteiro em 6 cargas</td></tr>
+    <tr><td>Vão do LCD pelo datasheet (~71 x 24)</td><td>A peça real tinha ~77 x 25</td><td>Medida tirada da foto da peça com régua</td></tr>
+    <tr><td>Leitor de digital preso por batentes</td><td>Os batentes não seguraram no teste</td><td>Garfo, depois cola quente num vão de 20 x 18</td></tr>
+    <tr><td>30 gavetas, uma por letra</td><td>Várias letras vazias; a letra A sozinha tem 29 ativos</td><td>15 gavetas por faixa de letras, piso de 29 na mais cheia</td></tr>
+    <tr><td>Parâmetros da tabela da máquina</td><td>A máquina rendia abaixo da tabela em tudo</td><td>Matriz de calibração cortada e lida; corte a 10 mm/s e 74,5%</td></tr>
+    <tr><td>Leitor de digital falhando a cada 10 s</td><td>LED sem resistor balançava o terra do leitor</td><td>Dois fios de terra extras e 330 Ω por cor</td></tr>
+  </table></div>
+</section>
+
+<section id="horas">
+  <h2>Horas de trabalho</h2>
+  <p class="sub">Estimativa bruta, de 20/08 a 18/11/2026: 13 semanas.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Quem</th><th>Horas por semana</th><th>Total</th></tr>
+    <tr><td>Joshua Azze</td><td>~20</td><td>~260 h</td></tr>
+    <tr><td>Beatriz Samaha</td><td>~7</td><td>~91 h</td></tr>
+    <tr><td>Bruna Bento</td><td>~7</td><td>~91 h</td></tr>
+    <tr><td>Marcelo Reis</td><td>~7</td><td>~91 h</td></tr>
+    <tr><td><b>Total</b></td><td><b>~41</b></td><td><b>~533 h</b></td></tr>
+  </table></div>
+  <p>Em números do próprio trabalho: 134 commits no repositório do gabinete, 39 no de firmware e servidor, 48 projetos do LightBurn e 60 DXF só no armário, mais de 200 testes automáticos no firmware e no servidor e cerca de 12.400 linhas de código e configuração no sistema embarcado.</p>
+</section>
+
+<section id="custos">
+  <h2>Quanto custa</h2>
+  <p class="sub">Estimativas por preço de varejo de 2026, não por nota fiscal.</p>
+  <div class="grid2">
+    <div>
+      <h3>O protótipo</h3>
+      <div class="tablewrap"><table>
+        <tr><th>Item</th><th>R$</th></tr>
+        <tr><td>Arduino Mega 2560 compatível</td><td>95</td></tr>
+        <tr><td>ESP32 DevKit</td><td>50</td></tr>
+        <tr><td>ESP32-CAM com OV2640</td><td>119</td></tr>
+        <tr><td>Leitor de digital</td><td>110</td></tr>
+        <tr><td>Leitor RFID RC522 e cartões</td><td>20</td></tr>
+        <tr><td>LCD 1602 e teclado 4x4</td><td>32</td></tr>
+        <tr><td>Fechadura 12 V e relé</td><td>82</td></tr>
+        <tr><td>Fonte 12 V, LM2596 e MB102</td><td>75</td></tr>
+        <tr><td>LED, buzzer, botões, transistores, diodo, resistores, fios</td><td>61</td></tr>
+        <tr><td>MDF 3 mm (chapas, incluindo testes)</td><td>350</td></tr>
+        <tr><td>Acrílico 1,5 mm</td><td>60</td></tr>
+        <tr><td>Abraçadeiras, parafusos, porcas, cola</td><td>60</td></tr>
+        <tr><td>Servidor na nuvem e domínio</td><td>0 (crédito)</td></tr>
+        <tr><td><b>Total em material</b></td><td><b>~1.114</b></td></tr>
+      </table></div>
+      <p>Corte a laser no laboratório da faculdade, sem custo de máquina. Se as ~533 horas fossem pagas a R$ 40, seriam mais ~R$ 21 mil de trabalho.</p>
+    </div>
+    <div>
+      <h3>Um dispensário aberto, por unidade</h3>
+      <div class="tablewrap"><table>
+        <tr><th>Item</th><th>R$</th></tr>
+        <tr><td>Placa única com ESP32-S3 e câmera (PCB própria)</td><td>250</td></tr>
+        <tr><td>Leitor de digital e leitor de crachá</td><td>130</td></tr>
+        <tr><td>Tela sensível ao toque de 7" para a prescrição</td><td>350</td></tr>
+        <tr><td>Fechadura de uso contínuo e sensores magnéticos de porta</td><td>180</td></tr>
+        <tr><td>Fonte com bateria (12 V)</td><td>150</td></tr>
+        <tr><td>Gabinete e gaveteiro cortados em CNC</td><td>750</td></tr>
+        <tr><td>Ferragens</td><td>150</td></tr>
+        <tr><td>Montagem (8 h)</td><td>320</td></tr>
+        <tr><td><b>Total por unidade</b></td><td><b>~2.280</b></td></tr>
+      </table></div>
+      <p>Uma unidade atende 20 leitos. O teto de R$ 4 milhões citado para as soluções comerciais pagaria mais de 1.700 dispensários abertos. O servidor é um só para todas as unidades: uma VM pequena custa algo como R$ 60 por mês.</p>
+    </div>
+  </div>
+</section>
+
+<section id="aberto">
+  <h2>Rumo a um modelo aberto</h2>
+  <p class="sub">O protótipo nasceu para um cliente, mas tudo nele pode servir a outros hospitais.</p>
+  <p>Os arquivos de corte, o gerador paramétrico e o design system já são públicos, sob licenças GPL v2 e MIT. Um hospital com acesso a uma cortadora a laser, ou a uma marcenaria com CNC, consegue reproduzir o gabinete trocando números num JSON. O firmware decide tudo localmente e o servidor não tem nenhuma dependência externa, então cabe numa máquina do próprio hospital.</p>
+  <p>Para virar um projeto aberto de verdade faltam três coisas: uma placa de circuito única no lugar da protoboard, a integração com sistemas hospitalares por um padrão aberto em vez de uma API específica, e conversas com profissionais de outras instituições para validar os requisitos fora do Mário Penna.</p>
+</section>
+<div class="proxima"><a href="requisitos.html"><small>Anterior</small>Requisitos</a><a href="eletronica.html"><small>Próxima</small>Eletrônica</a></div>
+</main>
+<footer><div class="wrap">
+  Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
+  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 18/11/2026.<br>
+  Código e arquivos: <a href="https://github.com/joshazze/dispensario-modulos">dispensario-modulos</a> ·
+  <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a> ·
+  <a href="https://github.com/marceloxreis/sistema-embarcados">sistema-embarcados</a>
+</div></footer>
+</body>
+</html>
