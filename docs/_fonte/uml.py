@@ -325,7 +325,7 @@ def matriz():
         cod, nome, st, como = l
         c, bg, n = COR[st]
         if cod in ("RF11",) and SEM_CAMERA:
-            como = "NTP com horário de origem em cada evento"
+            nome, como = "Correlação de evidências", "NTP com horário de origem em cada evento"
         o.append(f'<rect x="30" y="{y+4}" width="{W-60}" height="34" rx="8" fill="{bg}" opacity=".55"/>')
         o.append(txt(44, y + 27, cod, 14.5, "start", 700, c))
         o.append(txt(110, y + 27, nome, 14.5, "start"))
