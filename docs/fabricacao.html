@@ -10,7 +10,7 @@
 <body>
 <nav class="topo" aria-label="Páginas"><div class="wrap">
   <a class="marca" href="index.html">Dispensário Eletrônico</a>
-  <ul class="paginas"><li><a href="index.html">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li><li><a href="fabricacao.html" aria-current="page">Fabricação</a></li><li><a href="linha-do-tempo.html">Linha do tempo</a></li><li><a href="fontes.html">Fontes e glossário</a></li></ul>
+  <ul class="paginas"><li><a href="index.html">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="processo.html">Engenharia de software</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li><li><a href="modular.html">Modularidade</a></li><li><a href="fabricacao.html" aria-current="page">Fabricação</a></li><li><a href="linha-do-tempo.html">Linha do tempo</a></li><li><a href="fontes.html">Fontes e glossário</a></li></ul>
 </div></nav>
 <header class="hero"><div class="wrap">
   <div class="kicker">Fabricação</div>
@@ -18,13 +18,30 @@
   <p class="lede">Todas as peças saíram da cortadora a laser do laboratório do Ibmec. O caminho é sempre o mesmo: especificação, gerador, validação, prévia, teste em retalho, corte.</p>
 </div></header>
 <main class="wrap">
-<nav class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#maquina">A máquina</a></li><li><a href="#gerador">O gerador paramétrico</a></li><li><a href="#parametros">Parâmetros medidos, não chutados</a></li><li><a href="#cupons">Teste antes da peça</a></li><li><a href="#rota">Rota de corte</a></li><li><a href="#erros">O que custou chapa</a></li></ol></nav>
+<nav class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#maquina">A máquina</a></li><li><a href="#materiais">Materiais, juntas e resistência</a></li><li><a href="#gerador">O gerador paramétrico</a></li><li><a href="#parametros">Parâmetros medidos, não chutados</a></li><li><a href="#cupons">Teste antes da peça</a></li><li><a href="#rota">Rota de corte</a></li><li><a href="#erros">O que custou chapa</a></li></ol></nav>
 <section id="maquina">
   <h2>A máquina</h2>
   <div class="grid2">
     <div class="card"><h4>eCNC L-1210</h4>Laser CO2 de fabricação nacional (Garça, SP), controladora Trocen, mesa de 1150 x 1000 mm. Os arquivos saem do LightBurn pelo Mac: <b>Enviar</b> no computador, <b>Start</b> no painel da máquina.</div>
     <div class="card"><h4>Material</h4>MDF de 3 mm em quase tudo, montado em lâmina dupla nas paredes. Acrílico de 1,5 mm no miolo da porta.</div>
   </div>
+</section>
+
+<section id="materiais">
+  <h2>Materiais, juntas e resistência</h2>
+  <p class="sub">O que segura o gabinete de pé, sem um parafuso estrutural.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Elemento</th><th>Como é</th><th>Por que</th></tr>
+    <tr><td>Parede em lâmina dupla</td><td>duas chapas de MDF de 3 mm, 6 mm no total</td><td>uma lâmina sozinha empena; três davam 36 peças e centenas de furos sem ganho que valesse</td></tr>
+    <tr><td>Junta de dedos</td><td>matriz das seis faces do TabbedBoxMaker, número ímpar de divisões (numa aresta de 250: vão de 40, dente de 30)</td><td>cada canto tem dono definido, então as seis faces fecham sem dente batendo em dente</td></tr>
+    <tr><td>Enforca-gato</td><td>abraçadeira de nylon de 4,8 mm laçando os cantos por rasgos de 6,5 x 2,5 mm, dois por estação; no armário, 8 estações por aresta vertical e 5 duplas por aresta de 750</td><td>aperta as duas lâminas e os dedos ao mesmo tempo; troca sem ferramenta</td></tr>
+    <tr><td>Nicho suspenso</td><td>caixa interna de 3 mm presa por espaçadores com abas que atravessam e entram só na lâmina de dentro</td><td>sobra um corredor para os fios correrem atrás do estoque</td></tr>
+    <tr><td>Meia-madeira</td><td>ripas do gaveteiro com rasgos até o meio, em jogo da velha</td><td>a grade se trava sozinha; mudar a posição das ripas muda o miolo</td></tr>
+    <tr><td>Fixação na parede</td><td>furos em gota no fundo do biométrico: cabeça de ⌀12 e fenda de 6,5 subindo 10 mm</td><td>o módulo desce e trava no parafuso; sai levantando, sem desmontar</td></tr>
+    <tr><td>Fechadura</td><td>12 V, de pé na lateral, presa por 3 M4; batente em bolso faceado com a porta</td><td>a ficha do fabricante dá retenção de até 75 kg</td></tr>
+    <tr><td>Porta</td><td>moldura de MDF parafusada em 20 pontos, acrílico no miolo, logo do Instituto em MDF</td><td>dá para ver o estoque sem abrir</td></tr>
+  </table></div>
+  <p>Ainda estimados, e declarados assim: o kerf de 0,18 mm e a espessura nominal de 3,00 mm do MDF. Chapa vendida como 3 mm chega a 3,2, e por isso a gaveta tem 1 mm de folga por lado: com o pior caso, ainda sobram 1,4 mm no total.</p>
 </section>
 
 <section id="gerador">
@@ -89,11 +106,11 @@
   </ul>
   <p>Cada um desses erros virou regra no gerador ou um teste automático, para não se repetir.</p>
 </section>
-<div class="proxima"><a href="gabinete.html"><small>Anterior</small>Gabinete</a><a href="linha-do-tempo.html"><small>Próxima</small>Linha do tempo</a></div>
+<div class="proxima"><a href="modular.html"><small>Anterior</small>Modularidade</a><a href="linha-do-tempo.html"><small>Próxima</small>Linha do tempo</a></div>
 </main>
 <footer><div class="wrap">
   Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
-  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 08/11/2026.<br>
+  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 18/11/2026.<br>
   Código e arquivos: <a href="https://github.com/joshazze/dispensario-modulos">dispensario-modulos</a> ·
   <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a> ·
   <a href="https://github.com/marceloxreis/sistema-embarcados">sistema-embarcados</a>

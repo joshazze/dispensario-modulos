@@ -10,7 +10,7 @@
 <body>
 <nav class="topo" aria-label="Páginas"><div class="wrap">
   <a class="marca" href="index.html">Dispensário Eletrônico</a>
-  <ul class="paginas"><li><a href="index.html" aria-current="page">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li><li><a href="fabricacao.html">Fabricação</a></li><li><a href="linha-do-tempo.html">Linha do tempo</a></li><li><a href="fontes.html">Fontes e glossário</a></li></ul>
+  <ul class="paginas"><li><a href="index.html" aria-current="page">Visão geral</a></li><li><a href="requisitos.html">Requisitos</a></li><li><a href="processo.html">Engenharia de software</a></li><li><a href="eletronica.html">Eletrônica</a></li><li><a href="firmware.html">Firmware</a></li><li><a href="servidor.html">Servidor e nuvem</a></li><li><a href="gabinete.html">Gabinete</a></li><li><a href="modular.html">Modularidade</a></li><li><a href="fabricacao.html">Fabricação</a></li><li><a href="linha-do-tempo.html">Linha do tempo</a></li><li><a href="fontes.html">Fontes e glossário</a></li></ul>
 </div></nav>
 <header class="hero"><div class="wrap">
   <div class="kicker">Projeto de Sistemas Embarcados · Ibmec · 2026.2</div>
@@ -20,7 +20,7 @@
     <div class="fact"><b>Cliente</b>Instituto Mário Penna · Hospital Luxemburgo, 100% SUS</div>
     <div class="fact"><b>Disciplina</b>Projeto de Sistemas Embarcados, prof. Osmar Ventura Gomes</div>
     <div class="fact"><b>Grupo</b>Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis</div>
-    <div class="fact"><b>Situação</b>protótipo em montagem para a apresentação final</div>
+    <div class="fact"><b>Situação</b>protótipo montado e apresentado em 18/11/2026</div>
   </div>
 </div></header>
 <main class="wrap">
@@ -41,11 +41,17 @@
   <h2>Em números</h2>
   <div class="grid3">
     <div class="card"><h3 style="margin:0">20 leitos</h3><span class="tag mut">por dispensário</span><p style="margin-top:8px">Uma unidade por ala, reposta duas vezes ao dia conforme ocupação e consumo.</p></div>
-    <div class="card"><h3 style="margin:0">13 + 14</h3><span class="tag mut">requisitos</span><p style="margin-top:8px">Funcionais e não funcionais da Fase 1, rastreados até os critérios de aceite.</p></div>
-    <div class="card"><h3 style="margin:0">100 pessoas</h3><span class="tag mut">cadastros</span><p style="margin-top:8px">IDs de 001 a 100, com digital, senha e cartão RFID, e desativação sem apagar histórico.</p></div>
+    <div class="card"><h3 style="margin:0">13 + 14</h3><span class="tag mut">requisitos</span><p style="margin-top:8px">Funcionais e não funcionais da Fase 1, rastreados até os 12 critérios de aceite.</p></div>
+    <div class="card"><h3 style="margin:0">3 métodos</h3><span class="tag mut">de acesso</span><p style="margin-top:8px">Digital, ID + senha e crachá RFID, decididos no próprio equipamento, sem depender de rede.</p></div>
+    <div class="card"><h3 style="margin:0">100 pessoas</h3><span class="tag mut">cadastros</span><p style="margin-top:8px">IDs de 001 a 100, nunca reutilizados, e desativação sem apagar histórico.</p></div>
     <div class="card"><h3 style="margin:0">265 ativos</h3><span class="tag mut">RENAME 2024</span><p style="margin-top:8px">Princípios ativos em comprimido ou cápsula que definiram as 15 gavetas por letra.</p></div>
+    <div class="card"><h3 style="margin:0">1592</h3><span class="tag mut">montagens</span><p style="margin-top:8px">1 módulo biométrico com 1 a 4 armários e 4 miolos por armário, com as mesmas peças.</p></div>
     <div class="card"><h3 style="margin:0">750 x 1000 x 250</h3><span class="tag mut">mm, armário</span><p style="margin-top:8px">Cabe inteiro na mesa de 1 m da cortadora, sem emenda.</p></div>
+    <div class="card"><h3 style="margin:0">44</h3><span class="tag mut">divisórias</span><p style="margin-top:8px">Cortadas no miolo da porta, que ia virar sobra.</p></div>
     <div class="card"><h3 style="margin:0">~300 ms</h3><span class="tag mut">TLS</span><p style="margin-top:8px">Negociação HTTPS medida contra o servidor; cada pedido seguinte leva de 22 a 50 ms.</p></div>
+    <div class="card"><h3 style="margin:0">200+</h3><span class="tag mut">testes</span><p style="margin-top:8px">Automáticos, no firmware e no servidor, com relógio simulado e dublês do hardware.</p></div>
+    <div class="card"><h3 style="margin:0">~533 h</h3><span class="tag mut">de trabalho</span><p style="margin-top:8px">Estimativa bruta de 13 semanas para os quatro integrantes.</p></div>
+    <div class="card"><h3 style="margin:0">~R$ 1,1 mil</h3><span class="tag mut">em material</span><p style="margin-top:8px">Custo estimado do protótipo inteiro; uma unidade aberta sairia por ~R$ 2,3 mil.</p></div>
   </div>
 </section>
 
@@ -54,6 +60,8 @@
   <p class="sub">Cada página aprofunda uma parte do projeto.</p>
   <div class="grid2">
     <a class="card" href="requisitos.html"><b>Requisitos</b><span>Problema detalhado, os 13 requisitos funcionais e 14 não funcionais, o contrato entre hardware e software, a máquina de estados e os 12 critérios de aceite.</span></a>
+    <a class="card" href="processo.html"><b>Engenharia de software</b><span>Ciclo de vida, elicitação, matriz de rastreabilidade, casos de uso, classes, sequência e estados, além de horas e custos.</span></a>
+    <a class="card" href="modular.html"><b>Modularidade</b><span>Os 4 miolos do armário, as 1592 montagens possíveis e o índice D0 a D5 das gavetas, com a pesquisa na RENAME 2024.</span></a>
     <a class="card" href="eletronica.html"><b>Eletrônica</b><span>Cada componente e por que foi escolhido, alimentação em 12 V, pinagem completa e os 13 esquemas da bancada remontada em 06/11.</span></a>
     <a class="card" href="firmware.html"><b>Firmware</b><span>Cadastro, credenciais, tempos da porta, cores do LED, protocolo serial entre Mega e câmera, filas e testes.</span></a>
     <a class="card" href="servidor.html"><b>Servidor e nuvem</b><span>Rotas da API, banco de dados, autenticação, e a hospedagem com HTTPS, backup e parada automática de custo.</span></a>
@@ -66,16 +74,16 @@
 
 <section id="situacao">
   <h2>Onde o projeto está</h2>
-  <p class="sub">Estado em 08/11/2026.</p>
+  <p class="sub">Estado em 18/11/2026.</p>
   <div class="tablewrap"><table>
-    <tr><th>Parte</th><th>Situação</th><th>Falta</th></tr>
-    <tr><td>Requisitos e escopo</td><td><span class="tag ok">fechado</span></td><td>respostas do cliente sobre API, crachá e operação sem rede (fora do protótipo)</td></tr>
-    <tr><td>Módulo biométrico</td><td><span class="tag ok">cortado</span></td><td>conferir o encaixe do leitor na frente refeita em 06/11</td></tr>
-    <tr><td>Módulo armário</td><td><span class="tag warn">em corte</span></td><td>fundo da porta com as divisórias e as 6 últimas caixas de gaveta</td></tr>
-    <tr><td>Bancada eletrônica</td><td><span class="tag ok">testada em 06/11</span></td><td>senha, cartão e digital liberam e a fechadura pulsa; falta gravar a correção dos leitores após o pulso e conferir o teclado novo no Mega</td></tr>
-    <tr><td>Firmware</td><td><span class="tag ok">compila e passa nos testes</span></td><td>validação em hardware</td></tr>
-    <tr><td>Servidor na nuvem</td><td><span class="tag ok">no ar, com HTTPS</span></td><td>primeira conexão da câmera real (09/11)</td></tr>
-    <tr><td>Documentação</td><td><span class="tag ok">esta página</span></td><td>atualizar com os resultados da bancada</td></tr>
+    <tr><th>Parte</th><th>Situação</th><th>Falta para uma versão real</th></tr>
+    <tr><td>Requisitos e escopo</td><td><span class="tag ok">rastreados</span></td><td>API do hospital, crachá junto da digital, operação sem rede</td></tr>
+    <tr><td>Módulo biométrico</td><td><span class="tag ok">montado</span></td><td>fixação definitiva do leitor de digital</td></tr>
+    <tr><td>Módulo armário</td><td><span class="tag ok">montado com porta</span></td><td>últimas gavetas e divisórias</td></tr>
+    <tr><td>Eletrônica</td><td><span class="tag ok">funcionando na bancada</span></td><td>placa de circuito única no lugar da protoboard</td></tr>
+    <tr><td>Firmware</td><td><span class="tag ok">três métodos de acesso</span></td><td>fila de eventos persistente</td></tr>
+    <tr><td>Servidor na nuvem</td><td><span class="tag ok">no ar, com HTTPS</span></td><td>integração com o sistema do hospital</td></tr>
+    <tr><td>Documentação</td><td><span class="tag ok">este site</span></td><td></td></tr>
   </table></div>
 </section>
 
@@ -88,7 +96,7 @@
 </main>
 <footer><div class="wrap">
   Dispensário Eletrônico · Projeto de Sistemas Embarcados · Ibmec · 2026.2 · cliente Instituto Mário Penna (Hospital Luxemburgo).<br>
-  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 08/11/2026.<br>
+  Grupo: Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis. Professor: Osmar Ventura Gomes. Atualizado em 18/11/2026.<br>
   Código e arquivos: <a href="https://github.com/joshazze/dispensario-modulos">dispensario-modulos</a> ·
   <a href="https://github.com/joshazze/dispensario-design-system">dispensario-design-system</a> ·
   <a href="https://github.com/marceloxreis/sistema-embarcados">sistema-embarcados</a>
