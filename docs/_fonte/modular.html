@@ -1,0 +1,75 @@
+<header class="hero"><div class="wrap">
+  <div class="kicker">Modularidade</div>
+  <h1>Peças que se encaixam</h1>
+  <p class="lede">Lego, tijolo, Playmobil, estante de cubos, sintetizador modular: todos partem de uma peça padrão que se combina de muitos jeitos. O dispensário segue a mesma ideia. Um módulo biométrico, de 1 a 4 armários, 4 miolos por armário: 1592 montagens diferentes com as mesmas peças de corte.</p>
+  <div class="facts">
+    <div class="fact"><b>Módulos</b>biométrico 250 x 1000 x 250 · armário 750 x 1000 x 250</div>
+    <div class="fact"><b>Miolos do armário</b>4: gavetas em cima, embaixo, só nichos, só gavetas</div>
+    <div class="fact"><b>Montagens</b>8 + 48 + 256 + 1280 = 1592</div>
+    <div class="fact"><b>Largura</b>de 1,00 m a 3,25 m</div>
+  </div>
+</div></header>
+<!-- corpo -->
+<section id="conceito">
+  <h2>Hiperpersonalização com peça padrão</h2>
+  <p>Cada hospital, cada ala e cada perfil de paciente pede um estoque diferente: mais comprimido aqui, mais fralda e seringa ali. Em vez de desenhar um armário para cada caso, o projeto define poucas peças padrão e deixa a combinação resolver.</p>
+  <ul class="clean">
+    <li><b>Mesma altura e mesma profundidade</b> nos dois módulos (1000 e 250 mm): qualquer um encosta em qualquer outro.</li>
+    <li><b>Um único módulo biométrico</b> pode comandar a fileira inteira, em qualquer posição: na ponta, no meio, entre dois armários.</li>
+    <li><b>O miolo do armário é uma grade de ripas a meia-madeira</b>, como um jogo da velha. Mudar onde entram as ripas horizontais muda o que o armário guarda, sem mudar a casca.</li>
+    <li><b>Tudo sai de um JSON</b>: trocar uma medida e rodar o gerador refaz as peças e as cargas da cortadora.</li>
+  </ul>
+</section>
+
+<section id="miolos">
+  <h2>Os quatro miolos do armário</h2>
+  <p class="sub">Nicho de 704 x 954 mm, 5 colunas, gaveta de 88 mm de altura.</p>
+  <figure><img class="fig" src="site/modular/miolos.svg" alt="Quatro armários ao lado do módulo biométrico: gavetas em cima, gavetas embaixo, só nichos altos, só gavetas" loading="lazy"></figure>
+  <div class="tablewrap"><table>
+    <tr><th>Miolo</th><th>Arranjo</th><th>Gavetas</th><th>Vãos abertos</th></tr>
+    <tr><td><b>G</b> gavetas em cima</td><td>3 fileiras de gaveta sobre 3 fileiras de vão (o montado no protótipo)</td><td>15</td><td>15 de ~230 mm</td></tr>
+    <tr><td><b>B</b> gavetas embaixo</td><td>vãos em cima, gavetas na altura da mão</td><td>15</td><td>15 de ~230 mm</td></tr>
+    <tr><td><b>A</b> só nichos altos</td><td>3 fileiras de vão</td><td>0</td><td>15 de ~318 mm</td></tr>
+    <tr><td><b>T</b> só gavetas</td><td>10 fileiras</td><td>50</td><td>0</td></tr>
+  </table></div>
+</section>
+
+<section id="combinacoes">
+  <h2>As combinações</h2>
+  <p class="sub">Com n armários há n + 1 lugares para o biométrico e 4 miolos para cada armário: (n + 1) x 4<sup>n</sup>.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Armários</th><th>Largura</th><th>Montagens</th></tr>
+    <tr><td>1</td><td>1,00 m</td><td>2 x 4 = 8</td></tr>
+    <tr><td>2</td><td>1,75 m</td><td>3 x 16 = 48</td></tr>
+    <tr><td>3</td><td>2,50 m</td><td>4 x 64 = 256</td></tr>
+    <tr><td>4</td><td>3,25 m</td><td>5 x 256 = 1280</td></tr>
+    <tr><td><b>Total</b></td><td></td><td><b>1592</b></td></tr>
+  </table></div>
+  <h3>1 biométrico + 1 armário: todas as 8</h3>
+  <figure><img class="fig" src="site/modular/n1.svg" alt="As 8 montagens com um armário" loading="lazy"></figure>
+  <h3>1 biométrico + 2 armários: todas as 48</h3>
+  <figure><img class="fig" src="site/modular/n2.svg" alt="As 48 montagens com dois armários" loading="lazy"></figure>
+  <h3>1 biométrico + 3 armários: 8 das 256</h3>
+  <figure><img class="fig" src="site/modular/n3.svg" alt="Oito montagens com três armários" loading="lazy"></figure>
+  <h3>1 biométrico + 4 armários: 8 das 1280</h3>
+  <figure><img class="fig" src="site/modular/n4.svg" alt="Oito montagens com quatro armários" loading="lazy"></figure>
+</section>
+
+<section id="indice">
+  <h2>Como achar um medicamento: o índice D0 a D5</h2>
+  <p class="sub">Um endereço de duas partes, como página e linha de dicionário.</p>
+  <p>As 15 gavetas seguem faixas de letra tiradas da RENAME 2024, a Relação Nacional de Medicamentos Essenciais do SUS: A, B, C, D, E, F, G-I, J-L, M, N-O, P, Q-R, S, T, U-Z. Dentro de cada gaveta, até 5 divisórias criam até 6 compartimentos. Cada divisória tem uma orelha redonda, em escada, que nomeia o compartimento à frente dela; o fundo da gaveta é o 0.</p>
+  <figure><img class="fig" src="site/modular/indice-gaveta.svg" alt="Gaveta vista de cima com orelhas D0 a D5 em escada" loading="lazy"><figcaption>Vista de cima: as orelhas em escada ficam todas visíveis ao abrir a gaveta.</figcaption></figure>
+  <ul class="clean">
+    <li><b>D3</b> é a gaveta D, compartimento 3. <b>A5</b> é a gaveta A, compartimento da frente. <b>A0</b> é o fundo da gaveta A.</li>
+    <li>Gaveta sem divisória é toda 0. Divisórias vêm em jogos completos: quem tem a 4 tem a 3, a 2 e a 1.</li>
+    <li>Nada é gravado com letra. As etiquetas são coladas, então a farmácia reorganiza o gaveteiro sem cortar peça nova.</li>
+    <li>Quantidade de divisórias proporcional aos ativos de cada faixa: 44 no total, cortadas no miolo da porta, que ia virar sobra.</li>
+  </ul>
+  <h3>A pesquisa na RENAME 2024</h3>
+  <p>Da tabela do Apêndice A (páginas 26 a 122 do PDF oficial, Portaria GM/MS nº 6.324 de 26/12/2024) entraram só as linhas em comprimido, cápsula ou drágea, contadas pelo princípio ativo sem o sal: cloridrato de metformina conta como metformina, na M. Resultado: <b>265 princípios ativos</b>. A letra A sozinha tem 29; J, K, W, X e Y não têm nenhum. Uma programação dinâmica testou cada número de gavetas e escolheu as faixas que deixam a gaveta mais cheia a menor possível. A partir de 13 gavetas o piso de 29 é atingido; 15 fecha a grade de 5 colunas.</p>
+  <div class="grid2">
+    <figure><img class="fig" src="site/letras.svg" alt="Número de princípios ativos por letra inicial" loading="lazy"><figcaption>Ativos por letra inicial.</figcaption></figure>
+    <figure><img class="fig" src="site/gavetas-15.svg" alt="Ativos em cada uma das 15 gavetas" loading="lazy"><figcaption>As 15 gavetas e quantos ativos cabem em cada.</figcaption></figure>
+  </div>
+</section>
