@@ -13,7 +13,7 @@ from pathlib import Path
 AQUI = Path(__file__).resolve().parent
 DOCS = AQUI.parent
 GRUPO = "Beatriz Samaha, Bruna Bento, Joshua Azze e Marcelo Reis"
-ATUALIZADO = "08/11/2026"
+ATUALIZADO = "18/11/2026"
 
 # (arquivo, nome na barra, titulo da aba, descricao)
 PAGINAS = [
@@ -21,6 +21,8 @@ PAGINAS = [
      "Protótipo de farmácia satélite com acesso por digital ou senha e registro de cada abertura, para o Instituto Mário Penna."),
     ("requisitos", "Requisitos", "Requisitos · Dispensário Eletrônico",
      "Problema, requisitos funcionais e não funcionais, contrato entre hardware e software, máquina de estados e critérios de aceite."),
+    ("processo", "Engenharia de software", "Engenharia de software · Dispensário Eletrônico",
+     "Ciclo de vida, elicitação, classificação e rastreabilidade dos requisitos, casos de uso, classes, sequência, estados, horas e custos."),
     ("eletronica", "Eletrônica", "Eletrônica · Dispensário Eletrônico",
      "Componentes, alimentação, pinagem do Arduino Mega e da ESP32-CAM e os 13 esquemas da bancada."),
     ("firmware", "Firmware", "Firmware · Dispensário Eletrônico",
@@ -29,10 +31,12 @@ PAGINAS = [
      "API do servidor, banco, segurança e a hospedagem com HTTPS na AWS."),
     ("gabinete", "Gabinete", "Gabinete · Dispensário Eletrônico",
      "Chassi modular em MDF, módulo biométrico, armário, porta, gaveteiro por letra e placa do projeto."),
+    ("modular", "Modularidade", "Modularidade · Dispensário Eletrônico",
+     "Um módulo biométrico com 1 a 4 armários e 4 miolos: 1592 montagens com as mesmas peças, e o índice D0 a D5 das gavetas."),
     ("fabricacao", "Fabricação", "Fabricação · Dispensário Eletrônico",
      "Corte a laser na eCNC L-1210: gerador paramétrico, parâmetros medidos, cupons de teste e rota de corte."),
     ("linha-do-tempo", "Linha do tempo", "Linha do tempo · Dispensário Eletrônico",
-     "O projeto dia a dia, de 20 de agosto a 9 de novembro de 2026."),
+     "O projeto dia a dia, de 20 de agosto a 18 de novembro de 2026."),
     ("fontes", "Fontes e glossário", "Fontes e glossário · Dispensário Eletrônico",
      "Repositórios, fontes de cada medida e decisão e glossário dos termos usados."),
 ]
